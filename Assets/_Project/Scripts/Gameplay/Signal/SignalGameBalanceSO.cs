@@ -14,7 +14,7 @@ namespace LudumDare.Template.Gameplay.Signal
         [Header("Arena (logical pixels, как canvas 900×600)")]
         [Min(1f)] public float ReferenceCanvasWidth = 900f;
         [Min(1f)] public float ReferenceCanvasHeight = 600f;
-        [Tooltip("1 world unit = N logical pixels (100 → 9×6 world для 900×600).")]
+        [Tooltip("Запасной масштаб, если нет ортокамеры: 1 world unit = N logical pixels. Иначе масштаб берётся из Orthographic Size камеры в сцене, чтобы по вертикали влезала ReferenceCanvasHeight.")]
         [Min(0.0001f)] public float LogicalPixelsPerWorldUnit = 100f;
 
         [Header("Simulation")]

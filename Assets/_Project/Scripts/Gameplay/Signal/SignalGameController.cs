@@ -203,11 +203,6 @@ namespace LudumDare.Template.Gameplay.Signal
                 }
             }
 
-            if (_camera != null && _balance != null)
-            {
-                _camera.orthographicSize = _balance.ReferenceCanvasHeight /
-                    (2f * Mathf.Max(0.0001f, _balance.LogicalPixelsPerWorldUnit));
-            }
         }
 
         private void OnEnable()
@@ -255,9 +250,16 @@ namespace LudumDare.Template.Gameplay.Signal
             EnsureBalance();
             if (_balance == null) return;
 
-            _pixelsPerUnit = Mathf.Max(0.0001f, _balance.LogicalPixelsPerWorldUnit);
             _w = _balance.ReferenceCanvasWidth;
             _h = _balance.ReferenceCanvasHeight;
+            if (_camera != null && _camera.orthographic)
+            {
+                _pixelsPerUnit = _h / (2f * Mathf.Max(0.0001f, _camera.orthographicSize));
+            }
+            else
+            {
+                _pixelsPerUnit = Mathf.Max(0.0001f, _balance.LogicalPixelsPerWorldUnit);
+            }
 
             var p = _balance.Player;
             var n = _balance.Nest;
