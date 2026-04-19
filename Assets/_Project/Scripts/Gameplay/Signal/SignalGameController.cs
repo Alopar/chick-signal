@@ -130,6 +130,33 @@ namespace LudumDare.Template.Gameplay.Signal
         public float PlayerSignalRadiusLogical => _player.SignalRadius;
         public Transform PlayerVisualTransform => _playerTransform;
 
+        /// <summary>Состояние рывка для визуальных эффектов (шейдер дэша и т.п.).</summary>
+        public bool PlayerIsDashing => _phase == SignalRunPhase.Playing && _player.DashTimeLeft > 0f;
+
+        /// <summary>1 в начале дэша, 0 к концу — удобно для затухания FX.</summary>
+        public float PlayerDashIntensity01
+        {
+            get
+            {
+                if (_balance == null || _player.DashTimeLeft <= 0f) return 0f;
+                float d = Mathf.Max(1e-6f, _balance.Player.DashDuration);
+                return Mathf.Clamp01(_player.DashTimeLeft / d);
+            }
+        }
+
+        /// <summary>Нормализованное направление дэша в мировых координатах (ось Y как в Unity, вверх).</summary>
+        public Vector2 PlayerDashDirectionWorld
+        {
+            get
+            {
+                float dx = _player.DashDirX;
+                float dy = _player.DashDirY;
+                float len = Mathf.Sqrt(dx * dx + dy * dy);
+                if (len < 1e-6f) return Vector2.right;
+                return new Vector2(dx / len, -dy / len);
+            }
+        }
+
         private float _w;
         private float _h;
         private float _pixelsPerUnit = 100f;

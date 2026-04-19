@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 8812345678901234502}
   - component: {fileID: 8812345678901234503}
   - component: {fileID: 8812345678901234504}
+  - component: {fileID: 7712345678901234505}
   m_Layer: 8
   m_Name: Visual
   m_TagString: Untagged
@@ -186,7 +187,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 5f9b2d4e6c8a5307b6c9d1e3f5a7b9c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -241,3 +242,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7712345678901234505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812345678901234501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a0c3e5f7d9b6418c7d0e2f4a6b8c0d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalPlayerDashSpriteFx
+  _controller: {fileID: 0}
+  _spriteRenderer: {fileID: 8812345678901234503}
+  _intensityCurvePower: 0.9
