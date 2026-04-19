@@ -44,6 +44,12 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private SignalHudEventChannelSO _hudChannel;
         [SerializeField] private SignalEvolutionEventChannelSO _evolutionModalChannel;
 
+        [Header("Camera")]
+        [Tooltip("Время сглаживания следования камеры за игроком (SmoothDamp).")]
+        [SerializeField] private float _cameraFollowSmoothTime = 0.18f;
+        [Tooltip("Макс. скорость догонания камеры (0 = без ограничения).")]
+        [SerializeField] private float _cameraFollowMaxSpeed = 80f;
+
         public SignalHudEventChannelSO HudChannel => _hudChannel;
         public SignalEvolutionEventChannelSO EvolutionChannel => _evolutionModalChannel;
 
@@ -142,6 +148,7 @@ namespace LudumDare.Template.Gameplay.Signal
         private readonly Dictionary<string, int> _waveSpawnNext = new();
 
         private float _gameTime;
+        private Vector3 _cameraFollowVelocity;
 
         private void Awake()
         {
@@ -310,6 +317,14 @@ namespace LudumDare.Template.Gameplay.Signal
             _trapAttract = new TrapStock { Charges = maxC, CooldownLeft = 0f };
 
             PushHud();
+            if (_playerTransform != null)
+            {
+                Vector3 pw = LogicalToWorld(_player.X, _player.Y);
+                _playerTransform.position = new Vector3(pw.x, pw.y, _playerTransform.position.z);
+                _playerTransform.rotation = Quaternion.Euler(0f, 0f, _player.Angle * Mathf.Rad2Deg);
+            }
+
+            SnapCameraToPlayerWorld();
         }
 
         private void FixedUpdate()
@@ -327,12 +342,20 @@ namespace LudumDare.Template.Gameplay.Signal
             if (_balance == null || _inputReader == null) return;
             if (_phase != SignalRunPhase.Playing) return;
 
-            Vector2 mouseLogical = GetMouseLogicalPosition();
-            _player.Angle = LogicalAngleFromTo(_player.X, _player.Y, mouseLogical.x, mouseLogical.y);
-
             bool jammed = _player.SignalJam > 0f;
             _player.IsEmitting = _inputReader.IsAttackHeld && !jammed;
             _player.IsRepelling = _inputReader.IsRepelHeld && !jammed;
+        }
+
+        private void LateUpdate()
+        {
+            if (_balance == null || _phase != SignalRunPhase.Playing) return;
+
+            UpdateCameraFollow();
+            if (_inputReader == null) return;
+
+            Vector2 mouseLogical = GetMouseLogicalPosition();
+            _player.Angle = LogicalAngleFromTo(_player.X, _player.Y, mouseLogical.x, mouseLogical.y);
         }
 
         private Vector2 GetMouseLogicalPosition()
@@ -346,9 +369,43 @@ namespace LudumDare.Template.Gameplay.Signal
             Vector3 w = _camera.ScreenToWorldPoint(new Vector3(sp.x, sp.y, -_camera.transform.position.z));
             float lx = w.x * _pixelsPerUnit + _w * 0.5f;
             float ly = -w.y * _pixelsPerUnit + _h * 0.5f;
-            lx = Mathf.Clamp(lx, 0f, _w);
-            ly = Mathf.Clamp(ly, 0f, _h);
             return new Vector2(lx, ly);
+        }
+
+        private void SnapCameraToPlayerWorld()
+        {
+            if (_camera == null || _playerTransform == null) return;
+            Vector3 p = _playerTransform.position;
+            Vector3 c = _camera.transform.position;
+            _camera.transform.position = new Vector3(p.x, p.y, c.z);
+            _cameraFollowVelocity = Vector3.zero;
+        }
+
+        private void UpdateCameraFollow()
+        {
+            if (_camera == null || _playerTransform == null) return;
+            Vector3 p = _playerTransform.position;
+            Vector3 c = _camera.transform.position;
+            float smooth = Mathf.Max(0.0001f, _cameraFollowSmoothTime);
+            float maxSpd = _cameraFollowMaxSpeed > 0f ? _cameraFollowMaxSpeed : float.PositiveInfinity;
+            Vector3 target = new Vector3(p.x, p.y, c.z);
+            _camera.transform.position = Vector3.SmoothDamp(c, target, ref _cameraFollowVelocity, smooth, maxSpd, Time.deltaTime);
+        }
+
+        /// <summary>
+        /// Радиус появления юнитов вокруг игрока — чуть дальше видимой области камеры.
+        /// </summary>
+        private float GetSpawnRingRadiusLogical()
+        {
+            float margin = Mathf.Max(1f, _balance.Spawn.EdgeMargin);
+            if (_camera != null)
+            {
+                float halfH = _camera.orthographicSize * _pixelsPerUnit;
+                float halfW = halfH * _camera.aspect;
+                return Mathf.Sqrt(halfW * halfW + halfH * halfH) + margin * 2f;
+            }
+
+            return Mathf.Max(_w, _h) * 0.55f + margin;
         }
 
         private void HandleDash()
@@ -423,8 +480,8 @@ namespace LudumDare.Template.Gameplay.Signal
             if (_player.DashTimeLeft > 0f)
             {
                 float dSpd = p.DashDistance / Mathf.Max(1e-6f, p.DashDuration);
-                _player.X = Mathf.Clamp(_player.X + _player.DashDirX * dSpd * dt, _player.Radius, _w - _player.Radius);
-                _player.Y = Mathf.Clamp(_player.Y + _player.DashDirY * dSpd * dt, _player.Radius, _h - _player.Radius);
+                _player.X += _player.DashDirX * dSpd * dt;
+                _player.Y += _player.DashDirY * dSpd * dt;
                 _player.DashTimeLeft -= dt;
                 if (_player.DashTimeLeft <= 0f)
                 {
@@ -444,9 +501,9 @@ namespace LudumDare.Template.Gameplay.Signal
                     dx /= len;
                     dy /= len;
                     float spd = _player.Speed * (_player.MoveSlowTimer > 0f ? S.Debuff.SlowMult : 1f);
-                    _player.X = Mathf.Clamp(_player.X + dx * spd * dt, _player.Radius, _w - _player.Radius);
+                    _player.X += dx * spd * dt;
                     // Логическая ось Y вниз (как canvas); ввод «вверх» даёт +move.y → уменьшаем ly.
-                    _player.Y = Mathf.Clamp(_player.Y - dy * spd * dt, _player.Radius, _h - _player.Radius);
+                    _player.Y -= dy * spd * dt;
                 }
             }
 
@@ -1083,17 +1140,10 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void SpawnEnemy(SignalNpcKind kind)
         {
-            var S = _balance.Spawn;
-            float m = S.EdgeMargin;
-            int side = UnityEngine.Random.Range(0, 4);
-            float x, y;
-            switch (side)
-            {
-                case 0: x = UnityEngine.Random.value * _w; y = -m; break;
-                case 1: x = _w + m; y = UnityEngine.Random.value * _h; break;
-                case 2: x = UnityEngine.Random.value * _w; y = _h + m; break;
-                default: x = -m; y = UnityEngine.Random.value * _h; break;
-            }
+            float r = GetSpawnRingRadiusLogical();
+            float ang = UnityEngine.Random.value * Mathf.PI * 2f;
+            float x = _player.X + Mathf.Cos(ang) * r;
+            float y = _player.Y + Mathf.Sin(ang) * r;
 
             float speed = _balance.Enemy.SpeedMin + UnityEngine.Random.value * _balance.Enemy.SpeedRand;
             _enemies.Add(new EnemySim
@@ -1110,17 +1160,10 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void SpawnAlly()
         {
-            var S = _balance.Spawn;
-            float m = S.EdgeMargin;
-            int side = UnityEngine.Random.Range(0, 4);
-            float x, y;
-            switch (side)
-            {
-                case 0: x = UnityEngine.Random.value * _w; y = -m; break;
-                case 1: x = _w + m; y = UnityEngine.Random.value * _h; break;
-                case 2: x = UnityEngine.Random.value * _w; y = _h + m; break;
-                default: x = -m; y = UnityEngine.Random.value * _h; break;
-            }
+            float r = GetSpawnRingRadiusLogical();
+            float ang = UnityEngine.Random.value * Mathf.PI * 2f;
+            float x = _player.X + Mathf.Cos(ang) * r;
+            float y = _player.Y + Mathf.Sin(ang) * r;
 
             _allies.Add(new AllySim
             {

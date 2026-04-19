@@ -127,8 +127,9 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void SyncArenaBackground()
         {
-            float w = _controller.LogicalWidth / _controller.PixelsPerWorldUnit;
-            float h = _controller.LogicalHeight / _controller.PixelsPerWorldUnit;
+            const float floorExtentsMul = 14f;
+            float w = _controller.LogicalWidth / _controller.PixelsPerWorldUnit * floorExtentsMul;
+            float h = _controller.LogicalHeight / _controller.PixelsPerWorldUnit * floorExtentsMul;
             float sx = Mathf.Max(1e-6f, GetDefaultSprite().bounds.size.x);
             _arenaBackground.transform.localScale = new Vector3(w / sx, h / sx, 1f);
         }
