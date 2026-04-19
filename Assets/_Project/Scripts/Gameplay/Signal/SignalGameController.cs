@@ -49,6 +49,10 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private float _cameraFollowSmoothTime = 0.18f;
         [Tooltip("Макс. скорость догонания камеры (0 = без ограничения).")]
         [SerializeField] private float _cameraFollowMaxSpeed = 80f;
+        [Tooltip("Насколько далеко в сторону курсора может сместиться «якорь» камеры в мировых единицах (как в Nuclear Throne).")]
+        [SerializeField] private float _cameraMouseBiasMaxWorld = 0.42f;
+        [Tooltip("При какой дистанции игрок→курсор в мире смещение почти достигает максимума.")]
+        [SerializeField] private float _cameraMouseBiasRampWorld = 3.2f;
 
         public SignalHudEventChannelSO HudChannel => _hudChannel;
         public SignalEvolutionEventChannelSO EvolutionChannel => _evolutionModalChannel;
@@ -375,20 +379,55 @@ namespace LudumDare.Template.Gameplay.Signal
         private void SnapCameraToPlayerWorld()
         {
             if (_camera == null || _playerTransform == null) return;
-            Vector3 p = _playerTransform.position;
             Vector3 c = _camera.transform.position;
-            _camera.transform.position = new Vector3(p.x, p.y, c.z);
+            Vector3 target = GetCameraFollowTargetWorld(c.z);
+            _camera.transform.position = target;
             _cameraFollowVelocity = Vector3.zero;
+        }
+
+        private Vector3 GetMouseWorldPositionXY()
+        {
+            if (_camera == null || Mouse.current == null)
+            {
+                return _playerTransform != null ? _playerTransform.position : Vector3.zero;
+            }
+
+            Vector3 sp = Mouse.current.position.ReadValue();
+            Vector3 w = _camera.ScreenToWorldPoint(new Vector3(sp.x, sp.y, -_camera.transform.position.z));
+            return new Vector3(w.x, w.y, 0f);
+        }
+
+        /// <summary>
+        /// Цель камеры: между игроком и курсором; чем дальше курсор от игрока, тем сильнее сдвиг (до лимита).
+        /// </summary>
+        private Vector3 GetCameraFollowTargetWorld(float z)
+        {
+            if (_playerTransform == null) return new Vector3(0f, 0f, z);
+            Vector3 p = _playerTransform.position;
+            if (_cameraMouseBiasMaxWorld <= 0f) return new Vector3(p.x, p.y, z);
+
+            Vector3 mouse = GetMouseWorldPositionXY();
+            float dx = mouse.x - p.x;
+            float dy = mouse.y - p.y;
+            float dist = Mathf.Sqrt(dx * dx + dy * dy);
+            if (dist < 1e-5f) return new Vector3(p.x, p.y, z);
+
+            float ramp = Mathf.Max(0.01f, _cameraMouseBiasRampWorld);
+            float t = Mathf.Clamp01(dist / ramp);
+            t = t * t * (3f - 2f * t);
+            float off = t * _cameraMouseBiasMaxWorld;
+            float nx = dx / dist;
+            float ny = dy / dist;
+            return new Vector3(p.x + nx * off, p.y + ny * off, z);
         }
 
         private void UpdateCameraFollow()
         {
             if (_camera == null || _playerTransform == null) return;
-            Vector3 p = _playerTransform.position;
             Vector3 c = _camera.transform.position;
             float smooth = Mathf.Max(0.0001f, _cameraFollowSmoothTime);
             float maxSpd = _cameraFollowMaxSpeed > 0f ? _cameraFollowMaxSpeed : float.PositiveInfinity;
-            Vector3 target = new Vector3(p.x, p.y, c.z);
+            Vector3 target = GetCameraFollowTargetWorld(c.z);
             _camera.transform.position = Vector3.SmoothDamp(c, target, ref _cameraFollowVelocity, smooth, maxSpd, Time.deltaTime);
         }
 
