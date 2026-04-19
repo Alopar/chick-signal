@@ -225,7 +225,7 @@ namespace LudumDare.Template.EditorTools
             var sr = visual.AddComponent<SpriteRenderer>();
             var anim = visual.AddComponent<Animator>();
             anim.runtimeAnimatorController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
-                "Assets/_Project/Art/Sprites/bird/BertVisual.controller");
+                "Assets/_Project/Art/Sprites/bird/BirdVisual.controller");
             foreach (var o in AssetDatabase.LoadAllAssetsAtPath("Assets/_Project/Art/Sprites/bird/birdIdle.png"))
             {
                 if (o is Sprite sp && sp.name == "birdIdle_0")

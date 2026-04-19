@@ -11,7 +11,7 @@ namespace LudumDare.Template.Gameplay.Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerController : MonoBehaviour
     {
-        private static readonly int MovingHash = Animator.StringToHash("Moving");
+        private static readonly int VisualStateHash = Animator.StringToHash("VisualState");
 
         [Header("References")]
         [SerializeField] private InputReader _inputReader;
@@ -77,7 +77,14 @@ namespace LudumDare.Template.Gameplay.Player
 
             float sq = _movingSpeedThreshold * _movingSpeedThreshold;
             bool moving = _rigidbody2D.linearVelocity.sqrMagnitude > sq;
-            if (_animator != null) _animator.SetBool(MovingHash, moving);
+            if (_animator != null && _inputReader != null)
+            {
+                int state = BertVisualState.Compute(
+                    moving,
+                    _inputReader.IsAttackHeld,
+                    _inputReader.IsRepelHeld);
+                _animator.SetInteger(VisualStateHash, state);
+            }
 
             if (_spriteRenderer == null) return;
 
@@ -129,6 +136,27 @@ namespace LudumDare.Template.Gameplay.Player
         {
             if (PauseService.HasInstance && PauseService.Instance.IsPaused) return false;
             return true;
+        }
+    }
+
+    /// <summary>
+    /// Соответствует параметру <c>VisualState</c> в <c>BertVisual.controller</c>.
+    /// Контрсигнал имеет приоритет над сигналом, если зажаты оба.
+    /// </summary>
+    internal static class BertVisualState
+    {
+        public const int Idle = 0;
+        public const int Run = 1;
+        public const int SignalStand = 2;
+        public const int SignalRun = 3;
+        public const int CounterStand = 4;
+        public const int CounterRun = 5;
+
+        public static int Compute(bool moving, bool signalEmitting, bool counterSignal)
+        {
+            if (counterSignal) return moving ? CounterRun : CounterStand;
+            if (signalEmitting) return moving ? SignalRun : SignalStand;
+            return moving ? Run : Idle;
         }
     }
 }

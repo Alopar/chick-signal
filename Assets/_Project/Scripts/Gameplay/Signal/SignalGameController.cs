@@ -36,7 +36,7 @@ namespace LudumDare.Template.Gameplay.Signal
     [DefaultExecutionOrder(-50)]
     public sealed class SignalGameController : MonoBehaviour
     {
-        private static readonly int MovingAnimHash = Animator.StringToHash("Moving");
+        private static readonly int VisualStateHash = Animator.StringToHash("VisualState");
 
         [SerializeField] private SignalGameBalanceSO _balance;
         [SerializeField] private InputReader _inputReader;
@@ -385,7 +385,8 @@ namespace LudumDare.Template.Gameplay.Signal
                 bool moving = _player.DashTimeLeft > 0f;
                 if (!moving && _inputReader != null)
                     moving = _inputReader.MoveValue.sqrMagnitude > moveThreshSq;
-                anim.SetBool(MovingAnimHash, moving);
+                int state = BertVisualState.Compute(moving, _player.IsEmitting, _player.IsRepelling);
+                anim.SetInteger(VisualStateHash, state);
             }
 
             var sr = _playerTransform.GetComponentInChildren<SpriteRenderer>();
