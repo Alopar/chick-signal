@@ -68,7 +68,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalGameplayView
   _controller: {fileID: 2419645840226337993}
   _nestAnchor: {fileID: 0}
-  _arenaBackground: {fileID: 0}
   _signalCone: {fileID: 0}
   _repelCone: {fileID: 0}
   _allyColor: {r: 0.27, g: 1, b: 0.53, a: 0.9}

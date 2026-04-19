@@ -11,7 +11,6 @@ namespace LudumDare.Template.Gameplay.Signal
     {
         [SerializeField] private SignalGameController _controller;
         [SerializeField] private Transform _nestAnchor;
-        [SerializeField] private SpriteRenderer _arenaBackground;
         [SerializeField] private LineRenderer _signalCone;
         [SerializeField] private LineRenderer _repelCone;
         [SerializeField] private Color _allyColor = new(0.27f, 1f, 0.53f, 0.9f);
@@ -57,7 +56,6 @@ namespace LudumDare.Template.Gameplay.Signal
             }
 
             EnsureNestSprite();
-            EnsureArenaBackground();
             EnsureConeLines();
         }
 
@@ -67,18 +65,6 @@ namespace LudumDare.Template.Gameplay.Signal
             if (_nestSprite == null) _nestSprite = _nestAnchor.gameObject.AddComponent<SpriteRenderer>();
             _nestSprite.sprite = GetDefaultSprite();
             _nestSprite.sortingOrder = 2;
-        }
-
-        private void EnsureArenaBackground()
-        {
-            if (_arenaBackground != null) return;
-            var go = new GameObject("ArenaBackground");
-            go.transform.SetParent(transform, false);
-            go.transform.SetAsFirstSibling();
-            _arenaBackground = go.AddComponent<SpriteRenderer>();
-            _arenaBackground.sprite = GetDefaultSprite();
-            _arenaBackground.color = new Color(0.04f, 0.04f, 0.07f, 1f);
-            _arenaBackground.sortingOrder = -10;
         }
 
         private void EnsureConeLines()
@@ -116,22 +102,12 @@ namespace LudumDare.Template.Gameplay.Signal
             if (_controller == null) return;
             if (_controller.Balance == null) return;
 
-            SyncArenaBackground();
             SyncNest();
             SyncUnits();
             SyncPulses();
             SyncStaticTraps();
             SyncPlayerTraps();
             SyncCones();
-        }
-
-        private void SyncArenaBackground()
-        {
-            const float floorExtentsMul = 14f;
-            float w = _controller.LogicalWidth / _controller.PixelsPerWorldUnit * floorExtentsMul;
-            float h = _controller.LogicalHeight / _controller.PixelsPerWorldUnit * floorExtentsMul;
-            float sx = Mathf.Max(1e-6f, GetDefaultSprite().bounds.size.x);
-            _arenaBackground.transform.localScale = new Vector3(w / sx, h / sx, 1f);
         }
 
         private void SyncNest()
