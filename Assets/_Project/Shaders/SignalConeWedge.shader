@@ -110,8 +110,8 @@ Shader "Project/SignalConeWedge"
                 float absAng = abs(ang);
                 float wedge = 1.0 - smoothstep(_HalfAngleRad - _EdgeSoftRadians, _HalfAngleRad + _EdgeSoftRadians, absAng);
 
-                float radial = saturate(1.0 - r);
-                float waves = sin(radial * _WaveBands * TAU - _Time.y * _WaveSpeed);
+                // Фаза по r: кольца движутся от центра к краю (исходящий сигнал). Было (1-r) — волны шли внутрь.
+                float waves = sin(r * _WaveBands * TAU - _Time.y * _WaveSpeed);
                 float waveShade = waves * 0.5 + 0.5;
                 waveShade = lerp(1.0, waveShade, _RippleContrast);
                 float wavePeak = pow(saturate(waveShade), _WavePeakPower);

@@ -14,24 +14,8 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private GameObject _nestVisualPrefab;
         [SerializeField] private SpriteRenderer _signalCone;
         [SerializeField] private SpriteRenderer _repelCone;
-        [SerializeField] private Sprite _coneSprite;
-        [SerializeField] private Color _signalConeBase = new(1f, 0.86f, 0.31f, 0.28f);
-        [SerializeField] private Color _signalConeWave = new(1f, 0.98f, 0.75f, 1f);
-        [SerializeField] private Color _repelConeBase = new(1f, 0.45f, 0.42f, 0.24f);
-        [SerializeField] private Color _repelConeWave = new(1f, 0.75f, 0.72f, 1f);
-        [SerializeField] private float _coneWaveSpeed = 4f;
-        [SerializeField] private float _coneWaveBands = 9f;
-        [SerializeField] [Range(0f, 1f)] private float _coneWaveMix = 0.55f;
-        [SerializeField] [Range(0.001f, 0.2f)] private float _coneEdgeSoftRadians = 0.04f;
-        [SerializeField] [Range(0.01f, 0.45f)] private float _coneRadialEdgeSoft = 0.12f;
-        [SerializeField] [Range(0f, 0.55f)] private float _coneOuterEdgeFeather = 0.28f;
-        [SerializeField] [Range(0f, 0.2f)] private float _coneRadialEdgeBleed = 0.06f;
-        [SerializeField] [Range(1f, 10f)] private float _coneWavePeakPower = 3.5f;
-        [SerializeField] [Range(0f, 1f)] private float _coneWaveValleyAlpha = 0.22f;
-        [SerializeField] [Range(0.15f, 1.5f)] private float _coneAlphaScale = 0.55f;
-        [SerializeField] [Range(0f, 8f)] private float _coneCenterGlow = 2.2f;
-        [SerializeField] [Range(0.2f, 1f)] private float _coneRippleContrast = 0.85f;
-        [SerializeField] private int _coneSortingOrder = -8;
+        [Tooltip("Все параметры шейдера конуса — на этом компоненте (или будет добавлен автоматически).")]
+        [SerializeField] private SignalConeVisualSettings _coneVisualSettings;
         [SerializeField] private Color _allyColor = new(0.27f, 1f, 0.53f, 0.9f);
         [SerializeField] private Color _enemyColor = new(1f, 0.26f, 0.4f, 0.9f);
         [SerializeField] private Sprite _mudTrapSprite;
@@ -52,25 +36,10 @@ namespace LudumDare.Template.Gameplay.Signal
         private MaterialPropertyBlock _mpbSignal;
         private MaterialPropertyBlock _mpbRepel;
 
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private static readonly int WaveColorId = Shader.PropertyToID("_WaveColor");
-        private static readonly int HalfAngleRadId = Shader.PropertyToID("_HalfAngleRad");
-        private static readonly int EdgeSoftRadiansId = Shader.PropertyToID("_EdgeSoftRadians");
-        private static readonly int RadialEdgeSoftId = Shader.PropertyToID("_RadialEdgeSoft");
-        private static readonly int OuterEdgeFeatherId = Shader.PropertyToID("_OuterEdgeFeather");
-        private static readonly int RadialEdgeBleedId = Shader.PropertyToID("_RadialEdgeBleed");
-        private static readonly int CenterGlowId = Shader.PropertyToID("_CenterGlow");
-        private static readonly int WaveBandsId = Shader.PropertyToID("_WaveBands");
-        private static readonly int WaveSpeedId = Shader.PropertyToID("_WaveSpeed");
-        private static readonly int WaveMixId = Shader.PropertyToID("_WaveMix");
-        private static readonly int WavePeakPowerId = Shader.PropertyToID("_WavePeakPower");
-        private static readonly int WaveValleyAlphaId = Shader.PropertyToID("_WaveValleyAlpha");
-        private static readonly int RippleContrastId = Shader.PropertyToID("_RippleContrast");
-        private static readonly int AlphaScaleId = Shader.PropertyToID("_AlphaScale");
-
         private void Awake()
         {
             if (_controller == null) _controller = GetComponent<SignalGameController>();
+            EnsureConeVisualSettings();
             if (_nestAnchor == null)
             {
                 var n = new GameObject("Nest");
@@ -94,6 +63,14 @@ namespace LudumDare.Template.Gameplay.Signal
 
             EnsureNestVisual();
             EnsureConeRenderers();
+        }
+
+        private void EnsureConeVisualSettings()
+        {
+            if (_coneVisualSettings == null)
+                _coneVisualSettings = GetComponent<SignalConeVisualSettings>();
+            if (_coneVisualSettings == null)
+                _coneVisualSettings = gameObject.AddComponent<SignalConeVisualSettings>();
         }
 
         private void EnsureNestVisual()
@@ -148,38 +125,33 @@ namespace LudumDare.Template.Gameplay.Signal
 
             _signalCone.sharedMaterial = _coneMaterial;
             _repelCone.sharedMaterial = _coneMaterial;
-            _signalCone.sortingOrder = _coneSortingOrder;
-            _repelCone.sortingOrder = _coneSortingOrder - 1;
+            int order = _coneVisualSettings != null ? _coneVisualSettings.ConeSortingOrder : -8;
+            _signalCone.sortingOrder = order;
+            _repelCone.sortingOrder = order - 1;
         }
 
         private void ApplyConeMaterialStaticParams()
         {
-            if (_coneMaterial == null) return;
-            _coneMaterial.SetFloat(WaveSpeedId, _coneWaveSpeed);
-            _coneMaterial.SetFloat(WaveBandsId, _coneWaveBands);
-            _coneMaterial.SetFloat(WaveMixId, _coneWaveMix);
-            _coneMaterial.SetFloat(EdgeSoftRadiansId, _coneEdgeSoftRadians);
-            _coneMaterial.SetFloat(RadialEdgeSoftId, _coneRadialEdgeSoft);
-            _coneMaterial.SetFloat(OuterEdgeFeatherId, _coneOuterEdgeFeather);
-            _coneMaterial.SetFloat(RadialEdgeBleedId, _coneRadialEdgeBleed);
-            _coneMaterial.SetFloat(CenterGlowId, _coneCenterGlow);
-            _coneMaterial.SetFloat(WavePeakPowerId, _coneWavePeakPower);
-            _coneMaterial.SetFloat(WaveValleyAlphaId, _coneWaveValleyAlpha);
-            _coneMaterial.SetFloat(RippleContrastId, _coneRippleContrast);
-            _coneMaterial.SetFloat(AlphaScaleId, _coneAlphaScale);
+            if (_coneMaterial == null || _coneVisualSettings == null) return;
+            _coneVisualSettings.ApplyStaticToMaterial(_coneMaterial);
         }
 
         private void SetupConeSpriteRenderer(SpriteRenderer sr)
         {
-            sr.sprite = _coneSprite != null ? _coneSprite : GetDefaultSprite();
+            sr.sprite = _coneVisualSettings != null && _coneVisualSettings.ConeSprite != null
+                ? _coneVisualSettings.ConeSprite
+                : GetDefaultSprite();
             sr.color = Color.white;
-            sr.sortingOrder = _coneSortingOrder;
+            sr.sortingOrder = _coneVisualSettings != null ? _coneVisualSettings.ConeSortingOrder : -8;
         }
 
         private void LateUpdate()
         {
             if (_controller == null) return;
             if (_controller.Balance == null) return;
+
+            if (_coneMaterial != null && _coneVisualSettings != null)
+                _coneVisualSettings.ApplyStaticToMaterial(_coneMaterial);
 
             SyncNest();
             SyncUnits();
@@ -369,7 +341,7 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void SyncCones()
         {
-            if (_coneMaterial == null || _signalCone == null || _repelCone == null) return;
+            if (_coneMaterial == null || _signalCone == null || _repelCone == null || _coneVisualSettings == null) return;
 
             Transform player = _controller.PlayerVisualTransform;
             if (player == null)
@@ -388,8 +360,9 @@ namespace LudumDare.Template.Gameplay.Signal
 
             if (!showSignal && !showRepel) return;
 
-            _signalCone.sortingOrder = _coneSortingOrder;
-            _repelCone.sortingOrder = _coneSortingOrder - 1;
+            int order = _coneVisualSettings.ConeSortingOrder;
+            _signalCone.sortingOrder = order;
+            _repelCone.sortingOrder = order - 1;
 
             float half = _controller.Balance.Signal.ConeAngleRadians * 0.5f;
             float radiusWorld = _controller.PlayerSignalRadiusLogical / _controller.PixelsPerWorldUnit;
@@ -402,18 +375,18 @@ namespace LudumDare.Template.Gameplay.Signal
             if (showSignal)
             {
                 _mpbSignal.Clear();
-                _mpbSignal.SetColor(BaseColorId, _signalConeBase);
-                _mpbSignal.SetColor(WaveColorId, _signalConeWave);
-                _mpbSignal.SetFloat(HalfAngleRadId, half);
+                _mpbSignal.SetColor(SignalConeVisualShaders.BaseColorId, _coneVisualSettings.SignalConeBase);
+                _mpbSignal.SetColor(SignalConeVisualShaders.WaveColorId, _coneVisualSettings.SignalConeWave);
+                _mpbSignal.SetFloat(SignalConeVisualShaders.HalfAngleRadId, half);
                 _signalCone.SetPropertyBlock(_mpbSignal);
             }
 
             if (showRepel)
             {
                 _mpbRepel.Clear();
-                _mpbRepel.SetColor(BaseColorId, _repelConeBase);
-                _mpbRepel.SetColor(WaveColorId, _repelConeWave);
-                _mpbRepel.SetFloat(HalfAngleRadId, half);
+                _mpbRepel.SetColor(SignalConeVisualShaders.BaseColorId, _coneVisualSettings.RepelConeBase);
+                _mpbRepel.SetColor(SignalConeVisualShaders.WaveColorId, _coneVisualSettings.RepelConeWave);
+                _mpbRepel.SetFloat(SignalConeVisualShaders.HalfAngleRadId, half);
                 _repelCone.SetPropertyBlock(_mpbRepel);
             }
         }
@@ -455,6 +428,7 @@ namespace LudumDare.Template.Gameplay.Signal
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            EnsureConeVisualSettings();
             if (_coneMaterial != null)
                 ApplyConeMaterialStaticParams();
         }
