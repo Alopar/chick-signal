@@ -16,9 +16,10 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private LineRenderer _repelCone;
         [SerializeField] private Color _allyColor = new(0.27f, 1f, 0.53f, 0.9f);
         [SerializeField] private Color _enemyColor = new(1f, 0.26f, 0.4f, 0.9f);
-        [SerializeField] private Color _staticTrapColor = new(0.78f, 0.35f, 0.51f, 0.35f);
-        [SerializeField] private Color _playerTrapSlowColor = new(1f, 0.78f, 0.35f, 0.45f);
-        [SerializeField] private Color _playerTrapAttractColor = new(0.78f, 0.47f, 1f, 0.45f);
+        [SerializeField] private Sprite _mudTrapSprite;
+        [SerializeField] private Sprite _flyTrapSprite;
+        [SerializeField] private Color _mudTrapTint = new(1f, 1f, 1f, 0.88f);
+        [SerializeField] private Color _flyTrapTint = new(1f, 1f, 1f, 0.88f);
         [SerializeField] private Color _pulseColor = new(0.27f, 0.8f, 1f, 0.5f);
 
         private Transform _unitsRoot;
@@ -225,7 +226,8 @@ namespace LudumDare.Template.Gameplay.Signal
         private void SyncStaticTraps()
         {
             int n = _controller.GetStaticTrapCount();
-            while (_staticTrapRings.Count < n) _staticTrapRings.Add(CreateRingSprite(_fxRoot, "BaseTrap", _staticTrapColor, 0));
+            while (_staticTrapRings.Count < n)
+                _staticTrapRings.Add(CreateRingSprite(_fxRoot, "BaseTrap", ResolveMudSprite(), _mudTrapTint, -910));
             while (_staticTrapRings.Count > n)
             {
                 int last = _staticTrapRings.Count - 1;
@@ -235,15 +237,19 @@ namespace LudumDare.Template.Gameplay.Signal
 
             for (int i = 0; i < n; i++)
             {
+                var sr = _staticTrapRings[i];
+                sr.sprite = ResolveMudSprite();
+                sr.color = _mudTrapTint;
                 _controller.GetStaticTrap(i, out float lx, out float ly, out float r);
-                ApplyRing(_staticTrapRings[i], lx, ly, r);
+                ApplyRing(sr, lx, ly, r);
             }
         }
 
         private void SyncPlayerTraps()
         {
             int n = _controller.GetPlayerTrapCount();
-            while (_playerTrapRings.Count < n) _playerTrapRings.Add(CreateRingSprite(_fxRoot, "PlayerTrap", _playerTrapSlowColor, 3));
+            while (_playerTrapRings.Count < n)
+                _playerTrapRings.Add(CreateRingSprite(_fxRoot, "PlayerTrap", ResolveMudSprite(), _mudTrapTint, -920));
             while (_playerTrapRings.Count > n)
             {
                 int last = _playerTrapRings.Count - 1;
@@ -254,21 +260,36 @@ namespace LudumDare.Template.Gameplay.Signal
             for (int i = 0; i < n; i++)
             {
                 _controller.GetPlayerTrap(i, out float lx, out float ly, out float r, out bool slow);
-                _playerTrapRings[i].color = slow ? _playerTrapSlowColor : _playerTrapAttractColor;
-                ApplyRing(_playerTrapRings[i], lx, ly, r);
+                var sr = _playerTrapRings[i];
+                if (slow)
+                {
+                    sr.sprite = ResolveMudSprite();
+                    sr.color = _mudTrapTint;
+                }
+                else
+                {
+                    sr.sprite = ResolveFlySprite();
+                    sr.color = _flyTrapTint;
+                }
+
+                ApplyRing(sr, lx, ly, r);
             }
         }
 
-        private SpriteRenderer CreateRingSprite(Transform parent, string name, Color c, int order)
+        private SpriteRenderer CreateRingSprite(Transform parent, string name, Sprite sprite, Color tint, int order)
         {
             var go = new GameObject(name);
             go.transform.SetParent(parent, false);
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sprite = GetDefaultSprite();
-            sr.color = c;
+            sr.sprite = sprite;
+            sr.color = tint;
             sr.sortingOrder = order;
             return sr;
         }
+
+        private Sprite ResolveMudSprite() => _mudTrapSprite != null ? _mudTrapSprite : GetDefaultSprite();
+
+        private Sprite ResolveFlySprite() => _flyTrapSprite != null ? _flyTrapSprite : GetDefaultSprite();
 
         private void ApplyRing(SpriteRenderer sr, float lx, float ly, float r)
         {

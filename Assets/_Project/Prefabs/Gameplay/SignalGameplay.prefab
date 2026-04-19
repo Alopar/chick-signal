@@ -105,9 +105,10 @@ MonoBehaviour:
   _repelCone: {fileID: 0}
   _allyColor: {r: 0.27, g: 1, b: 0.53, a: 0.9}
   _enemyColor: {r: 1, g: 0.26, b: 0.4, a: 0.9}
-  _staticTrapColor: {r: 0.78, g: 0.35, b: 0.51, a: 0.35}
-  _playerTrapSlowColor: {r: 1, g: 0.78, b: 0.35, a: 0.45}
-  _playerTrapAttractColor: {r: 0.78, g: 0.47, b: 1, a: 0.45}
+  _mudTrapSprite: {fileID: 5634026908348037240, guid: 9f648e5add568444b9e6ece210673f8f, type: 3}
+  _flyTrapSprite: {fileID: 5352286359449648278, guid: 7ef6abc0b616c7c4e9b0f24462477aa2, type: 3}
+  _mudTrapTint: {r: 1, g: 1, b: 1, a: 0.88}
+  _flyTrapTint: {r: 1, g: 1, b: 1, a: 0.88}
   _pulseColor: {r: 0.27, g: 0.8, b: 1, a: 0.5}
 --- !u!114 &8278025653607510496
 MonoBehaviour:
