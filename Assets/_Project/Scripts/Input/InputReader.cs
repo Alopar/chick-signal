@@ -27,14 +27,20 @@ namespace LudumDare.Template.Input
         public event Action OnCancel;
         public event Action OnCheatWin;
         public event Action OnCheatLose;
+        public event Action OnTrapSlow;
+        public event Action OnTrapAttract;
 
         private InputActionMap _player;
         private InputActionMap _ui;
 
         private InputAction _move, _look, _attack, _interact, _jump, _crouch, _cancel, _cheatWin, _cheatLose;
+        private InputAction _repel, _trapSlow, _trapAttract;
 
         public Vector2 MoveValue => _move != null ? _move.ReadValue<Vector2>() : Vector2.zero;
         public Vector2 LookValue => _look != null ? _look.ReadValue<Vector2>() : Vector2.zero;
+
+        public bool IsAttackHeld => _attack != null && _attack.IsPressed();
+        public bool IsRepelHeld => _repel != null && _repel.IsPressed();
 
         private void OnEnable() => Bind();
         private void OnDisable() => Unbind();
@@ -54,6 +60,9 @@ namespace LudumDare.Template.Input
             _crouch   = _player?.FindAction("Crouch",   throwIfNotFound: false);
             _cheatWin = _player?.FindAction("CheatWin", throwIfNotFound: false);
             _cheatLose = _player?.FindAction("CheatLose", throwIfNotFound: false);
+            _repel = _player?.FindAction("Repel", throwIfNotFound: false);
+            _trapSlow = _player?.FindAction("TrapSlow", throwIfNotFound: false);
+            _trapAttract = _player?.FindAction("TrapAttract", throwIfNotFound: false);
             _cancel   = _ui?.FindAction("Cancel",       throwIfNotFound: false);
 
             if (_move != null)     { _move.performed     += OnMovePerformed;     _move.canceled     += OnMovePerformed; }
@@ -64,6 +73,8 @@ namespace LudumDare.Template.Input
             if (_crouch != null)   { _crouch.performed   += OnCrouchPerformed; }
             if (_cheatWin != null) { _cheatWin.performed += OnCheatWinPerformed; }
             if (_cheatLose != null) { _cheatLose.performed += OnCheatLosePerformed; }
+            if (_trapSlow != null) { _trapSlow.performed += OnTrapSlowPerformed; }
+            if (_trapAttract != null) { _trapAttract.performed += OnTrapAttractPerformed; }
             if (_cancel != null)   { _cancel.performed   += OnCancelPerformed; }
         }
 
@@ -77,6 +88,8 @@ namespace LudumDare.Template.Input
             if (_crouch != null)   { _crouch.performed   -= OnCrouchPerformed; }
             if (_cheatWin != null) { _cheatWin.performed -= OnCheatWinPerformed; }
             if (_cheatLose != null) { _cheatLose.performed -= OnCheatLosePerformed; }
+            if (_trapSlow != null) { _trapSlow.performed -= OnTrapSlowPerformed; }
+            if (_trapAttract != null) { _trapAttract.performed -= OnTrapAttractPerformed; }
             if (_cancel != null)   { _cancel.performed   -= OnCancelPerformed; }
 
             DisableAll();
@@ -109,6 +122,8 @@ namespace LudumDare.Template.Input
         private void OnCrouchPerformed(InputAction.CallbackContext ctx)    => OnCrouch?.Invoke();
         private void OnCheatWinPerformed(InputAction.CallbackContext ctx)  => OnCheatWin?.Invoke();
         private void OnCheatLosePerformed(InputAction.CallbackContext ctx) => OnCheatLose?.Invoke();
+        private void OnTrapSlowPerformed(InputAction.CallbackContext ctx) => OnTrapSlow?.Invoke();
+        private void OnTrapAttractPerformed(InputAction.CallbackContext ctx) => OnTrapAttract?.Invoke();
         private void OnCancelPerformed(InputAction.CallbackContext ctx)    => OnCancel?.Invoke();
     }
 }

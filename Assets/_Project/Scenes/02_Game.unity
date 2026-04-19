@@ -373,6 +373,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 265b362b137477c44850b308dd271c8f, type: 3}
+--- !u!4 &289859736 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6542376959890820934, guid: 265b362b137477c44850b308dd271c8f, type: 3}
+  m_PrefabInstance: {fileID: 289859735}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &594357606 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1196258780656633203, guid: 481de57cd78c2eb44872bff3b2500627, type: 3}
@@ -588,6 +593,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 2137486733502680853, guid: 0262b9d8871ace8449372b201edaa09d, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 2137486733502680853, guid: 0262b9d8871ace8449372b201edaa09d, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.size
       value: 0
       objectReference: {fileID: 0}
@@ -607,6 +616,10 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 4586658082826349269, guid: 0262b9d8871ace8449372b201edaa09d, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 4586658082826349269, guid: 0262b9d8871ace8449372b201edaa09d, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.size
       value: 0
@@ -711,6 +724,10 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 9169499695973535987, guid: 0262b9d8871ace8449372b201edaa09d, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 9169499695973535987, guid: 0262b9d8871ace8449372b201edaa09d, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.size
       value: 0
@@ -821,6 +838,119 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9158222636201523478, guid: fa53aee49605edf4f98fed05746b84c3, type: 3}
   m_PrefabInstance: {fileID: 3234802134132399214}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2120966419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2120966424}
+  - component: {fileID: 2120966423}
+  - component: {fileID: 2120966422}
+  - component: {fileID: 2120966421}
+  - component: {fileID: 2120966420}
+  m_Layer: 0
+  m_Name: SignalGameplay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2120966420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120966419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d72233f768e2248439dd64f281e908f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalEvolutionPanel
+  _controller: {fileID: 2120966423}
+--- !u!114 &2120966421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120966419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d87e8767627d58c4194d51f8b96199b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalHudPresenter
+  _controller: {fileID: 2120966423}
+  _nestChargeLabel: {fileID: 0}
+  _nestHpLabel: {fileID: 0}
+  _nestSatietyLabel: {fileID: 0}
+  _nestLevelLabel: {fileID: 0}
+  _waveLabel: {fileID: 0}
+  _dashLabel: {fileID: 0}
+  _trapSlowLabel: {fileID: 0}
+  _trapAttractLabel: {fileID: 0}
+--- !u!114 &2120966422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120966419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4e3d2c1b0a978665544332211009988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalGameplayView
+  _controller: {fileID: 2120966423}
+  _nestAnchor: {fileID: 0}
+  _arenaBackground: {fileID: 0}
+  _signalCone: {fileID: 0}
+  _repelCone: {fileID: 0}
+  _allyColor: {r: 0.27, g: 1, b: 0.53, a: 0.9}
+  _enemyColor: {r: 1, g: 0.26, b: 0.4, a: 0.9}
+  _nestColorCalm: {r: 0.27, g: 1, b: 0.53, a: 0.85}
+  _nestColorAbsorb: {r: 0.27, g: 0.67, b: 1, a: 0.85}
+  _staticTrapColor: {r: 0.78, g: 0.35, b: 0.51, a: 0.35}
+  _playerTrapSlowColor: {r: 1, g: 0.78, b: 0.35, a: 0.45}
+  _playerTrapAttractColor: {r: 0.78, g: 0.47, b: 1, a: 0.45}
+  _pulseColor: {r: 0.27, g: 0.8, b: 1, a: 0.5}
+--- !u!114 &2120966423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120966419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d9b01255d61d354d870adbca128bc07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalGameController
+  _balance: {fileID: 11400000, guid: 8c63b0116455bba418b1ec37b4a26b3d, type: 2}
+  _inputReader: {fileID: 11400000, guid: 313c1536b7d5a1b42b4f7adf68629987, type: 2}
+  _camera: {fileID: 733331665}
+  _playerTransform: {fileID: 289859736}
+  _disableWhileSignalRuns: []
+  _hudChannel: {fileID: 11400000, guid: 2f433af4ad02de2479b8d60899d759c1, type: 2}
+  _evolutionModalChannel: {fileID: 11400000, guid: e16036e33e66d17409706b360a6e7de4, type: 2}
+--- !u!4 &2120966424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120966419}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &139317396041621499
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1135,3 +1265,4 @@ SceneRoots:
   - {fileID: 289859735}
   - {fileID: 258307137}
   - {fileID: 1523274790}
+  - {fileID: 2120966424}

@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>SIGNAL — Игра</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+  body {
+    background: #0a0a12;
+    font-family: 'Courier New', monospace;
+    color: #e0e0ff;
+  }
+  #game-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: #0a0a12;
+  }
+  #c {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: none;
+    border: none;
+    border-radius: 0;
+    max-width: none;
+  }
+  #hud {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 12px;
+    z-index: 2;
+  }
+  #hud-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+  #ui-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    align-items: center;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  .bar-wrap { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .bar-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; }
+  .bar-outer { height: 8px; background: #1a1a2e; border-radius: 4px; overflow: hidden; }
+  .bar-inner { height: 100%; border-radius: 4px; transition: width 0.1s; }
+  #nest-charge-bar { background: linear-gradient(90deg, #44dd88, #ccff66); }
+  #nest-hp-bar { background: linear-gradient(90deg, #cc5533, #ff9966); }
+  #nest-satiety-bar { background: linear-gradient(90deg, #4488ff, #88ccff); }
+  #wave-info { font-size: 11px; letter-spacing: 1px; opacity: 0.7; text-align: right; min-width: 120px; }
+  #nest-level { font-size: 13px; letter-spacing: 2px; color: #88ffcc; }
+  #hint {
+    font-size: 10px;
+    letter-spacing: 1px;
+    opacity: 0.4;
+    width: 100%;
+    text-align: center;
+    padding: 0 8px;
+  }
+  /* Не использовать .bar-wrap здесь: у него flex:1 для #ui-top, на body это ломает окно */
+  #dash-bar-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  #dash-cooldown-bar {
+    background: linear-gradient(90deg, #4488cc, #a8e8ff);
+  }
+  #trap-slow-bar {
+    background: linear-gradient(90deg, #cc9944, #ffdd88);
+  }
+  #trap-attract-bar {
+    background: linear-gradient(90deg, #8866cc, #ddaaff);
+  }
+  #trap-bars-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    width: 100%;
+    justify-content: center;
+  }
+  #trap-bars-row .bar-wrap {
+    flex: 1 1 160px;
+    min-width: 140px;
+    max-width: 280px;
+  }
+  #overlay {
+    position: fixed; inset: 0;
+    background: rgba(10,10,18,0.92);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px;
+    z-index: 10;
+  }
+  #overlay h1 { font-size: 48px; letter-spacing: 8px; color: #88ffcc; text-shadow: 0 0 40px #44ff88; }
+  #overlay p { font-size: 13px; letter-spacing: 2px; opacity: 0.7; text-align: center; line-height: 1.8; }
+  #overlay button {
+    margin-top: 8px;
+    padding: 12px 40px;
+    background: transparent;
+    border: 1px solid #44ff88;
+    color: #44ff88;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  #overlay button:hover { background: #44ff88; color: #0a0a12; }
+  #result { font-size: 20px; letter-spacing: 4px; color: #ffcc44; }
+
+  #level-up-modal {
+    position: fixed; inset: 0;
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 20;
+    background: rgba(6, 8, 20, 0.88);
+    padding: 24px;
+  }
+  #level-up-modal.is-open { display: flex; }
+  .level-up-panel {
+    max-width: 820px;
+    width: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 18px;
+  }
+  .level-up-panel h2 {
+    font-size: 22px; letter-spacing: 6px; color: #88ffcc;
+    text-shadow: 0 0 24px #44aa88;
+    text-align: center;
+  }
+  .level-up-panel > p {
+    font-size: 12px; letter-spacing: 2px; opacity: 0.75; text-align: center;
+  }
+  .level-up-cards {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    justify-content: center; width: 100%;
+  }
+  .level-up-card {
+    flex: 1 1 220px; max-width: 260px;
+    min-height: 120px;
+    padding: 16px 14px;
+    background: linear-gradient(165deg, rgba(26, 32, 56, 0.95), rgba(14, 18, 36, 0.98));
+    border: 1px solid rgba(100, 200, 160, 0.35);
+    border-radius: 8px;
+    color: #dde0f0;
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .level-up-card:hover {
+    border-color: #66ddaa;
+    box-shadow: 0 0 20px rgba(80, 220, 160, 0.25);
+    transform: translateY(-2px);
+  }
+  .level-up-card .card-emoji { font-size: 28px; line-height: 1; }
+  .level-up-card .card-title { font-size: 12px; letter-spacing: 3px; color: #a8ffd0; text-transform: uppercase; }
+  .level-up-card .card-desc { font-size: 11px; letter-spacing: 1px; opacity: 0.72; line-height: 1.45; }
+
+  .cheat-wrap {
+    position: fixed;
+    left: 12px;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    color: #8899bb;
+    opacity: 0.85;
+    cursor: pointer;
+    user-select: none;
+    max-width: min(280px, calc(100vw - 24px));
+  }
+  .cheat-wrap:hover { opacity: 1; }
+  .cheat-wrap input {
+    width: 13px;
+    height: 13px;
+    accent-color: #66cc99;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  #option-green-heal-nest-wrap { bottom: 76px; }
+  #cheat-nest-dmg-wrap { bottom: 44px; }
+</style>
+</head>
+<body>
+
+<label id="option-green-heal-nest-wrap" class="cheat-wrap" title="В зелёном режиме каждая поглощённая зелёная точка восполняет 1 HP гнезда">
+  <input type="checkbox" id="option-green-heal-nest" />
+  <span>Хил гнезда от зелёных точек (+1 HP)</span>
+</label>
+<label id="cheat-nest-dmg-wrap" class="cheat-wrap" title="Только для красных врагов вне режима поглощения">
+  <input type="checkbox" id="cheat-no-nest-enemy-dmg" />
+  <span>Чит: враги не бьют гнездо</span>
+</label>
+
+<div id="game-stage">
+  <canvas id="c"></canvas>
+  <div id="hud">
+    <div id="ui-top">
+      <div class="bar-wrap">
+        <div class="bar-label">Заряд</div>
+        <div class="bar-outer"><div class="bar-inner" id="nest-charge-bar" style="width:0%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Здоровье гнезда</div>
+        <div class="bar-outer"><div class="bar-inner" id="nest-hp-bar" style="width:100%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Сытость гнезда</div>
+        <div class="bar-outer"><div class="bar-inner" id="nest-satiety-bar" style="width:0%"></div></div>
+      </div>
+      <div id="nest-level">ГНЕЗДО Ур.1</div>
+      <div id="wave-info">Волна 1</div>
+    </div>
+    <div id="hud-footer">
+      <div id="hint">WASD — движение · Пробел — дэш · ЛКМ — сигнал · ПКМ — контрсигнал · Q — ловушка замедления · E — приманка · курсор — направление</div>
+      <div id="trap-bars-row">
+        <div class="bar-wrap">
+          <div class="bar-label">Q · Замедление</div>
+          <div class="bar-outer"><div class="bar-inner" id="trap-slow-bar" style="width:100%"></div></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-label">E · Приманка</div>
+          <div class="bar-outer"><div class="bar-inner" id="trap-attract-bar" style="width:100%"></div></div>
+        </div>
+      </div>
+      <div id="dash-bar-wrap">
+        <div class="bar-label">Дэш (готовность)</div>
+        <div class="bar-outer"><div class="bar-inner" id="dash-cooldown-bar" style="width:100%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="overlay">
+  <h1>SIGNAL</h1>
+  <p>Управляй сигналом. Уводи врагов от Гнезда.<br>Направляй союзников к Гнезду. Эволюционируй.<br><br>
+  WASD — движение &nbsp;|&nbsp; Пробел — дэш &nbsp;|&nbsp; Мышь — направление &nbsp;|&nbsp; ЛКМ — сигнал &nbsp;|&nbsp; ПКМ — контрсигнал &nbsp;|&nbsp; Q / E — ловушки</p>
+  <div id="result"></div>
+  <button id="startBtn">НАЧАТЬ</button>
+</div>
+
+<div id="level-up-modal" aria-hidden="true">
+  <div class="level-up-panel">
+    <h2>Эволюция гнезда</h2>
+    <p>Игра на паузе. Выберите одно бонусное действие.</p>
+    <div class="level-up-cards">
+      <button type="button" class="level-up-card" id="bonus-nest-full-heal" data-bonus="heal">
+        <span class="card-emoji" aria-hidden="true">💚</span>
+        <span class="card-title">Полное исцеление</span>
+        <span class="card-desc">Гнездо полностью восстанавливает HP и получает +10 к максимуму здоровья.</span>
+      </button>
+      <button type="button" class="level-up-card" id="bonus-extra-trap" data-bonus="trap">
+        <span class="card-emoji" aria-hidden="true">🕸️</span>
+        <span class="card-title">Ловушка</span>
+        <span class="card-desc">На поле появляется ещё одна случайная зона замедления.</span>
+      </button>
+      <button type="button" class="level-up-card" id="bonus-kill-enemies" data-bonus="purge">
+        <span class="card-emoji" aria-hidden="true">💥</span>
+        <span class="card-title">Зачистка</span>
+        <span class="card-desc">Все враги на поле уничтожаются.</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+// ═══ Все настройки баланса и поведения ═══
+const S = {
+  /** Базовый размер уровня (логические единицы до первого ресайза) */
+  canvasW: 900,
+  canvasH: 600,
+  loopMaxDt: 0.05,
+
+  player: {
+    startDx: 200,
+    speed: 140,
+    hp: 100,
+    maxHp: 100,
+    signalPower: 400, // было 280
+    signalRadius: 160,
+    r: 14,
+    trailMax: 12,
+    /** Длительность глушения сигнала после касания врага, с */
+    signalJamOnHit: 3.5,
+    /** Дэш: длина рывка в пикселях, длительность рывка и кулдаун после окончания, с */
+    dashDistance: 130,
+    dashDuration: 0.14,
+    dashCooldown: 1.15,
+    /** Контрсигнал (ПКМ, конус как у ЛКМ): множитель скорости «бегства» от игрока */
+    repelSpeedMult: 1.15,
+  },
+
+  /** Сигнал: конус, сила «притяжения» для выбора цели NPC */
+  signal: {
+    coneAngle: Math.PI / 4, //ширина конуса сигнала
+    strengthScale: 10000,
+    /** Сколько секунд NPC движутся после импульса гнезда / попадания в конус */
+    npcWakeDuration: 0.7,
+  },
+
+  /** Дебафы при столкновении героя с врагом */
+  debuff: {
+    slowMult: 0.05,
+    slowDuration: 1.5,
+  },
+
+  nest: {
+    startDx: -120,
+    hp: 250,
+    maxHp: 250,
+    initialLevel: 1,
+    initialChargeMax: 5, //Сколько надо зеленых для активации Синего режима
+    healRadius: 5,
+    healBase: 10,
+    healProximityBonus: 8,
+    signalPower: 150,
+    r: 16,
+    pulseInterval: 1.5,
+    pulseExpandSpeed: 300, 
+    pulseMaxRadius: 900,
+    /** Визуальная «пульсация» гнезда: множитель фазы и амплитуда */
+    visualPulsePhaseSpeed: 2,
+    visualPulseAmp: 4,
+    visualSignalRingScale: 0.5,
+    visualSignalRingAmp: 2,
+    maxLevel: 14,
+    chargeBase: 5, 
+    chargePerLevel: 10,
+    levelSignalPowerBonus: 60,
+    allyDeliveryPlayerMaxHpBonus: 20,
+    allyDeliveryPlayerMaxHpFromLevel: 2,
+    aoeCooldown: 2.5,
+    aoeRadius: 120,
+    /** AoE-удар по врагам доступен с этого уровня гнезда */
+    aoeUnlockLevel: 99,
+    /** Сколько секунд длится поглощение, пока заряд стекает до нуля */
+    absorptionDuration: 10,
+    /** Шкала сытости: после режима поглощения столько единиц нужно, чтобы вырасти в уровень */
+    satiationMax: 10,
+    /** На сколько пикселей увеличивается радиус гнезда за уровень */
+    radiusPerLevel: 8,
+  },
+
+  /** Зоны-ловушки вокруг гнезда: враги внутри замедлены, пока на них не действует конус сигнала игрока */
+  traps: {
+    count: 1,
+    radiusMin: 65,
+    radiusMax: 80,
+    ringInner: 250,
+    ringOuter: 400,
+    /** Минимальный зазор между окружностями зон (центр-центр >= r1+r2+gap) */
+    minGapBetween: 12,
+    /** Доля сектора, оставляемая «пустой» у границ — зоны не лезут в соседний сектор по углу */
+    sectorEdgeMargin: 0.12,
+    slowMult: 0.15,
+    /** Ловушки героя (Q / E): радиус, время жизни, складываемые заряды и своя перезарядка каждого типа */
+    playerPlacedRadius: 55,
+    playerPlacedDuration: 6, //По умолчанию 4
+    playerTrapMaxCharges: 1,
+    playerTrapRechargeSlow: 10.2,
+    playerTrapRechargeAttract: 10.2,
+    /** Множитель скорости притягивания к центру ловушки «притяжение» */
+    attractPullSpeedMult: 0.5,
+  },
+
+  spawn: {
+    edgeMargin: 20,
+    startingAllies: 0,
+    /**
+     * Волны: число волн = длина массива. После последней волны цикл повторяется с первой.
+     * counts: red — враги; green — «положительные» юниты (союзники).
+     * Спавны по типам независимы; моменты внутри типа равномерно распределены по (0, duration).
+     */
+    waves: [
+      { duration: 10, counts: { red: 2, green: 4 } },
+      { duration: 25, counts: { red: 5, green: 5 } },
+      { duration: 25, counts: { red: 3, green: 7 } },
+      { duration: 30, counts: { red: 5, green: 9 } },
+      { duration: 35, counts: { red: 4, green: 9 } },
+      { duration: 45, counts: { red: 5, green: 12 } },
+      { duration: 50, counts: { red: 7, green: 13 } },
+      { duration: 60, counts: { red: 6, green: 15 } },
+      { duration: 75, counts: { red: 11, green: 12 } },
+      { duration: 80, counts: { red: 7, green: 100 } },
+    ],
+  },
+
+  enemy: {
+    speedMin: 55,
+    speedRand: 20,
+    /** Урон HP гнезду при касании вне режима поглощения (по типу; green — союзники, по умолчанию 0) */
+    nestDamageByKind: {
+      red: 10,
+      green: 0,
+    },
+    /** Сытость за поглощённого юнита в режиме поглощения (по типу) */
+    satiationPerAbsorbedByKind: {
+      red: 4,
+      green: 2,
+    },
+    r: 9,
+    flickerRate: 5,
+  },
+
+  ally: {
+    speedMin: 60,
+    speedRand: 20,
+    r: 9,
+    bobSpeed: 3,
+    bobAmp: 1.5,
+  },
+
+  particles: {
+    friction: 0.92,
+    lifeDecay: 1.5,
+    defaultCount: 6,
+  },
+
+  win: {
+    /** Победа при достижении этого уровня гнезда (эволюция через сытость) */
+    minNestLevel: 7,
+  },
+
+  /** Отрисовка сетки и эффектов (не логика боя) */
+  draw: {
+    gridStep: 40,
+    nestAoeRingAlpha: 0.4,
+    pulseAlphaBase: 0.55,
+    pulseInnerOffset: 10,
+    pulseInnerMinR: 18,
+    signalConeRingCount: 3,
+    signalConeRingPhaseSpeed: 3,
+    signalConeRingPhaseStagger: 0.4,
+    signalConeRingStrokeAlpha: 0.3,
+    playerJammedFlickerSpeed: 20,
+  },
+};
+
+function nestDamageForKind(kind) {
+  const m = S.enemy.nestDamageByKind;
+  return m && m[kind] != null ? m[kind] : 0;
+}
+
+function satiationPerAbsorbedForKind(kind) {
+  const m = S.enemy.satiationPerAbsorbedByKind;
+  return m && m[kind] != null ? m[kind] : 1;
+}
+
+let W = S.canvasW;
+let H = S.canvasH;
+
+function nestPulseMaxR() {
+  return Math.max(S.nest.pulseMaxRadius, Math.hypot(W, H) * 1.15);
+}
+
+function resizeCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+  const r = canvas.getBoundingClientRect();
+  const cssW = Math.max(1, r.width);
+  const cssH = Math.max(1, r.height);
+  const wPx = Math.max(1, Math.floor(cssW * dpr));
+  const hPx = Math.max(1, Math.floor(cssH * dpr));
+  if (canvas.width !== wPx || canvas.height !== hPx) {
+    canvas.width = wPx;
+    canvas.height = hPx;
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const oldW = W;
+  const oldH = H;
+  const hadWorld = !!nest;
+  W = cssW;
+  H = cssH;
+
+  const shiftWorld = hadWorld && (state === 'playing' || state === 'levelUpPick')
+    && oldW > 0 && oldH > 0 && (oldW !== W || oldH !== H);
+  if (shiftWorld) {
+    const dx = W / 2 - nest.x;
+    const dy = H / 2 - nest.y;
+    nest.x = W / 2;
+    nest.y = H / 2;
+    player.x += dx;
+    player.y += dy;
+    allies.forEach(a => { a.x += dx; a.y += dy; });
+    enemies.forEach(e => { e.x += dx; e.y += dy; });
+    particles.forEach(p => { p.x += dx; p.y += dy; });
+    trapZones.forEach(z => { z.x += dx; z.y += dy; });
+    playerPlacedTraps.forEach(pt => {
+      pt.x += dx;
+      pt.y += dy;
+    });
+    player.trail.forEach(t => { t.x += dx; t.y += dy; });
+  }
+  mouse.x = Math.max(0, Math.min(W, mouse.x));
+  mouse.y = Math.max(0, Math.min(H, mouse.y));
+}
+
+let state = 'idle'; // idle, playing, dead, win, levelUpPick
+/** Чит: красные враги (вне поглощения) не снимают HP гнезда при касании */
+let cheatNoRedEnemyNestDamage = false;
+/** Если true — каждая зелёная точка в зелёном режиме даёт гнезду +1 HP при поглощении */
+let optionNestHealFromGreen = false;
+let keys = {};
+let mouse = { x: W/2, y: H/2, down: false, repelDown: false };
+let particles = [];
+let pulses = [];
+let wave = 1;
+let gameTime = 0;
+/** Номер текущей волны по порядку (не сбрасывается при цикле конфига) */
+let waveNumber = 1;
+/** Прошедшее время внутри активной волны (сек) */
+let waveElapsed = 0;
+/** kind -> отсортированные моменты спавна внутри текущей волны (враги и green) */
+let waveEnemySpawnTimes = {};
+/** kind -> следующий индекс в waveEnemySpawnTimes[kind] */
+let waveEnemySpawnNext = {};
+/** Круговые зоны { x, y, r } вокруг гнезда */
+let trapZones = [];
+/** Ловушки героя: { x, y, r, timeLeft, kind }; kind: 'slow' | 'attract' */
+let playerPlacedTraps = [];
+/** Независимые заряды и таймер до следующего заряда */
+let playerTrapSlow = { charges: 0, cooldownLeft: 0 };
+let playerTrapAttract = { charges: 0, cooldownLeft: 0 };
+
+// ─── Entities ───────────────────────────────────
+let player, nest, allies, enemies;
+
+function getSpawnWaveDef() {
+  const waves = S.spawn.waves;
+  if (!waves || !waves.length) return null;
+  return waves[(waveNumber - 1) % waves.length];
+}
+
+function rebuildEnemySpawnSchedule() {
+  waveEnemySpawnTimes = {};
+  waveEnemySpawnNext = {};
+  wave = waveNumber;
+  const wdef = getSpawnWaveDef();
+  if (!wdef || !(wdef.duration > 0)) return;
+  const counts = wdef.counts || {};
+  for (const kind of Object.keys(counts)) {
+    const n = Math.max(0, Math.floor(Number(counts[kind])));
+    if (n <= 0) continue;
+    const d = wdef.duration;
+    const times = [];
+    for (let i = 0; i < n; i++) {
+      times.push(((i + 1) / (n + 1)) * d);
+    }
+    waveEnemySpawnTimes[kind] = times;
+    waveEnemySpawnNext[kind] = 0;
+  }
+}
+
+function flushEnemySpawnsUpTo(tEnd) {
+  for (const kind of Object.keys(waveEnemySpawnTimes)) {
+    const times = waveEnemySpawnTimes[kind];
+    let idx = waveEnemySpawnNext[kind] | 0;
+    while (idx < times.length && tEnd + 1e-9 >= times[idx]) {
+      if (kind === 'green') spawnAlly();
+      else spawnEnemy(kind);
+      idx++;
+    }
+    waveEnemySpawnNext[kind] = idx;
+  }
+}
+
+function updateWaveEnemySpawns(dt) {
+  let wdef = getSpawnWaveDef();
+  if (!wdef || !(wdef.duration > 0)) return;
+
+  waveElapsed += dt;
+  while (wdef && wdef.duration > 0 && waveElapsed >= wdef.duration) {
+    flushEnemySpawnsUpTo(wdef.duration);
+    waveElapsed -= wdef.duration;
+    waveNumber += 1;
+    rebuildEnemySpawnSchedule();
+    wdef = getSpawnWaveDef();
+  }
+  flushEnemySpawnsUpTo(waveElapsed);
+}
+
+function initGame() {
+  resizeCanvas();
+  const playerDxFromNest = S.player.startDx - S.nest.startDx;
+  player = {
+    x: W / 2 + playerDxFromNest, y: H / 2,
+    speed: S.player.speed,
+    hp: S.player.hp, maxHp: S.player.maxHp,
+    signalPower: S.player.signalPower,
+    signalRadius: S.player.signalRadius,
+    isEmitting: false,
+    angle: 0,
+    r: S.player.r,
+    signalJam: 0,
+    moveSlowTimer: 0,
+    dashTimeLeft: 0,
+    dashCooldownLeft: 0,
+    dashDirX: 1,
+    dashDirY: 0,
+    trail: []
+  };
+  nest = {
+    x: W / 2, y: H / 2,
+    level: S.nest.initialLevel,
+    hp: S.nest.hp, maxHp: S.nest.maxHp,
+    charge: 0, chargeMax: S.nest.initialChargeMax,
+    satiety: 0,
+    /** Поглощение: временно, пока течёт absorptionTimeLeft и тратится заряд */
+    absorbing: false,
+    absorptionTimeLeft: 0,
+    /** Заряд на момент входа в поглощение (для линейного расхода) */
+    absorptionChargeStart: 0,
+    healRadius: S.nest.healRadius,
+    signalPower: S.nest.signalPower,
+    r: S.nest.r,
+    aoeTimer: 0,
+    pulseT: 0,
+    pulseTimer: 0
+  };
+  allies = [];
+  enemies = [];
+  particles = [];
+  pulses = [];
+  wave = 1;
+  waveNumber = 1;
+  waveElapsed = 0;
+  waveEnemySpawnTimes = {};
+  waveEnemySpawnNext = {};
+  gameTime = 0;
+  rebuildEnemySpawnSchedule();
+  for (let i = 0; i < S.spawn.startingAllies; i++) spawnAlly();
+  generateTrapZones();
+  playerPlacedTraps = [];
+  const maxC = S.traps.playerTrapMaxCharges;
+  playerTrapSlow = { charges: maxC, cooldownLeft: 0 };
+  playerTrapAttract = { charges: maxC, cooldownLeft: 0 };
+  mouse.repelDown = false;
+  hideLevelUpBonusModal();
+}
+
+function stepTrapStock(tr, maxC, recharge, dt) {
+  if (tr.charges >= maxC) {
+    tr.cooldownLeft = 0;
+    return;
+  }
+  tr.cooldownLeft -= dt;
+  if (tr.cooldownLeft <= 0) {
+    tr.charges++;
+    tr.cooldownLeft = tr.charges >= maxC ? 0 : recharge;
+  }
+}
+
+function trapBarPercent(tr, maxC, recharge) {
+  if (maxC <= 0) return 0;
+  const base = (tr.charges / maxC) * 100;
+  if (tr.charges >= maxC) return 100;
+  const partial = (1 - Math.max(0, tr.cooldownLeft) / Math.max(1e-6, recharge)) * (100 / maxC);
+  return Math.min(100, base + partial);
+}
+
+function tryPlacePlayerTrap(kind) {
+  if (state !== 'playing' || !player) return;
+  const tr = kind === 'slow' ? playerTrapSlow : playerTrapAttract;
+  const maxC = S.traps.playerTrapMaxCharges;
+  const recharge = kind === 'slow' ? S.traps.playerTrapRechargeSlow : S.traps.playerTrapRechargeAttract;
+  if (tr.charges <= 0) return;
+  tr.charges--;
+  if (tr.charges < maxC) tr.cooldownLeft = recharge;
+  playerPlacedTraps.push({
+    x: player.x,
+    y: player.y,
+    r: S.traps.playerPlacedRadius,
+    timeLeft: S.traps.playerPlacedDuration,
+    kind
+  });
+}
+
+function trapZonesTooClose(a, b, gap) {
+  return dist({ x: a.x, y: a.y }, { x: b.x, y: b.y }) < a.r + b.r + gap;
+}
+
+function generateTrapZones() {
+  trapZones = [];
+  const T = S.traps;
+  const n = T.count;
+  const sector = (Math.PI * 2) / n;
+  const edge = T.sectorEdgeMargin * sector;
+  const rot = Math.random() * Math.PI * 2;
+  const gap = T.minGapBetween;
+
+  for (let i = 0; i < n; i++) {
+    const a0 = rot + i * sector + edge;
+    const a1 = rot + (i + 1) * sector - edge;
+    let placed = false;
+    for (let attempt = 0; attempt < 48 && !placed; attempt++) {
+      const angle = a0 + Math.random() * (a1 - a0);
+      const ring = T.ringInner + Math.random() * (T.ringOuter - T.ringInner);
+      const rad = T.radiusMin + Math.random() * (T.radiusMax - T.radiusMin);
+      let x = nest.x + Math.cos(angle) * ring;
+      let y = nest.y + Math.sin(angle) * ring;
+      x = Math.max(rad + 4, Math.min(W - rad - 4, x));
+      y = Math.max(rad + 4, Math.min(H - rad - 4, y));
+      const cand = { x, y, r: rad };
+      let ok = true;
+      for (let j = 0; j < trapZones.length; j++) {
+        if (trapZonesTooClose(cand, trapZones[j], gap)) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) {
+        trapZones.push(cand);
+        placed = true;
+      }
+    }
+    if (!placed) {
+      const angle = (a0 + a1) * 0.5;
+      const ring = (T.ringInner + T.ringOuter) * 0.5;
+      let baseR = (T.radiusMin + T.radiusMax) * 0.5;
+      for (let scale = 1; scale >= 0.4; scale -= 0.08) {
+        const rad = Math.max(T.radiusMin * 0.65, baseR * scale);
+        let x = nest.x + Math.cos(angle) * ring;
+        let y = nest.y + Math.sin(angle) * ring;
+        x = Math.max(rad + 4, Math.min(W - rad - 4, x));
+        y = Math.max(rad + 4, Math.min(H - rad - 4, y));
+        const cand = { x, y, r: rad };
+        let ok = true;
+        for (let j = 0; j < trapZones.length; j++) {
+          if (trapZonesTooClose(cand, trapZones[j], gap)) {
+            ok = false;
+            break;
+          }
+        }
+        if (ok) {
+          trapZones.push(cand);
+          break;
+        }
+      }
+    }
+  }
+}
+
+/** Одна дополнительная зона ловушки (после выбора бонуса при эволюции) */
+function addBonusTrapZone() {
+  const T = S.traps;
+  const gap = T.minGapBetween;
+  const margin = 8;
+  for (let attempt = 0; attempt < 72; attempt++) {
+    const rad = T.radiusMin + Math.random() * (T.radiusMax - T.radiusMin);
+    let x = rad + margin + Math.random() * (W - 2 * (rad + margin));
+    let y = rad + margin + Math.random() * (H - 2 * (rad + margin));
+    const cand = { x, y, r: rad };
+    if (dist(cand, nest) < nest.r + rad + 28) continue;
+    let ok = true;
+    for (let j = 0; j < trapZones.length; j++) {
+      if (trapZonesTooClose(cand, trapZones[j], gap)) {
+        ok = false;
+        break;
+      }
+    }
+    if (!ok) continue;
+    let clashPt = false;
+    for (let p = 0; p < playerPlacedTraps.length; p++) {
+      const pt = playerPlacedTraps[p];
+      if (dist(cand, pt) < rad + pt.r + gap) {
+        clashPt = true;
+        break;
+      }
+    }
+    if (clashPt) continue;
+    trapZones.push(cand);
+    spawnParticles(x, y, '#a8ccff', 10);
+    return;
+  }
+}
+
+function enemyInBaseTrapZone(ex, ey) {
+  for (let i = 0; i < trapZones.length; i++) {
+    const z = trapZones[i];
+    if (dist({ x: ex, y: ey }, z) < z.r) return true;
+  }
+  return false;
+}
+
+function getPlayerTrapEffectsAt(ex, ey) {
+  let inSlow = false;
+  let attractPt = null;
+  let attractDist = 0;
+  for (let i = 0; i < playerPlacedTraps.length; i++) {
+    const t = playerPlacedTraps[i];
+    const d = dist({ x: ex, y: ey }, t);
+    if (d >= t.r) continue;
+    if (t.kind === 'slow') inSlow = true;
+    else if (!attractPt || d < attractDist) {
+      attractPt = t;
+      attractDist = d;
+    }
+  }
+  return { inSlow, attractPt };
+}
+
+function dist(a, b) {
+  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+}
+
+function signalStrength(source, target) {
+  const d = Math.max(1, dist(source, target));
+  return source.signalPower / (d * d) * S.signal.strengthScale;
+}
+
+function isInPlayerSignalCone(ent) {
+  if (!player.isEmitting) return false;
+  if (dist(ent, player) >= player.signalRadius) return false;
+  const angleToEnt = Math.atan2(ent.y - player.y, ent.x - player.x);
+  let diff = angleToEnt - player.angle;
+  while (diff > Math.PI) diff -= Math.PI * 2;
+  while (diff < -Math.PI) diff += Math.PI * 2;
+  return Math.abs(diff) < S.signal.coneAngle / 2;
+}
+
+/** Контрсигнал (ПКМ): тот же угол и дальность, что у притягивающего конуса */
+function isInPlayerRepelCone(ent) {
+  if (!player.isRepelling) return false;
+  if (dist(ent, player) >= player.signalRadius) return false;
+  const angleToEnt = Math.atan2(ent.y - player.y, ent.x - player.x);
+  let diff = angleToEnt - player.angle;
+  while (diff > Math.PI) diff -= Math.PI * 2;
+  while (diff < -Math.PI) diff += Math.PI * 2;
+  return Math.abs(diff) < S.signal.coneAngle / 2;
+}
+
+function showLevelUpBonusModal() {
+  const m = document.getElementById('level-up-modal');
+  if (!m) return;
+  m.classList.add('is-open');
+  m.setAttribute('aria-hidden', 'false');
+  state = 'levelUpPick';
+}
+
+function hideLevelUpBonusModal() {
+  const m = document.getElementById('level-up-modal');
+  if (!m) return;
+  m.classList.remove('is-open');
+  m.setAttribute('aria-hidden', 'true');
+}
+
+/** Эволюция гнезда по сытости — не отключает поглощение и не сбрасывает заряд */
+function tryCompleteSatietyLevel() {
+  if (nest.satiety < S.nest.satiationMax) return;
+  nest.satiety = 0;
+  if (nest.level >= S.nest.maxLevel) {
+    spawnParticles(nest.x, nest.y, '#88ccff', 14);
+    return;
+  }
+  nest.level++;
+  nest.chargeMax = S.nest.chargeBase + nest.level * S.nest.chargePerLevel;
+  nest.signalPower += S.nest.levelSignalPowerBonus;
+  nest.r += S.nest.radiusPerLevel;
+  if (nest.level >= S.nest.allyDeliveryPlayerMaxHpFromLevel) player.maxHp += S.nest.allyDeliveryPlayerMaxHpBonus;
+  spawnParticles(nest.x, nest.y, '#ffffff', 20);
+  if (nest.level >= S.win.minNestLevel) {
+    state = 'win';
+    showOverlay('ПОБЕДА', 'Гнездо достигло максимальной эволюции!');
+  } else {
+    showLevelUpBonusModal();
+  }
+}
+
+function applyLevelUpBonus(kind) {
+  if (kind === 'heal') {
+    nest.maxHp += 10;
+    nest.hp = nest.maxHp;
+    spawnParticles(nest.x, nest.y, '#66ffaa', 22);
+  } else if (kind === 'trap') {
+    addBonusTrapZone();
+  } else if (kind === 'purge') {
+    enemies.forEach(enemy => spawnParticles(enemy.x, enemy.y, '#ff6688', 8));
+    enemies = [];
+  }
+  hideLevelUpBonusModal();
+  state = 'playing';
+}
+
+// ─── Spawn ──────────────────────────────────────
+
+function spawnEnemy(kind) {
+  if (kind !== 'red') kind = 'red';
+  const m = S.spawn.edgeMargin;
+  const side = Math.floor(Math.random() * 4);
+  let x, y;
+  if (side === 0) { x = Math.random() * W; y = -m; }
+  else if (side === 1) { x = W + m; y = Math.random() * H; }
+  else if (side === 2) { x = Math.random() * W; y = H + m; }
+  else { x = -m; y = Math.random() * H; }
+  const speed = S.enemy.speedMin + Math.random() * S.enemy.speedRand;
+  const r = S.enemy.r;
+  enemies.push({ x, y, speed, nestDamage: nestDamageForKind(kind), r, kind,
+    target: null, aggroSource: 'nest', flickerT: 0, moveTimer: 0 });
+}
+
+function spawnAlly() {
+  const m = S.spawn.edgeMargin;
+  const side = Math.floor(Math.random() * 4);
+  let x, y;
+  if (side === 0) { x = Math.random() * W; y = -m; }
+  else if (side === 1) { x = W + m; y = Math.random() * H; }
+  else if (side === 2) { x = Math.random() * W; y = H + m; }
+  else { x = -m; y = Math.random() * H; }
+  allies.push({ x, y, speed: S.ally.speedMin + Math.random() * S.ally.speedRand, r: S.ally.r, kind: 'green',
+    target: null, bobT: Math.random() * Math.PI * 2, moveTimer: 0 });
+}
+
+// ─── Particle ────────────────────────────────────
+function spawnParticles(x, y, color, count = S.particles.defaultCount) {
+  for (let i = 0; i < count; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const sp = 1 + Math.random() * 3;
+    particles.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+      life: 1, color, size: 2 + Math.random() * 3 });
+  }
+}
+
+// ─── Update ──────────────────────────────────────
+function update(dt) {
+  gameTime += dt;
+
+  playerPlacedTraps.forEach(t => { t.timeLeft -= dt; });
+  playerPlacedTraps = playerPlacedTraps.filter(t => t.timeLeft > 0);
+  stepTrapStock(playerTrapSlow, S.traps.playerTrapMaxCharges, S.traps.playerTrapRechargeSlow, dt);
+  stepTrapStock(playerTrapAttract, S.traps.playerTrapMaxCharges, S.traps.playerTrapRechargeAttract, dt);
+
+  updateWaveEnemySpawns(dt);
+
+  // Дэш (направление фиксируется в момент нажатия пробела) или обычное движение
+  if (player.dashTimeLeft > 0) {
+    const dSpd = S.player.dashDistance / S.player.dashDuration;
+    player.x = Math.max(player.r, Math.min(W - player.r, player.x + player.dashDirX * dSpd * dt));
+    player.y = Math.max(player.r, Math.min(H - player.r, player.y + player.dashDirY * dSpd * dt));
+    player.dashTimeLeft -= dt;
+    if (player.dashTimeLeft <= 0) {
+      player.dashTimeLeft = 0;
+      player.dashCooldownLeft = S.player.dashCooldown;
+    }
+  } else {
+    if (player.dashCooldownLeft > 0) player.dashCooldownLeft -= dt;
+    let dx = 0, dy = 0;
+    if (keys['w'] || keys['arrowup']) dy -= 1;
+    if (keys['s'] || keys['arrowdown']) dy += 1;
+    if (keys['a'] || keys['arrowleft']) dx -= 1;
+    if (keys['d'] || keys['arrowright']) dx += 1;
+    const len = Math.sqrt(dx * dx + dy * dy) || 1;
+    if (dx || dy) {
+      const spd = player.speed * (player.moveSlowTimer > 0 ? S.debuff.slowMult : 1);
+      player.x = Math.max(player.r, Math.min(W - player.r, player.x + dx / len * spd * dt));
+      player.y = Math.max(player.r, Math.min(H - player.r, player.y + dy / len * spd * dt));
+    }
+  }
+
+  // Player angle
+  player.angle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
+  if (player.signalJam > 0) player.signalJam -= dt;
+  if (player.moveSlowTimer > 0) player.moveSlowTimer -= dt;
+  player.isEmitting = mouse.down && player.signalJam <= 0;
+  player.isRepelling = mouse.repelDown && player.signalJam <= 0;
+
+  // Player trail
+  player.trail.unshift({ x: player.x, y: player.y });
+  if (player.trail.length > S.player.trailMax) player.trail.pop();
+
+  // Heal from nest
+  if (dist(player, nest) < nest.healRadius) {
+    const proximity = 1 - dist(player, nest) / nest.healRadius;
+    const healRate = S.nest.healBase + proximity * S.nest.healProximityBonus;
+    player.hp = Math.min(player.maxHp, player.hp + healRate * dt);
+  }
+
+  // Nest pulse — раз в секунду
+  nest.pulseT += dt * S.nest.visualPulsePhaseSpeed;
+  nest.pulseTimer += dt;
+  if (nest.pulseTimer >= S.nest.pulseInterval) {
+    nest.pulseTimer = 0;
+    pulses.push({ r: nest.r, speed: S.nest.pulseExpandSpeed });
+  }
+
+  // Обновляем пульсы и активируем NPC при касании
+  pulses = pulses.filter(pulse => {
+    const prevR = pulse.r;
+    pulse.r += pulse.speed * dt;
+    // Активируем союзников
+    allies.forEach(ally => {
+      const d = dist(ally, nest);
+      if (d >= prevR && d < pulse.r) ally.moveTimer = S.signal.npcWakeDuration;
+    });
+    // Активируем врагов
+    enemies.forEach(enemy => {
+      const d = dist(enemy, nest);
+      if (d >= prevR && d < pulse.r) enemy.moveTimer = S.signal.npcWakeDuration;
+    });
+    return pulse.r < nestPulseMaxR();
+  });
+
+  // Nest AoE (level 3)
+  if (nest.level >= S.nest.aoeUnlockLevel) {
+    nest.aoeTimer += dt;
+    if (nest.aoeTimer > S.nest.aoeCooldown) {
+      nest.aoeTimer = 0;
+      const aoeR = S.nest.aoeRadius;
+      spawnParticles(nest.x, nest.y, '#ff4466', 12);
+      enemies = enemies.filter(e => {
+        if (dist(e, nest) < aoeR) {
+          spawnParticles(e.x, e.y, '#ff8899', 8);
+          return false;
+        }
+        return true;
+      });
+    }
+  }
+
+  // Сигнал игрока активирует NPC только в конусе — они получают moveTimer
+  if (player.isEmitting) {
+    const activate = npc => {
+      if (isInPlayerSignalCone(npc)) npc.moveTimer = S.signal.npcWakeDuration;
+    };
+    allies.forEach(activate);
+    enemies.forEach(activate);
+  }
+  if (player.isRepelling) {
+    const activateRepel = npc => {
+      if (isInPlayerRepelCone(npc)) npc.moveTimer = S.signal.npcWakeDuration;
+    };
+    allies.forEach(activateRepel);
+    enemies.forEach(activateRepel);
+  }
+
+  // Allies update
+  allies.forEach((ally, ai) => {
+    // Choose target: сигнал игрока учитывается только в конусе
+    const ps = isInPlayerSignalCone(ally) ? signalStrength(player, ally) : 0;
+    const ns = signalStrength(nest, ally);
+    ally.target = ps > ns ? player : nest;
+
+    const ddx = ally.target.x - ally.x;
+    const ddy = ally.target.y - ally.y;
+    const d = Math.sqrt(ddx*ddx + ddy*ddy) || 1;
+    if (ally.moveTimer > 0) {
+      if (player.isRepelling && isInPlayerRepelCone(ally)) {
+        const dp = dist(ally, player);
+        if (dp > 1e-3) {
+          const ux = (ally.x - player.x) / dp;
+          const uy = (ally.y - player.y) / dp;
+          const spd = ally.speed * S.player.repelSpeedMult;
+          ally.x += ux * spd * dt;
+          ally.y += uy * spd * dt;
+        }
+        ally.moveTimer -= dt;
+      } else {
+        ally.x += ddx/d * ally.speed * dt;
+        ally.y += ddy/d * ally.speed * dt;
+        ally.moveTimer -= dt;
+      }
+    }
+    ally.bobT += dt * S.ally.bobSpeed;
+
+    // Дошёл до гнезда: вне поглощения — заряд; в поглощении — только сытость (как у врагов)
+    if (dist(ally, nest) < nest.r + ally.r) {
+      allies.splice(ai, 1);
+      if (nest.absorbing) {
+        spawnParticles(ally.x, ally.y, '#88ccff', 10);
+        spawnParticles(nest.x, nest.y, '#44aaff', 8);
+        nest.satiety += satiationPerAbsorbedForKind(ally.kind);
+        tryCompleteSatietyLevel();
+      } else {
+        spawnParticles(nest.x, nest.y, '#44ff88', 10);
+        nest.charge++;
+        if (optionNestHealFromGreen) nest.hp = Math.min(nest.maxHp, nest.hp + 1);
+        if (nest.charge >= nest.chargeMax) {
+          nest.charge = nest.chargeMax;
+          nest.absorptionChargeStart = nest.chargeMax;
+          nest.absorptionTimeLeft = S.nest.absorptionDuration;
+          nest.absorbing = true;
+          spawnParticles(nest.x, nest.y, '#44aaff', 16);
+        }
+      }
+    }
+  });
+
+  // Enemies update
+  enemies = enemies.filter(enemy => {
+    const ps = isInPlayerSignalCone(enemy) ? signalStrength(player, enemy) : 0;
+    const ns = signalStrength(nest, enemy);
+    const signalPulls = isInPlayerSignalCone(enemy);
+    enemy.target = signalPulls ? player : (ps > ns ? player : nest);
+
+    const ddx = enemy.target.x - enemy.x;
+    const ddy = enemy.target.y - enemy.y;
+    const d = Math.sqrt(ddx*ddx + ddy*ddy) || 1;
+
+    const distP = dist(enemy, player);
+    const inRepelCone = player.isRepelling && isInPlayerRepelCone(enemy);
+    const trapSlowIgnored = signalPulls || inRepelCone
+      || (nest.absorbing && enemy.kind === 'red');
+
+    if (inRepelCone && distP > 1e-3) {
+      const ux = (enemy.x - player.x) / distP;
+      const uy = (enemy.y - player.y) / distP;
+      const trapFx = getPlayerTrapEffectsAt(enemy.x, enemy.y);
+      const baseSlow = !(nest.absorbing && enemy.kind === 'red') && enemyInBaseTrapZone(enemy.x, enemy.y);
+      const inSlow = baseSlow || (trapFx.inSlow && !trapSlowIgnored);
+      let rspd = enemy.speed * S.player.repelSpeedMult * (inSlow ? S.traps.slowMult : 1);
+      enemy.x += ux * rspd * dt;
+      enemy.y += uy * rspd * dt;
+      enemy.moveTimer -= dt;
+    } else if (enemy.moveTimer > 0) {
+      const trapFx = getPlayerTrapEffectsAt(enemy.x, enemy.y);
+      const attractHere = trapFx.attractPt && !signalPulls;
+      if (attractHere) {
+        const pt = trapFx.attractPt;
+        const adx = pt.x - enemy.x;
+        const ady = pt.y - enemy.y;
+        const ad = Math.sqrt(adx * adx + ady * ady) || 1;
+        const pullSpd = enemy.speed * S.traps.attractPullSpeedMult;
+        enemy.x += adx / ad * pullSpd * dt;
+        enemy.y += ady / ad * pullSpd * dt;
+        enemy.moveTimer -= dt;
+      } else {
+        const baseSlow = !(nest.absorbing && enemy.kind === 'red') && enemyInBaseTrapZone(enemy.x, enemy.y);
+        const inSlow = baseSlow || (trapFx.inSlow && !trapSlowIgnored);
+        const trapSlow = inSlow && !trapSlowIgnored;
+        const spdMul = trapSlow ? S.traps.slowMult : 1;
+        enemy.x += ddx / d * enemy.speed * spdMul * dt;
+        enemy.y += ddy / d * enemy.speed * spdMul * dt;
+        enemy.moveTimer -= dt;
+      }
+    }
+    enemy.flickerT += dt * S.enemy.flickerRate;
+
+    // Враг достиг гнезда
+    if (dist(enemy, nest) < nest.r + enemy.r) {
+      if (nest.absorbing) {
+        spawnParticles(enemy.x, enemy.y, '#88ccff', 10);
+        spawnParticles(nest.x, nest.y, '#44aaff', 8);
+        nest.satiety += satiationPerAbsorbedForKind(enemy.kind);
+        tryCompleteSatietyLevel();
+        return false;
+      }
+      spawnParticles(enemy.x, enemy.y, '#ff4466', 10);
+      spawnParticles(nest.x, nest.y, '#ff6644', 6);
+      if (!(enemy.kind === 'red' && cheatNoRedEnemyNestDamage)) {
+        nest.hp = Math.max(0, nest.hp - enemy.nestDamage);
+        if (nest.hp <= 0) {
+          state = 'dead';
+          showOverlay('ГИБЕЛЬ', 'Гнездо разрушено.');
+        }
+      }
+      return false;
+    }
+
+    return true;
+  });
+
+  // Поглощение временное: заряд линейно стекает за absorptionDuration (эволюция по сытости это не отменяет)
+  if (nest.absorbing) {
+    nest.absorptionTimeLeft -= dt;
+    if (nest.absorptionTimeLeft <= 0) {
+      nest.absorptionTimeLeft = 0;
+      nest.charge = 0;
+      nest.absorbing = false;
+    } else {
+      const u = nest.absorptionTimeLeft / S.nest.absorptionDuration;
+      nest.charge = nest.absorptionChargeStart * u;
+    }
+  }
+
+  // Particles
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    p.vx *= S.particles.friction; p.vy *= S.particles.friction;
+    p.life -= dt * S.particles.lifeDecay;
+  });
+  particles = particles.filter(p => p.life > 0);
+
+  // Update UI
+  document.getElementById('nest-charge-bar').style.width = Math.max(0, nest.charge / nest.chargeMax * 100) + '%';
+  document.getElementById('nest-hp-bar').style.width = Math.max(0, nest.hp / nest.maxHp * 100) + '%';
+  document.getElementById('nest-satiety-bar').style.width = Math.max(0, nest.satiety / S.nest.satiationMax * 100) + '%';
+  document.getElementById('nest-level').textContent = `ГНЕЗДО УР.${nest.level}`;
+  document.getElementById('wave-info').textContent = `Волна ${wave} · ${enemies.length} врагов`;
+  const dcd = S.player.dashCooldown;
+  let dashBarPct = 100;
+  if (player.dashTimeLeft > 0) dashBarPct = 100;
+  else if (player.dashCooldownLeft > 0 && dcd > 0) dashBarPct = (1 - player.dashCooldownLeft / dcd) * 100;
+  document.getElementById('dash-cooldown-bar').style.width = Math.max(0, Math.min(100, dashBarPct)) + '%';
+  const maxTC = S.traps.playerTrapMaxCharges;
+  document.getElementById('trap-slow-bar').style.width = trapBarPercent(playerTrapSlow, maxTC, S.traps.playerTrapRechargeSlow) + '%';
+  document.getElementById('trap-attract-bar').style.width = trapBarPercent(playerTrapAttract, maxTC, S.traps.playerTrapRechargeAttract) + '%';
+}
+
+// ─── Draw ─────────────────────────────────────────
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Background grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 1;
+  const gStep = S.draw.gridStep;
+  for (let x = 0; x < W; x += gStep) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y < H; y += gStep) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  // Зоны-ловушки
+  trapZones.forEach(z => {
+    ctx.beginPath();
+    ctx.arc(z.x, z.y, z.r, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(200,90,130,0.2)';
+    ctx.setLineDash([5, 7]);
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  playerPlacedTraps.forEach(pt => {
+    const pulse = 0.92 + 0.08 * Math.sin(gameTime * 12 + pt.x * 0.01);
+    const attract = pt.kind === 'attract';
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, pt.r * pulse, 0, Math.PI * 2);
+    ctx.strokeStyle = attract ? 'rgba(200,120,255,0.55)' : 'rgba(255,200,90,0.45)';
+    ctx.setLineDash([4, 6]);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, pt.r * 0.65, 0, Math.PI * 2);
+    ctx.strokeStyle = attract ? 'rgba(220,170,255,0.2)' : 'rgba(255,220,140,0.15)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  // Nest heal radius
+  const nestPulse = Math.sin(nest.pulseT) * S.nest.visualPulseAmp;
+  ctx.beginPath();
+  ctx.arc(nest.x, nest.y, nest.healRadius + nestPulse, 0, Math.PI * 2);
+  ctx.strokeStyle = nest.absorbing ? 'rgba(68,170,255,0.1)' : 'rgba(68,255,136,0.08)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Nest signal radius
+  ctx.beginPath();
+  ctx.arc(nest.x, nest.y, nest.signalPower * S.nest.visualSignalRingScale + nestPulse * S.nest.visualSignalRingAmp, 0, Math.PI * 2);
+  ctx.strokeStyle = nest.absorbing ? 'rgba(68,170,255,0.06)' : 'rgba(68,255,136,0.04)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Nest AoE ring (level 3)
+  if (nest.level >= S.nest.aoeUnlockLevel) {
+    const t = nest.aoeTimer / S.nest.aoeCooldown;
+    ctx.beginPath();
+    ctx.arc(nest.x, nest.y, S.nest.aoeRadius * t, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(255,68,102,${S.draw.nestAoeRingAlpha * (1 - t)})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  // Расходящиеся импульсы гнезда
+  const nestColorRGB = nest.absorbing ? '68,170,255' : (nest.level === 1 ? '68,255,136' : nest.level === 2 ? '68,204,255' : '255,170,68');
+  pulses.forEach(pulse => {
+    const pm = nestPulseMaxR();
+    const alpha = Math.max(0, S.draw.pulseAlphaBase * (1 - pulse.r / pm));
+    ctx.beginPath();
+    ctx.arc(nest.x, nest.y, pulse.r, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(${nestColorRGB},${alpha})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Второй тонкий след
+    if (pulse.r > S.draw.pulseInnerMinR) {
+      ctx.beginPath();
+      ctx.arc(nest.x, nest.y, pulse.r - S.draw.pulseInnerOffset, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${nestColorRGB},${alpha * 0.3})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  });
+
+  // Player trail
+  player.trail.forEach((pt, i) => {
+    const alpha = (1 - i / player.trail.length) * 0.15;
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, player.r * (1 - i / player.trail.length), 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,170,68,${alpha})`;
+    ctx.fill();
+  });
+
+  // Player signal cone
+  if (player.isEmitting) {
+    ctx.save();
+    ctx.translate(player.x, player.y);
+    ctx.rotate(player.angle);
+    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, player.signalRadius);
+    grad.addColorStop(0, 'rgba(255,220,80,0.28)');
+    grad.addColorStop(0.6, 'rgba(255,180,40,0.10)');
+    grad.addColorStop(1, 'rgba(255,180,40,0)');
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, player.signalRadius, -S.signal.coneAngle/2, S.signal.coneAngle/2);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Signal rings
+    const ringN = S.draw.signalConeRingCount;
+    for (let i = 1; i <= ringN; i++) {
+      const rr = (player.signalRadius / ringN) * i;
+      const phase = (gameTime * S.draw.signalConeRingPhaseSpeed + i * S.draw.signalConeRingPhaseStagger) % 1;
+      ctx.beginPath();
+      ctx.arc(0, 0, rr * phase, -S.signal.coneAngle/2, S.signal.coneAngle/2);
+      ctx.strokeStyle = `rgba(255,220,80,${S.draw.signalConeRingStrokeAlpha * (1 - phase)})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Контрсигнал (ПКМ): конус отталкивания (тот же угол/дальность, что притягивание)
+  if (player.isRepelling) {
+    ctx.save();
+    ctx.translate(player.x, player.y);
+    ctx.rotate(player.angle);
+    const gradR = ctx.createRadialGradient(0, 0, 0, 0, 0, player.signalRadius);
+    gradR.addColorStop(0, 'rgba(255,140,130,0.26)');
+    gradR.addColorStop(0.55, 'rgba(255,100,120,0.09)');
+    gradR.addColorStop(1, 'rgba(255,80,100,0)');
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, player.signalRadius, -S.signal.coneAngle/2, S.signal.coneAngle/2);
+    ctx.closePath();
+    ctx.fillStyle = gradR;
+    ctx.fill();
+    const ringN = S.draw.signalConeRingCount;
+    for (let i = 1; i <= ringN; i++) {
+      const rr = (player.signalRadius / ringN) * i;
+      const phase = (gameTime * S.draw.signalConeRingPhaseSpeed + i * S.draw.signalConeRingPhaseStagger + 0.5) % 1;
+      ctx.beginPath();
+      ctx.arc(0, 0, rr * phase, -S.signal.coneAngle/2, S.signal.coneAngle/2);
+      ctx.strokeStyle = `rgba(255,120,110,${S.draw.signalConeRingStrokeAlpha * (1 - phase)})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Allies (в режиме поглощения — те же синие «поглощаемые», что и враги)
+  allies.forEach(ally => {
+    const bob = ally.moveTimer > 0 ? Math.sin(ally.bobT) * S.ally.bobAmp : 0;
+    const frozen = ally.moveTimer <= 0;
+    const absorbVis = nest.absorbing;
+    const flickerA = !frozen && Math.sin(ally.bobT * 2) > 0;
+    const ag = ctx.createRadialGradient(ally.x, ally.y + bob, 0, ally.x, ally.y + bob, ally.r * 2);
+    if (absorbVis) {
+      ag.addColorStop(0, frozen ? 'rgba(50,90,160,0.32)' : 'rgba(68,136,255,0.38)');
+    } else {
+      ag.addColorStop(0, frozen ? 'rgba(68,180,255,0.2)' : 'rgba(68,255,136,0.3)');
+    }
+    ag.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(ally.x, ally.y + bob, ally.r * 2, 0, Math.PI * 2);
+    ctx.fillStyle = ag;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ally.x, ally.y + bob, ally.r, 0, Math.PI * 2);
+    if (absorbVis) {
+      ctx.fillStyle = frozen ? '#4466aa' : (flickerA ? '#6699ff' : '#4488ee');
+      ctx.strokeStyle = frozen ? '#88aadd' : '#88bbff';
+    } else {
+      ctx.fillStyle = frozen ? '#338866' : '#44ff88';
+      ctx.strokeStyle = frozen ? '#4499aa' : '#88ffcc';
+    }
+    ctx.fill();
+    ctx.lineWidth = frozen ? 1 : 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(ally.x, ally.y + bob, 3, 0, Math.PI * 2);
+    ctx.fillStyle = absorbVis ? (frozen ? '#aaccff' : '#ffffff') : (frozen ? '#88bbcc' : '#ffffff');
+    ctx.fill();
+  });
+
+  // Enemies (в режиме поглощения — синие; иначе красные)
+  enemies.forEach(enemy => {
+    const frozen = enemy.moveTimer <= 0;
+    const flicker = !frozen && Math.sin(enemy.flickerT) > 0;
+    const blueMode = nest.absorbing;
+    const eg = ctx.createRadialGradient(enemy.x, enemy.y, 0, enemy.x, enemy.y, enemy.r * 2.5);
+    if (blueMode) {
+      eg.addColorStop(0, frozen ? 'rgba(50,90,160,0.32)' : 'rgba(68,136,255,0.38)');
+    } else {
+      eg.addColorStop(0, frozen ? 'rgba(120,40,60,0.25)' : 'rgba(255,68,102,0.35)');
+    }
+    eg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, enemy.r * 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = eg;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, enemy.r, 0, Math.PI * 2);
+    if (blueMode) {
+      ctx.fillStyle = frozen ? '#4466aa' : (flicker ? '#6699ff' : '#4488ee');
+      ctx.strokeStyle = frozen ? '#88aadd' : '#88bbff';
+    } else {
+      ctx.fillStyle = frozen ? '#661133' : (flicker ? '#ff6688' : '#ff4466');
+      ctx.strokeStyle = frozen ? '#883344' : '#ff8899';
+    }
+    ctx.lineWidth = frozen ? 0.8 : 1;
+    ctx.fill();
+    ctx.stroke();
+
+    // Target indicator
+    if (enemy.target) {
+      const tdx = enemy.target.x - enemy.x;
+      const tdy = enemy.target.y - enemy.y;
+      const td = Math.sqrt(tdx*tdx + tdy*tdy) || 1;
+      ctx.beginPath();
+      ctx.moveTo(enemy.x + tdx/td * enemy.r, enemy.y + tdy/td * enemy.r);
+      ctx.lineTo(enemy.x + tdx/td * (enemy.r + 6), enemy.y + tdy/td * (enemy.r + 6));
+      if (blueMode) ctx.strokeStyle = 'rgba(120,180,255,0.5)';
+      else ctx.strokeStyle = 'rgba(255,100,130,0.4)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  });
+
+  // Nest (режим поглощения — синий, иначе цвет по уровню)
+  const nestColor = nest.absorbing ? '#44aaff' : (nest.level === 1 ? '#44ff88' : nest.level === 2 ? '#44ccff' : '#ffaa44');
+  const nestGlow = ctx.createRadialGradient(nest.x, nest.y, 0, nest.x, nest.y, nest.r * 3);
+  nestGlow.addColorStop(0, nestColor + '55');
+  nestGlow.addColorStop(1, 'transparent');
+  ctx.beginPath();
+  ctx.arc(nest.x, nest.y, nest.r * 3, 0, Math.PI * 2);
+  ctx.fillStyle = nestGlow;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(nest.x, nest.y, nest.r + nestPulse * 0.3, 0, Math.PI * 2);
+  ctx.fillStyle = nestColor + '33';
+  ctx.fill();
+  ctx.strokeStyle = nestColor;
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Nest level indicators
+  for (let i = 0; i < nest.level; i++) {
+    const a = (i / 3) * Math.PI * 2 - Math.PI / 2;
+    const lx = nest.x + Math.cos(a) * (nest.r + 10);
+    const ly = nest.y + Math.sin(a) * (nest.r + 10);
+    ctx.beginPath();
+    ctx.arc(lx, ly, 3, 0, Math.PI * 2);
+    ctx.fillStyle = nestColor;
+    ctx.fill();
+  }
+
+  // Дуга: заряд (зелёный) или сытость в режиме поглощения (синий)
+  const arcT = nest.absorbing ? nest.satiety / S.nest.satiationMax : nest.charge / nest.chargeMax;
+  ctx.beginPath();
+  ctx.arc(nest.x, nest.y, nest.r + 6, -Math.PI/2, -Math.PI/2 + Math.min(1, arcT) * Math.PI * 2);
+  ctx.strokeStyle = nest.absorbing ? '#66aaff' : '#44ff88';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Player
+  const pAlpha = player.signalJam > 0 ? (Math.sin(gameTime * S.draw.playerJammedFlickerSpeed) * 0.5 + 0.5) : 1;
+  ctx.globalAlpha = pAlpha;
+
+  const pg = ctx.createRadialGradient(player.x, player.y, 0, player.x, player.y, player.r * 3);
+  pg.addColorStop(0, 'rgba(255,190,60,0.4)');
+  pg.addColorStop(1, 'rgba(255,190,60,0)');
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, player.r * 3, 0, Math.PI * 2);
+  ctx.fillStyle = pg;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+  ctx.fillStyle = '#ffaa44';
+  ctx.fill();
+  ctx.strokeStyle = '#ffdd88';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  if (player.dashTimeLeft > 0) {
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, player.r + 5, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(160,220,255,0.75)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  // Direction indicator
+  ctx.beginPath();
+  ctx.moveTo(player.x + Math.cos(player.angle) * (player.r + 2),
+             player.y + Math.sin(player.angle) * (player.r + 2));
+  ctx.lineTo(player.x + Math.cos(player.angle) * (player.r + 10),
+             player.y + Math.sin(player.angle) * (player.r + 10));
+  ctx.strokeStyle = '#ffdd88';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // Custom cursor
+  ctx.beginPath();
+  ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,220,80,0.7)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(mouse.x - 8, mouse.y); ctx.lineTo(mouse.x + 8, mouse.y);
+  ctx.moveTo(mouse.x, mouse.y - 8); ctx.lineTo(mouse.x, mouse.y + 8);
+  ctx.strokeStyle = 'rgba(255,220,80,0.4)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Particles
+  particles.forEach(p => {
+    ctx.globalAlpha = p.life;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+}
+
+// ─── Loop ─────────────────────────────────────────
+let last = 0;
+function loop(ts) {
+  const dt = Math.min((ts - last) / 1000, S.loopMaxDt);
+  last = ts;
+  if (state === 'playing') {
+    update(dt);
+    draw();
+  } else if (state === 'levelUpPick') {
+    draw();
+  }
+  requestAnimationFrame(loop);
+}
+
+// ─── Events ───────────────────────────────────────
+function applyKeyDown(e) {
+  switch (e.code) {
+    case 'KeyW': keys.w = true; break;
+    case 'KeyA': keys.a = true; break;
+    case 'KeyS': keys.s = true; break;
+    case 'KeyD': keys.d = true; break;
+    default:
+      keys[e.key.toLowerCase()] = true;
+  }
+}
+
+function applyKeyUp(e) {
+  switch (e.code) {
+    case 'KeyW': keys.w = false; break;
+    case 'KeyA': keys.a = false; break;
+    case 'KeyS': keys.s = false; break;
+    case 'KeyD': keys.d = false; break;
+    default:
+      keys[e.key.toLowerCase()] = false;
+  }
+}
+
+function tryStartDash() {
+  if (state !== 'playing' || !player) return;
+  if (player.dashTimeLeft > 0 || player.dashCooldownLeft > 0) return;
+  const ang = Math.atan2(mouse.y - player.y, mouse.x - player.x);
+  player.dashDirX = Math.cos(ang);
+  player.dashDirY = Math.sin(ang);
+  player.dashTimeLeft = S.player.dashDuration;
+}
+
+document.addEventListener('keydown', e => {
+  applyKeyDown(e);
+  if (e.code === 'KeyQ' && !e.repeat && state === 'playing') {
+    e.preventDefault();
+    tryPlacePlayerTrap('slow');
+  }
+  if (e.code === 'KeyE' && !e.repeat && state === 'playing') {
+    e.preventDefault();
+    tryPlacePlayerTrap('attract');
+  }
+  if (e.code === 'Space' && !e.repeat) {
+    e.preventDefault();
+    tryStartDash();
+  }
+  // Стрелки — не скроллить страницу
+  if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(e.key.toLowerCase())) e.preventDefault();
+});
+document.addEventListener('keyup', e => { applyKeyUp(e); });
+
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - r.left;
+  mouse.y = e.clientY - r.top;
+});
+canvas.addEventListener('mousedown', e => {
+  if (e.button === 0) mouse.down = true;
+  if (e.button === 2) {
+    e.preventDefault();
+    if (state === 'playing') mouse.repelDown = true;
+  }
+});
+canvas.addEventListener('mouseup', e => {
+  if (e.button === 0) mouse.down = false;
+  if (e.button === 2) mouse.repelDown = false;
+});
+canvas.addEventListener('contextmenu', e => e.preventDefault());
+window.addEventListener('blur', () => {
+  mouse.down = false;
+  mouse.repelDown = false;
+});
+document.addEventListener('mouseup', e => {
+  if (e.button === 2) mouse.repelDown = false;
+});
+
+function showOverlay(title, desc) {
+  hideLevelUpBonusModal();
+  const ov = document.getElementById('overlay');
+  ov.style.display = 'flex';
+  document.getElementById('result').textContent = title;
+  document.querySelector('#overlay p').innerHTML = desc;
+  document.getElementById('startBtn').textContent = 'ИГРАТЬ СНОВА';
+}
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('overlay').style.display = 'none';
+  initGame();
+  state = 'playing';
+});
+
+document.querySelectorAll('.level-up-card').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (state !== 'levelUpPick') return;
+    applyLevelUpBonus(btn.getAttribute('data-bonus'));
+  });
+});
+
+(function initCheatToggles() {
+  const nestDmg = document.getElementById('cheat-no-nest-enemy-dmg');
+  if (nestDmg) {
+    cheatNoRedEnemyNestDamage = nestDmg.checked;
+    nestDmg.addEventListener('change', () => { cheatNoRedEnemyNestDamage = nestDmg.checked; });
+  }
+  const greenHeal = document.getElementById('option-green-heal-nest');
+  if (greenHeal) {
+    optionNestHealFromGreen = greenHeal.checked;
+    greenHeal.addEventListener('change', () => { optionNestHealFromGreen = greenHeal.checked; });
+  }
+})();
+
+resizeCanvas();
+window.addEventListener('resize', () => {
+  resizeCanvas();
+});
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => { resizeCanvas(); });
+  ro.observe(canvas);
+}
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

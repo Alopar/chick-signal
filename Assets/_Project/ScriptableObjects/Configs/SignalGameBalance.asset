@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1045dc41942cd342b66a1a84f180faf, type: 3}
+  m_Name: SignalGameBalance
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalGameBalanceSO
+  ReferenceCanvasWidth: 900
+  ReferenceCanvasHeight: 600
+  LogicalPixelsPerWorldUnit: 100
+  LoopMaxDeltaTime: 0.05
+  Player:
+    StartDx: 200
+    Speed: 140
+    Hp: 100
+    MaxHp: 100
+    SignalPower: 400
+    SignalRadius: 160
+    Radius: 14
+    SignalJamOnHit: 3.5
+    DashDistance: 130
+    DashDuration: 0.14
+    DashCooldown: 1.15
+    RepelSpeedMult: 1.15
+  Signal:
+    ConeAngleRadians: 0.7853982
+    StrengthScale: 10000
+    NpcWakeDuration: 0.7
+  Debuff:
+    SlowMult: 0.05
+    SlowDuration: 1.5
+  Nest:
+    StartDx: -120
+    Hp: 250
+    MaxHp: 250
+    InitialLevel: 1
+    InitialChargeMax: 5
+    HealRadius: 5
+    HealBase: 10
+    HealProximityBonus: 8
+    SignalPower: 150
+    Radius: 16
+    PulseInterval: 1.5
+    PulseExpandSpeed: 300
+    PulseMaxRadius: 900
+    MaxLevel: 14
+    ChargeBase: 5
+    ChargePerLevel: 10
+    LevelSignalPowerBonus: 60
+    AllyDeliveryPlayerMaxHpBonus: 20
+    AllyDeliveryPlayerMaxHpFromLevel: 2
+    AoeCooldown: 2.5
+    AoeRadius: 120
+    AoeUnlockLevel: 99
+    AbsorptionDuration: 10
+    SatiationMax: 10
+    RadiusPerLevel: 8
+  Traps:
+    Count: 1
+    RadiusMin: 65
+    RadiusMax: 80
+    RingInner: 250
+    RingOuter: 400
+    MinGapBetween: 12
+    SectorEdgeMargin: 0.12
+    SlowMult: 0.15
+    PlayerPlacedRadius: 55
+    PlayerPlacedDuration: 6
+    PlayerTrapMaxCharges: 1
+    PlayerTrapRechargeSlow: 10.2
+    PlayerTrapRechargeAttract: 10.2
+    AttractPullSpeedMult: 0.5
+  Spawn:
+    EdgeMargin: 20
+    StartingAllies: 0
+    Waves:
+    - Duration: 10
+      Red: 2
+      Green: 4
+    - Duration: 25
+      Red: 5
+      Green: 5
+    - Duration: 25
+      Red: 3
+      Green: 7
+    - Duration: 30
+      Red: 5
+      Green: 9
+    - Duration: 35
+      Red: 4
+      Green: 9
+    - Duration: 45
+      Red: 5
+      Green: 12
+    - Duration: 50
+      Red: 7
+      Green: 13
+    - Duration: 60
+      Red: 6
+      Green: 15
+    - Duration: 75
+      Red: 11
+      Green: 12
+    - Duration: 80
+      Red: 7
+      Green: 100
+  Enemy:
+    SpeedMin: 55
+    SpeedRand: 20
+    NestDamageRed: 10
+    NestDamageGreen: 0
+    SatiationRed: 4
+    SatiationGreen: 2
+    Radius: 9
+  Ally:
+    SpeedMin: 60
+    SpeedRand: 20
+    Radius: 9
+  Win:
+    MinNestLevel: 7
+  CheatNoRedEnemyNestDamage: 0
+  OptionNestHealFromGreen: 0
+  DocumentSignalJamNotImplemented: 1
+  DocumentEnemyContactSlowNotImplemented: 1
+  DocumentPlayerDamageNotImplemented: 1
