@@ -895,12 +895,6 @@ namespace LudumDare.Template.Gameplay.Signal
             if (_nest.Level >= _balance.Nest.AllyDeliveryPlayerMaxHpFromLevel)
                 _player.MaxHp += _balance.Nest.AllyDeliveryPlayerMaxHpBonus;
 
-            if (_nest.Level >= _balance.Win.MinNestLevel)
-            {
-                EndVictory();
-                return;
-            }
-
             _phase = SignalRunPhase.EvolutionPick;
             _evolutionModalChannel?.Raise(true);
         }
@@ -1150,8 +1144,8 @@ namespace LudumDare.Template.Gameplay.Signal
         {
             var waves = _balance.Spawn.Waves;
             if (waves == null || waves.Count == 0) return null;
-            int idx = (_waveNumber - 1) % waves.Count;
-            return waves[idx];
+            if (_waveNumber < 1 || _waveNumber > waves.Count) return null;
+            return waves[_waveNumber - 1];
         }
 
         private void RebuildEnemySpawnSchedule()
@@ -1199,10 +1193,19 @@ namespace LudumDare.Template.Gameplay.Signal
             var wdef = GetSpawnWaveDef();
             if (!wdef.HasValue || !(wdef.Value.Duration > 0f)) return;
 
+            var waves = _balance.Spawn.Waves;
+            int waveCount = waves != null ? waves.Count : 0;
+
             _waveElapsed += dt;
             while (wdef.HasValue && wdef.Value.Duration > 0f && _waveElapsed >= wdef.Value.Duration)
             {
                 FlushEnemySpawnsUpTo(wdef.Value.Duration);
+                if (waveCount > 0 && _waveNumber == waveCount)
+                {
+                    EndVictory();
+                    return;
+                }
+
                 _waveElapsed -= wdef.Value.Duration;
                 _waveNumber++;
                 RebuildEnemySpawnSchedule();

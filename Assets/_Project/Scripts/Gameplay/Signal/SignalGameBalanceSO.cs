@@ -164,7 +164,6 @@ namespace LudumDare.Template.Gameplay.Signal
     [Serializable]
     public struct WinBalance
     {
-        public int MinNestLevel;
     }
 
     public static class SignalBalanceDefaults
@@ -280,7 +279,7 @@ namespace LudumDare.Template.Gameplay.Signal
 
             s.Ally = new AllyBalance { SpeedMin = 60f, SpeedRand = 20f, Radius = 9f };
 
-            s.Win = new WinBalance { MinNestLevel = 7 };
+            s.Win = new WinBalance();
         }
     }
 }

@@ -123,8 +123,6 @@ MonoBehaviour:
     SpeedMin: 60
     SpeedRand: 20
     Radius: 9
-  Win:
-    MinNestLevel: 7
   CheatNoRedEnemyNestDamage: 0
   OptionNestHealFromGreen: 0
   DocumentSignalJamNotImplemented: 1
