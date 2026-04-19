@@ -1,0 +1,113 @@
+using System.Collections.Generic;
+using System.Linq;
+using LudumDare.Template.Managers;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace LudumDare.Template.UI
+{
+    public class LeaderboardScreen : UIScreen
+    {
+        [SerializeField] private Button _backButton;
+        [SerializeField] private TMP_Text _statusLabel;
+        [SerializeField] private RectTransform _rowsRoot;
+        [SerializeField] private TextMeshProUGUI _rowPrefab;
+
+        private readonly List<GameObject> _spawnedRows = new();
+        private bool _backListenerAdded;
+
+        public void SetRuntimeRefs(Button back, TMP_Text status, RectTransform rowsRoot, TextMeshProUGUI rowPrefab)
+        {
+            _backButton = back;
+            _statusLabel = status;
+            _rowsRoot = rowsRoot;
+            _rowPrefab = rowPrefab;
+            TryAddBackListener();
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            TryAddBackListener();
+        }
+
+        private void TryAddBackListener()
+        {
+            if (_backListenerAdded || _backButton == null) return;
+            _backListenerAdded = true;
+            _backButton.onClick.AddListener(OnBack);
+        }
+
+        protected override void OnShow()
+        {
+            Refresh();
+        }
+
+        private void OnBack()
+        {
+            if (UIManager.HasInstance) UIManager.Instance.Pop();
+        }
+
+        private void Refresh()
+        {
+            ClearRows();
+            if (_statusLabel != null) _statusLabel.text = "Loading...";
+
+            if (!LeaderboardClient.HasInstance)
+            {
+                if (_statusLabel != null) _statusLabel.text = "Service unavailable.";
+                return;
+            }
+
+            LeaderboardClient.Instance.FetchLeaderboard(OnFetched);
+        }
+
+        private void OnFetched(IReadOnlyList<LeaderboardEntry> entries)
+        {
+            ClearRows();
+
+            if (entries == null || entries.Count == 0)
+            {
+                if (_statusLabel != null) _statusLabel.text = "No entries or network error.";
+                return;
+            }
+
+            if (_statusLabel != null) _statusLabel.text = string.Empty;
+
+            var sorted = entries.OrderByDescending(e => e.Score).ToList();
+            for (var i = 0; i < sorted.Count; i++)
+            {
+                var e = sorted[i];
+                var line =
+                    $"{i + 1}. {e.PlayerName} — {e.Score}" +
+                    (string.IsNullOrEmpty(e.RecordedAt) ? string.Empty : $"  ({e.RecordedAt})");
+                AddRow(line);
+            }
+        }
+
+        private void AddRow(string text)
+        {
+            if (_rowsRoot == null || _rowPrefab == null) return;
+
+            var row = Instantiate(_rowPrefab, _rowsRoot);
+            row.gameObject.SetActive(true);
+            row.text = text;
+            row.fontSize = 28;
+            row.alignment = TextAlignmentOptions.Left;
+            var rt = row.rectTransform;
+            rt.sizeDelta = new Vector2(rt.sizeDelta.x, 36f);
+            _spawnedRows.Add(row.gameObject);
+        }
+
+        private void ClearRows()
+        {
+            for (var i = 0; i < _spawnedRows.Count; i++)
+            {
+                if (_spawnedRows[i] != null) Destroy(_spawnedRows[i]);
+            }
+
+            _spawnedRows.Clear();
+        }
+    }
+}

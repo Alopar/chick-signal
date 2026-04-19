@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c51f74d0bd4d4b699ec5967cf44ff45f, type: 3}
+  m_Name: SceneMusicConfig
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Managers.SceneMusicConfigSO
+  _entries:
+  - SceneName: 01_MainMenu
+    Cue: {fileID: 11400000, guid: 729971ec2ddf4d8b8430b81fb981ab63, type: 2}
+    FadeSeconds: 1
+  - SceneName: 02_Game
+    Cue: {fileID: 11400000, guid: d662f4f0cee94fb2b775f80d7c64677e, type: 2}
+    FadeSeconds: 1.5
+  _defaultCue: {fileID: 0}
+  _defaultFadeSeconds: 1
+  _silenceIfNotMapped: 1

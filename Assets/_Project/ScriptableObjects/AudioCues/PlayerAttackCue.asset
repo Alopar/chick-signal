@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b052f7b385e173409d20572368ff5fb, type: 3}
+  m_Name: PlayerAttackCue
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Managers.AudioCueSO
+  Clips:
+  - {fileID: 8300000, guid: 8dbc65651b29e26469c129f89de47281, type: 3}
+  - {fileID: 8300000, guid: c6dc9e92d65c7dd4c98f0788061dc105, type: 3}
+  - {fileID: 8300000, guid: d0be1f7753b25a042b2b7f6af67c7041, type: 3}
+  Volume: 0.9
+  PitchRange: {x: 0.97, y: 1.03}
+  Loop: 0
+  MixerGroup: {fileID: 4043243294817334332, guid: f20bc4b0e3db0b04fb47cdf82e7401ca, type: 2}
