@@ -32,8 +32,40 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8033847721100551234}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9033847721100551234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8033847721100551234}
+  m_Layer: 0
+  m_Name: Nest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8033847721100551234
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033847721100551234}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5119193614253493173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2419645840226337993
 MonoBehaviour:
@@ -67,13 +99,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalGameplayView
   _controller: {fileID: 2419645840226337993}
-  _nestAnchor: {fileID: 0}
+  _nestAnchor: {fileID: 8033847721100551234}
+  _nestVisualPrefab: {fileID: 6707988994521686595, guid: 26df7052ae9bdd946a4717518545a799, type: 3}
   _signalCone: {fileID: 0}
   _repelCone: {fileID: 0}
   _allyColor: {r: 0.27, g: 1, b: 0.53, a: 0.9}
   _enemyColor: {r: 1, g: 0.26, b: 0.4, a: 0.9}
-  _nestColorCalm: {r: 0.27, g: 1, b: 0.53, a: 0.85}
-  _nestColorAbsorb: {r: 0.27, g: 0.67, b: 1, a: 0.85}
   _staticTrapColor: {r: 0.78, g: 0.35, b: 0.51, a: 0.35}
   _playerTrapSlowColor: {r: 1, g: 0.78, b: 0.35, a: 0.45}
   _playerTrapAttractColor: {r: 0.78, g: 0.47, b: 1, a: 0.45}

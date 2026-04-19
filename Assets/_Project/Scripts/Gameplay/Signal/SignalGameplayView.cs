@@ -11,12 +11,11 @@ namespace LudumDare.Template.Gameplay.Signal
     {
         [SerializeField] private SignalGameController _controller;
         [SerializeField] private Transform _nestAnchor;
+        [SerializeField] private GameObject _nestVisualPrefab;
         [SerializeField] private LineRenderer _signalCone;
         [SerializeField] private LineRenderer _repelCone;
         [SerializeField] private Color _allyColor = new(0.27f, 1f, 0.53f, 0.9f);
         [SerializeField] private Color _enemyColor = new(1f, 0.26f, 0.4f, 0.9f);
-        [SerializeField] private Color _nestColorCalm = new(0.27f, 1f, 0.53f, 0.85f);
-        [SerializeField] private Color _nestColorAbsorb = new(0.27f, 0.67f, 1f, 0.85f);
         [SerializeField] private Color _staticTrapColor = new(0.78f, 0.35f, 0.51f, 0.35f);
         [SerializeField] private Color _playerTrapSlowColor = new(1f, 0.78f, 0.35f, 0.45f);
         [SerializeField] private Color _playerTrapAttractColor = new(0.78f, 0.47f, 1f, 0.45f);
@@ -29,7 +28,7 @@ namespace LudumDare.Template.Gameplay.Signal
         private readonly List<LineRenderer> _pulseRings = new();
         private readonly List<SpriteRenderer> _staticTrapRings = new();
         private readonly List<SpriteRenderer> _playerTrapRings = new();
-        private SpriteRenderer _nestSprite;
+        private SignalNestVisual _nestVisual;
 
         private void Awake()
         {
@@ -55,16 +54,28 @@ namespace LudumDare.Template.Gameplay.Signal
                 _fxRoot = f.transform;
             }
 
-            EnsureNestSprite();
+            EnsureNestVisual();
             EnsureConeLines();
         }
 
-        private void EnsureNestSprite()
+        private void EnsureNestVisual()
         {
-            _nestSprite = _nestAnchor.GetComponent<SpriteRenderer>();
-            if (_nestSprite == null) _nestSprite = _nestAnchor.gameObject.AddComponent<SpriteRenderer>();
-            _nestSprite.sprite = GetDefaultSprite();
-            _nestSprite.sortingOrder = 2;
+            if (_nestVisualPrefab == null)
+            {
+                Debug.LogWarning($"{nameof(SignalGameplayView)}: не назначен префаб гнезда ({nameof(_nestVisualPrefab)}).");
+                return;
+            }
+
+            for (int i = _nestAnchor.childCount - 1; i >= 0; i--)
+                Destroy(_nestAnchor.GetChild(i).gameObject);
+
+            var instance = Instantiate(_nestVisualPrefab, _nestAnchor, false);
+            instance.name = _nestVisualPrefab.name;
+            _nestVisual = instance.GetComponent<SignalNestVisual>();
+            if (_nestVisual == null) _nestVisual = instance.AddComponent<SignalNestVisual>();
+            if (_nestVisual.SpriteRenderer == null)
+                Debug.LogWarning($"{nameof(SignalGameplayView)}: у префаба гнезда нет {nameof(SpriteRenderer)}.");
+            _nestAnchor.localScale = Vector3.one;
         }
 
         private void EnsureConeLines()
@@ -112,13 +123,12 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void SyncNest()
         {
-            _controller.GetNest(out float lx, out float ly, out float r, out bool absorbing, out int level);
+            if (_nestVisual == null) return;
+
+            _controller.GetNest(out float lx, out float ly, out _, out bool absorbing, out _);
             Vector3 p = _controller.LogicalToWorldPublic(lx, ly);
             _nestAnchor.position = new Vector3(p.x, p.y, 0f);
-            float worldD = 2f * r / _controller.PixelsPerWorldUnit;
-            float sx = Mathf.Max(1e-6f, GetDefaultSprite().bounds.size.x);
-            _nestAnchor.localScale = Vector3.one * Mathf.Max(0.05f, worldD / sx);
-            _nestSprite.color = absorbing ? _nestColorAbsorb : _nestColorCalm;
+            _nestVisual.SetAbsorbing(absorbing);
         }
 
         private void SyncUnits()
