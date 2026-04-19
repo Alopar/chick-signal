@@ -213,15 +213,33 @@ namespace LudumDare.Template.EditorTools
             var go = new GameObject("Player");
             go.tag = "Player";
             go.layer = LayerMask.NameToLayer("Player");
-            go.AddComponent<SpriteRenderer>();
             var rb = go.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0f;
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             rb.freezeRotation = true;
             go.AddComponent<BoxCollider2D>();
+
+            var visual = new GameObject("Visual");
+            visual.transform.SetParent(go.transform, false);
+            visual.layer = go.layer;
+            var sr = visual.AddComponent<SpriteRenderer>();
+            var anim = visual.AddComponent<Animator>();
+            anim.runtimeAnimatorController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                "Assets/_Project/Art/Sprites/bird/BertVisual.controller");
+            foreach (var o in AssetDatabase.LoadAllAssetsAtPath("Assets/_Project/Art/Sprites/bird/birdIdle.png"))
+            {
+                if (o is Sprite sp && sp.name == "birdIdle_0")
+                {
+                    sr.sprite = sp;
+                    break;
+                }
+            }
+
             var controller = go.AddComponent<PlayerController>();
             SetField(controller, "_inputReader", LoadByName<InputReader>("InputReader"));
             SetField(controller, "_attackCue", LoadByName<AudioCueSO>("PlayerAttackCue"));
+            SetField(controller, "_animator", anim);
+            SetField(controller, "_spriteRenderer", sr);
 
             var prefab = PrefabUtility.SaveAsPrefabAsset(go, PlayerPrefabPath);
             Object.DestroyImmediate(go);

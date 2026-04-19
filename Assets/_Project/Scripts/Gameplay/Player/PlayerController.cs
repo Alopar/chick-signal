@@ -11,19 +11,27 @@ namespace LudumDare.Template.Gameplay.Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerController : MonoBehaviour
     {
+        private static readonly int MovingHash = Animator.StringToHash("Moving");
+
         [Header("References")]
         [SerializeField] private InputReader _inputReader;
         [SerializeField] private Rigidbody2D _rigidbody2D;
+        [SerializeField] private Animator _animator;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private AudioCueSO _attackCue;
 
         [Header("Movement")]
         [SerializeField] private float _moveSpeed = 5f;
+        [SerializeField] private float _movingSpeedThreshold = 0.05f;
 
         private Vector2 _moveInput;
+        private Camera _mainCamera;
 
         private void Reset()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
+            if (_animator == null) _animator = GetComponentInChildren<Animator>();
+            if (_spriteRenderer == null) _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
         private void Awake()
@@ -32,6 +40,10 @@ namespace LudumDare.Template.Gameplay.Player
             {
                 _rigidbody2D = GetComponent<Rigidbody2D>();
             }
+
+            if (_animator == null) _animator = GetComponentInChildren<Animator>();
+            if (_spriteRenderer == null) _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            _mainCamera = Camera.main;
         }
 
         private void OnEnable()
@@ -57,6 +69,25 @@ namespace LudumDare.Template.Gameplay.Player
         {
             if (_rigidbody2D == null) return;
             _rigidbody2D.linearVelocity = _moveInput * _moveSpeed;
+        }
+
+        private void LateUpdate()
+        {
+            if (_rigidbody2D == null) return;
+
+            float sq = _movingSpeedThreshold * _movingSpeedThreshold;
+            bool moving = _rigidbody2D.linearVelocity.sqrMagnitude > sq;
+            if (_animator != null) _animator.SetBool(MovingHash, moving);
+
+            if (_spriteRenderer == null) return;
+
+            if (_mainCamera == null) _mainCamera = Camera.main;
+            if (_mainCamera == null) return;
+
+            Vector3 mp = UnityEngine.Input.mousePosition;
+            mp.z = -_mainCamera.transform.position.z;
+            float cursorWorldX = _mainCamera.ScreenToWorldPoint(mp).x;
+            _spriteRenderer.flipX = cursorWorldX > transform.position.x;
         }
 
         private void HandleMove(Vector2 moveValue)

@@ -36,6 +36,8 @@ namespace LudumDare.Template.Gameplay.Signal
     [DefaultExecutionOrder(-50)]
     public sealed class SignalGameController : MonoBehaviour
     {
+        private static readonly int MovingAnimHash = Animator.StringToHash("Moving");
+
         [SerializeField] private SignalGameBalanceSO _balance;
         [SerializeField] private InputReader _inputReader;
         [SerializeField] private Camera _camera;
@@ -325,7 +327,7 @@ namespace LudumDare.Template.Gameplay.Signal
             {
                 Vector3 pw = LogicalToWorld(_player.X, _player.Y);
                 _playerTransform.position = new Vector3(pw.x, pw.y, _playerTransform.position.z);
-                _playerTransform.rotation = Quaternion.Euler(0f, 0f, _player.Angle * Mathf.Rad2Deg);
+                _playerTransform.rotation = Quaternion.identity;
             }
 
             SnapCameraToPlayerWorld();
@@ -360,6 +362,38 @@ namespace LudumDare.Template.Gameplay.Signal
 
             Vector2 mouseLogical = GetMouseLogicalPosition();
             _player.Angle = LogicalAngleFromTo(_player.X, _player.Y, mouseLogical.x, mouseLogical.y);
+            SyncPlayerVisual();
+        }
+
+        /// <summary>
+        /// В режиме Signal <see cref="PlayerController"/> отключён — анимация и флип спрайта задаются здесь.
+        /// Поворот корня не используем (угол сигнала — только для конусов через <see cref="PlayerAngleRadians"/>).
+        /// </summary>
+        private void SyncPlayerVisual()
+        {
+            if (_playerTransform == null) return;
+
+            var playerController = _playerTransform.GetComponent<PlayerController>();
+            if (playerController != null && playerController.enabled)
+                return;
+
+            const float moveThreshSq = 0.05f * 0.05f;
+
+            var anim = _playerTransform.GetComponentInChildren<Animator>();
+            if (anim != null)
+            {
+                bool moving = _player.DashTimeLeft > 0f;
+                if (!moving && _inputReader != null)
+                    moving = _inputReader.MoveValue.sqrMagnitude > moveThreshSq;
+                anim.SetBool(MovingAnimHash, moving);
+            }
+
+            var sr = _playerTransform.GetComponentInChildren<SpriteRenderer>();
+            if (sr != null)
+            {
+                Vector3 mouse = GetMouseWorldPositionXY();
+                sr.flipX = mouse.x > _playerTransform.position.x;
+            }
         }
 
         private Vector2 GetMouseLogicalPosition()
@@ -1258,7 +1292,7 @@ namespace LudumDare.Template.Gameplay.Signal
             if (_playerTransform == null) return;
             Vector3 pw = LogicalToWorld(_player.X, _player.Y);
             _playerTransform.position = new Vector3(pw.x, pw.y, _playerTransform.position.z);
-            _playerTransform.rotation = Quaternion.Euler(0f, 0f, _player.Angle * Mathf.Rad2Deg);
+            _playerTransform.rotation = Quaternion.identity;
         }
 
         private Vector3 LogicalToWorld(float lx, float ly)
