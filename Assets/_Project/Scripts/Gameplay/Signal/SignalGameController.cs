@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using LudumDare.Template.Gameplay.Player;
 using LudumDare.Template.Input;
 using LudumDare.Template.Managers;
@@ -200,6 +201,11 @@ namespace LudumDare.Template.Gameplay.Signal
                 _balance = ScriptableObject.CreateInstance<SignalGameBalanceSO>();
                 SignalBalanceDefaults.ApplyHtmlDefaults(_balance);
             }
+            else
+            {
+                // Работаем с runtime-копией, чтобы не менять исходный ассет в проекте.
+                _balance = Instantiate(_balance);
+            }
 
             if (_hudChannel == null)
                 _hudChannel = ScriptableObject.CreateInstance<SignalHudEventChannelSO>();
@@ -246,6 +252,7 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void OnEnable()
         {
+            LoadBalanceFromRuntimeJson();
             EnsureBalance();
             if (_inputReader != null)
             {
@@ -257,6 +264,33 @@ namespace LudumDare.Template.Gameplay.Signal
 
             InitGame();
             _phase = SignalRunPhase.Playing;
+        }
+
+        private void LoadBalanceFromRuntimeJson()
+        {
+            if (_balance == null) return;
+
+            string bundledPath = Path.Combine(Application.streamingAssetsPath, "SignalGameBalance.json");
+            string bundledSignalPath = Path.Combine(Application.streamingAssetsPath, "Signal", "SignalGameBalance.json");
+            string legacyRuntimePath = Path.Combine(Application.persistentDataPath, "SignalGameBalance.json");
+
+            try
+            {
+                string json = null;
+                if (File.Exists(bundledSignalPath))
+                    json = File.ReadAllText(bundledSignalPath);
+                else if (File.Exists(bundledPath))
+                    json = File.ReadAllText(bundledPath);
+                else if (File.Exists(legacyRuntimePath))
+                    json = File.ReadAllText(legacyRuntimePath);
+
+                if (!string.IsNullOrWhiteSpace(json))
+                    JsonUtility.FromJsonOverwrite(json, _balance);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[Signal] Failed to load runtime balance json: {ex.Message}");
+            }
         }
 
         private void OnDisable()

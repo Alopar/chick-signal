@@ -1,0 +1,165 @@
+{
+  "ReferenceCanvasWidth": 900.0,
+  "ReferenceCanvasHeight": 600.0,
+  "LogicalPixelsPerWorldUnit": 100.0,
+  "LoopMaxDeltaTime": 0.05,
+  "Player": {
+    "StartDx": 200.0,
+    "Speed": 140.0,
+    "Hp": 100.0,
+    "MaxHp": 100.0,
+    "SignalPower": 400.0,
+    "SignalRadius": 160.0,
+    "Radius": 14.0,
+    "SignalJamOnHit": 3.5,
+    "DashDistance": 130.0,
+    "DashDuration": 0.14,
+    "DashCooldown": 1.15,
+    "RepelSpeedMult": 1.15
+  },
+  "Signal": {
+    "ConeAngleRadians": 0.7853982,
+    "StrengthScale": 10000.0,
+    "NpcWakeDuration": 0.7
+  },
+  "Debuff": {
+    "SlowMult": 0.05,
+    "SlowDuration": 1.5
+  },
+  "Nest": {
+    "StartDx": -120.0,
+    "Hp": 250.0,
+    "MaxHp": 250.0,
+    "InitialLevel": 1,
+    "InitialChargeMax": 5.0,
+    "HealRadius": 5.0,
+    "HealBase": 10.0,
+    "HealProximityBonus": 8.0,
+    "SignalPower": 150.0,
+    "Radius": 16.0,
+    "PulseInterval": 1.5,
+    "PulseExpandSpeed": 300.0,
+    "PulseMaxRadius": 900.0,
+    "MaxLevel": 14,
+    "ChargeBase": 5.0,
+    "ChargePerLevel": 10.0,
+    "LevelSignalPowerBonus": 60.0,
+    "AllyDeliveryPlayerMaxHpBonus": 20.0,
+    "AllyDeliveryPlayerMaxHpFromLevel": 2,
+    "AoeCooldown": 2.5,
+    "AoeRadius": 120.0,
+    "AoeUnlockLevel": 99,
+    "AbsorptionDuration": 10.0,
+    "SatiationMax": 10.0,
+    "RadiusPerLevel": 8.0
+  },
+  "Traps": {
+    "Count": 1,
+    "RadiusMin": 65.0,
+    "RadiusMax": 80.0,
+    "RingInner": 250.0,
+    "RingOuter": 400.0,
+    "MinGapBetween": 12.0,
+    "SectorEdgeMargin": 0.12,
+    "SlowMult": 0.15,
+    "PlayerPlacedRadius": 55.0,
+    "PlayerPlacedDuration": 6.0,
+    "PlayerTrapMaxCharges": 1,
+    "PlayerTrapRechargeSlow": 10.2,
+    "PlayerTrapRechargeAttract": 10.2,
+    "AttractPullSpeedMult": 0.5
+  },
+  "Spawn": {
+    "EdgeMargin": 20.0,
+    "StartingAllies": 0,
+    "Waves": [
+      {
+        "Duration": 10.0,
+        "Red": 2,
+        "Green": 4
+      },
+      {
+        "Duration": 25.0,
+        "Red": 5,
+        "Green": 5
+      },
+      {
+        "Duration": 25.0,
+        "Red": 3,
+        "Green": 7
+      },
+      {
+        "Duration": 30.0,
+        "Red": 5,
+        "Green": 9
+      },
+      {
+        "Duration": 35.0,
+        "Red": 4,
+        "Green": 9
+      },
+      {
+        "Duration": 45.0,
+        "Red": 5,
+        "Green": 12
+      },
+      {
+        "Duration": 50.0,
+        "Red": 7,
+        "Green": 13
+      },
+      {
+        "Duration": 60.0,
+        "Red": 6,
+        "Green": 15
+      },
+      {
+        "Duration": 75.0,
+        "Red": 11,
+        "Green": 12
+      },
+      {
+        "Duration": 80.0,
+        "Red": 7,
+        "Green": 100
+      }
+    ]
+  },
+  "Enemy": {
+    "SpeedMin": 55.0,
+    "SpeedRand": 20.0,
+    "NestDamageRed": 10.0,
+    "NestDamageGreen": 0.0,
+    "SatiationRed": 4.0,
+    "SatiationGreen": 2.0,
+    "ScoreRed": 1,
+    "ScoreGreen": 1,
+    "Radius": 9.0
+  },
+  "Combo": {
+    "TimeAddSeconds": 1.0,
+    "FirstThreshold": 1,
+    "FirstBonus": 1,
+    "SecondThreshold": 6,
+    "SecondBonus": 2,
+    "ThirdThreshold": 11,
+    "ThirdBonus": 5,
+    "FourthThreshold": 16,
+    "FourthBonus": 10
+  },
+  "WaveScoreBonus": {
+    "EveryNthWave": 5,
+    "ScoreAward": 100
+  },
+  "Ally": {
+    "SpeedMin": 60.0,
+    "SpeedRand": 20.0,
+    "Radius": 9.0
+  },
+  "Win": {},
+  "CheatNoRedEnemyNestDamage": false,
+  "OptionNestHealFromGreen": false,
+  "DocumentSignalJamNotImplemented": true,
+  "DocumentEnemyContactSlowNotImplemented": true,
+  "DocumentPlayerDamageNotImplemented": true
+}
