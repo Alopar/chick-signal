@@ -27,6 +27,7 @@ namespace LudumDare.Template.Gameplay.Signal
         public TrapsBalance Traps = new();
         public SpawnBalance Spawn = new();
         public EnemyBalance Enemy = new();
+        public ComboBalance Combo = new();
         public AllyBalance Ally = new();
         public WinBalance Win = new();
 
@@ -156,6 +157,20 @@ namespace LudumDare.Template.Gameplay.Signal
     }
 
     [Serializable]
+    public struct ComboBalance
+    {
+        [Min(0.01f)] public float TimeAddSeconds;
+        [Min(1)] public int FirstThreshold;
+        [Min(1)] public int FirstBonus;
+        [Min(1)] public int SecondThreshold;
+        [Min(1)] public int SecondBonus;
+        [Min(1)] public int ThirdThreshold;
+        [Min(1)] public int ThirdBonus;
+        [Min(1)] public int FourthThreshold;
+        [Min(1)] public int FourthBonus;
+    }
+
+    [Serializable]
     public struct AllyBalance
     {
         public float SpeedMin;
@@ -279,6 +294,19 @@ namespace LudumDare.Template.Gameplay.Signal
                 ScoreRed = 1,
                 ScoreGreen = 1,
                 Radius = 9f,
+            };
+
+            s.Combo = new ComboBalance
+            {
+                TimeAddSeconds = 1f,
+                FirstThreshold = 1,
+                FirstBonus = 1,
+                SecondThreshold = 6,
+                SecondBonus = 2,
+                ThirdThreshold = 11,
+                ThirdBonus = 5,
+                FourthThreshold = 16,
+                FourthBonus = 10,
             };
 
             s.Ally = new AllyBalance { SpeedMin = 60f, SpeedRand = 20f, Radius = 9f };

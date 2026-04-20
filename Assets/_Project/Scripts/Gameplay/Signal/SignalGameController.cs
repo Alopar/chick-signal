@@ -179,6 +179,9 @@ namespace LudumDare.Template.Gameplay.Signal
         private float _waveElapsed;
         private readonly Dictionary<string, List<float>> _waveSpawnTimes = new();
         private readonly Dictionary<string, int> _waveSpawnNext = new();
+        private int _comboEatenMonsters;
+        private int _comboBonus;
+        private float _comboTimeLeft;
 
         private float _gameTime;
         private Vector3 _cameraFollowVelocity;
@@ -340,6 +343,7 @@ namespace LudumDare.Template.Gameplay.Signal
             _waveSpawnTimes.Clear();
             _waveSpawnNext.Clear();
             _gameTime = 0f;
+            ResetCombo();
 
             RebuildEnemySpawnSchedule();
             var sp = _balance.Spawn;
@@ -565,6 +569,7 @@ namespace LudumDare.Template.Gameplay.Signal
         {
             var S = _balance;
             _gameTime += dt;
+            StepComboTimer(dt);
 
             for (int i = 0; i < _playerTraps.Count; i++)
             {
@@ -944,8 +949,69 @@ namespace LudumDare.Template.Gameplay.Signal
         private void AddScoreForAbsorbed(SignalNpcKind kind)
         {
             if (!GameManager.HasInstance || _balance == null) return;
-            int amount = kind == SignalNpcKind.Red ? _balance.Enemy.ScoreRed : _balance.Enemy.ScoreGreen;
-            if (amount > 0) GameManager.Instance.AddScore(amount);
+            int baseScore = kind == SignalNpcKind.Red ? _balance.Enemy.ScoreRed : _balance.Enemy.ScoreGreen;
+            int comboBonus = RegisterComboAbsorbAndGetBonus();
+            int amount = baseScore * comboBonus;
+            if (amount > 0)
+                GameManager.Instance.AddScore(amount);
+
+            Debug.Log($"[Signal][Combo] Absorb kind={kind}, eaten={_comboEatenMonsters}, bonus={comboBonus}x, base={baseScore}, gained={amount}, total={GameManager.Instance.Score}");
+        }
+
+        private void StepComboTimer(float dt)
+        {
+            if (_comboTimeLeft <= 0f) return;
+            _comboTimeLeft = Mathf.Max(0f, _comboTimeLeft - dt);
+            if (_comboTimeLeft <= 0f)
+                ResetCombo();
+        }
+
+        private int RegisterComboAbsorbAndGetBonus()
+        {
+            if (_balance == null) return 1;
+
+            if (_comboTimeLeft <= 0f)
+                ResetCombo();
+
+            _comboEatenMonsters++;
+            var combo = _balance.Combo;
+            if (_comboEatenMonsters == combo.FirstThreshold)
+            {
+                _comboBonus = combo.FirstBonus;
+                _comboTimeLeft += combo.TimeAddSeconds;
+                Debug.Log($"[Signal][Combo] Threshold reached: eaten={_comboEatenMonsters}, bonus={_comboBonus}x, timeLeft={_comboTimeLeft:0.00}s");
+            }
+            else if (_comboEatenMonsters == combo.SecondThreshold)
+            {
+                _comboBonus = combo.SecondBonus;
+                _comboTimeLeft += combo.TimeAddSeconds;
+                Debug.Log($"[Signal][Combo] Threshold reached: eaten={_comboEatenMonsters}, bonus={_comboBonus}x, timeLeft={_comboTimeLeft:0.00}s");
+            }
+            else if (_comboEatenMonsters == combo.ThirdThreshold)
+            {
+                _comboBonus = combo.ThirdBonus;
+                _comboTimeLeft += combo.TimeAddSeconds;
+                Debug.Log($"[Signal][Combo] Threshold reached: eaten={_comboEatenMonsters}, bonus={_comboBonus}x, timeLeft={_comboTimeLeft:0.00}s");
+            }
+            else if (_comboEatenMonsters == combo.FourthThreshold)
+            {
+                _comboBonus = combo.FourthBonus;
+                _comboTimeLeft += combo.TimeAddSeconds;
+                Debug.Log($"[Signal][Combo] Threshold reached: eaten={_comboEatenMonsters}, bonus={_comboBonus}x, timeLeft={_comboTimeLeft:0.00}s");
+            }
+
+            if (_comboBonus <= 0)
+                _comboBonus = 1;
+            return _comboBonus;
+        }
+
+        private void ResetCombo()
+        {
+            if (_comboEatenMonsters > 0 || _comboBonus > 0)
+                Debug.Log($"[Signal][Combo] Reset: eaten={_comboEatenMonsters}, bonus={_comboBonus}x");
+            _comboEatenMonsters = 0;
+            _comboBonus = 0;
+            _comboTimeLeft = 0f;
         }
 
         private float SignalStrength(float sx, float sy, float power, float tx, float ty)

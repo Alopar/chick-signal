@@ -121,6 +121,16 @@ MonoBehaviour:
     ScoreRed: 1
     ScoreGreen: 1
     Radius: 9
+  Combo:
+    TimeAddSeconds: 1
+    FirstThreshold: 1
+    FirstBonus: 1
+    SecondThreshold: 6
+    SecondBonus: 2
+    ThirdThreshold: 11
+    ThirdBonus: 5
+    FourthThreshold: 16
+    FourthBonus: 10
   Ally:
     SpeedMin: 60
     SpeedRand: 20
