@@ -1048,6 +1048,7 @@ MonoBehaviour:
   _confirmButton: {fileID: 588853135163407193}
   _backButton: {fileID: 8330912076839774425}
   _maxNicknameLength: 32
+  _tutorialScreen: {fileID: 0}
 --- !u!1 &8946597645501018493
 GameObject:
   m_ObjectHideFlags: 0

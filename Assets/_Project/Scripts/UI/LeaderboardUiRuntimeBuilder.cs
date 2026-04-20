@@ -36,6 +36,11 @@ namespace LudumDare.Template.UI
             {
                 BuildLeaderboardPanel(parent);
             }
+
+            if (FindChildScreen(parent, "TutorialScreen") == null)
+            {
+                BuildTutorialPanel(parent);
+            }
         }
 
         public static UIScreen EnsureGameLeaderboard(Transform uiElementUnderCanvas)
@@ -62,6 +67,28 @@ namespace LudumDare.Template.UI
             var back = CreateMenuButton(panel.transform, "BackButton", "Back", new Vector2(0.5f, 0.3f));
 
             screen.SetRuntimeRefs(input, confirm, back);
+            panel.SetActive(false);
+            return screen;
+        }
+
+        private static UIScreen BuildTutorialPanel(Transform parent)
+        {
+            var panel = CreateOverlayPanel(parent, "TutorialScreen");
+            var screen = panel.AddComponent<TutorialScreen>();
+
+            var imgGo = new GameObject("TutorialArt", typeof(RectTransform), typeof(Image));
+            imgGo.transform.SetParent(panel.transform, false);
+            var imgRt = (RectTransform)imgGo.transform;
+            imgRt.anchorMin = new Vector2(0.05f, 0.12f);
+            imgRt.anchorMax = new Vector2(0.95f, 0.88f);
+            imgRt.offsetMin = Vector2.zero;
+            imgRt.offsetMax = Vector2.zero;
+            var image = imgGo.GetComponent<Image>();
+            image.preserveAspect = true;
+            image.color = Color.white;
+
+            var play = CreateMenuButton(panel.transform, "PlayButton", "Play", new Vector2(0.5f, 0.06f));
+            screen.SetRuntimeRefs(play);
             panel.SetActive(false);
             return screen;
         }

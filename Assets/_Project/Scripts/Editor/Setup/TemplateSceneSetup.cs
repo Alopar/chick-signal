@@ -22,7 +22,9 @@ namespace LudumDare.Template.EditorTools
         private const string UIRootPrefabPath   = "Assets/_Project/Prefabs/UI/UIRoot.prefab";
         private const string PlayerPrefabPath   = "Assets/_Project/Prefabs/Gameplay/Player.prefab";
         private const string NicknameEntryScreenPrefabPath = "Assets/_Project/Prefabs/UI/Screens/MainMenu/NicknameEntryScreen.prefab";
+        private const string TutorialScreenPrefabPath = "Assets/_Project/Prefabs/UI/Screens/MainMenu/TutorialScreen.prefab";
         private const string LeaderboardScreenPrefabPath = "Assets/_Project/Prefabs/UI/Screens/MainMenu/LeaderboardScreen.prefab";
+        private const string TutorialSpriteAssetPath = "Assets/_Project/Art/Sprites/HUD/tutorial.png";
         private const string LeaderboardConfigPath = "Assets/_Project/Settings/LeaderboardConfig.asset";
 
         private const string BootstrapScenePath = "Assets/_Project/Scenes/00_Bootstrap.unity";
@@ -31,24 +33,24 @@ namespace LudumDare.Template.EditorTools
 
         private const string VolumeProfilePath = "Assets/_Project/Settings/PostProcessing/GlobalVolumeProfile.asset";
 
-        [MenuItem("Tools/LudumDare/Regenerate Nickname + Leaderboard Prefabs")]
+        [MenuItem("Tools/LudumDare/Regenerate Nickname + Tutorial + Leaderboard Prefabs")]
         public static void RegenerateNicknameLeaderboardPrefabsOnly()
         {
             EnsureFolders();
             BuildNicknameAndLeaderboardScreenPrefabs();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("[TemplateSceneSetup] Saved: " + NicknameEntryScreenPrefabPath + ", " + LeaderboardScreenPrefabPath);
+            Debug.Log("[TemplateSceneSetup] Saved: " + NicknameEntryScreenPrefabPath + ", " + TutorialScreenPrefabPath + ", " + LeaderboardScreenPrefabPath);
         }
 
         /// <summary>
-        /// Places Nickname + Leaderboard prefabs under UIRoot and assigns references on MainMenu / EndGame without rebuilding the whole template.
+        /// Places Nickname + Tutorial + Leaderboard prefabs under UIRoot and assigns references on MainMenu / EndGame without rebuilding the whole template.
         /// </summary>
         [MenuItem("Tools/LudumDare/Connect Nickname + Leaderboard Prefabs To Scenes")]
         public static void ConnectNicknameLeaderboardPrefabsToScenes()
         {
             EnsureFolders();
-            if (!File.Exists(NicknameEntryScreenPrefabPath) || !File.Exists(LeaderboardScreenPrefabPath))
+            if (!File.Exists(NicknameEntryScreenPrefabPath) || !File.Exists(TutorialScreenPrefabPath) || !File.Exists(LeaderboardScreenPrefabPath))
                 BuildNicknameAndLeaderboardScreenPrefabs();
 
             ConnectScreensInScene(MainMenuScenePath, wireEndGame: false);
@@ -56,7 +58,7 @@ namespace LudumDare.Template.EditorTools
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("[TemplateSceneSetup] Nickname + Leaderboard prefabs connected in 01_MainMenu and 02_Game.");
+            Debug.Log("[TemplateSceneSetup] Nickname + Tutorial + Leaderboard prefabs connected in 01_MainMenu and 02_Game.");
         }
 
         [MenuItem("Tools/LudumDare/Build Template (Prefabs + Scenes)")]
@@ -198,11 +200,14 @@ namespace LudumDare.Template.EditorTools
             root.AddComponent<GraphicRaycaster>();
 
             var nickname = BuildNicknameEntryUI(root.transform);
+            var tutorial = BuildTutorialUI(root.transform);
             var leaderboard = BuildLeaderboardUI(root.transform);
             nickname.SetActive(false);
+            tutorial.SetActive(false);
             leaderboard.SetActive(false);
 
             PrefabUtility.SaveAsPrefabAsset(nickname, NicknameEntryScreenPrefabPath);
+            PrefabUtility.SaveAsPrefabAsset(tutorial, TutorialScreenPrefabPath);
             PrefabUtility.SaveAsPrefabAsset(leaderboard, LeaderboardScreenPrefabPath);
 
             Object.DestroyImmediate(root);
@@ -278,12 +283,14 @@ namespace LudumDare.Template.EditorTools
             var mainMenu = BuildMainMenuUI(uiRoot.transform);
             var settings = BuildSettingsUI(uiRoot.transform);
             var nickname = InstantiateScreenPrefabOrFallback(uiRoot.transform, NicknameEntryScreenPrefabPath, BuildNicknameEntryUI);
+            var tutorial = InstantiateScreenPrefabOrFallback(uiRoot.transform, TutorialScreenPrefabPath, BuildTutorialUI);
             var leaderboard = InstantiateScreenPrefabOrFallback(uiRoot.transform, LeaderboardScreenPrefabPath, BuildLeaderboardUI);
 
             var mainMenuScreen = mainMenu.GetComponent<MainMenuScreen>();
             SetField(mainMenuScreen, "_settingsScreen", settings.GetComponent<SettingsScreen>());
             SetField(mainMenuScreen, "_nicknameEntryScreen", nickname.GetComponent<NicknameEntryScreen>());
             SetField(mainMenuScreen, "_leaderboardScreen", leaderboard.GetComponent<LeaderboardScreen>());
+            SetField(nickname.GetComponent<NicknameEntryScreen>(), "_tutorialScreen", tutorial.GetComponent<TutorialScreen>());
 
             mainMenu.SetActive(true);
             var cg = mainMenu.GetComponent<CanvasGroup>();
@@ -493,6 +500,40 @@ namespace LudumDare.Template.EditorTools
             SetField(screen, "_inputField", input);
             SetField(screen, "_confirmButton", confirm);
             SetField(screen, "_backButton", back);
+            return panel;
+        }
+
+        private static Sprite LoadTutorialHudSprite()
+        {
+            foreach (var o in AssetDatabase.LoadAllAssetsAtPath(TutorialSpriteAssetPath))
+            {
+                if (o is Sprite sp && sp.name == "tutorial_0") return sp;
+            }
+
+            return AssetDatabase.LoadAssetAtPath<Sprite>(TutorialSpriteAssetPath);
+        }
+
+        private static GameObject BuildTutorialUI(Transform parent)
+        {
+            var panel = CreatePanel("TutorialScreen", parent, dim: true);
+            panel.AddComponent<TutorialScreen>();
+
+            var imgGo = new GameObject("TutorialArt", typeof(RectTransform), typeof(Image));
+            imgGo.transform.SetParent(panel.transform, false);
+            var imgRt = (RectTransform)imgGo.transform;
+            imgRt.anchorMin = new Vector2(0.05f, 0.12f);
+            imgRt.anchorMax = new Vector2(0.95f, 0.88f);
+            imgRt.offsetMin = Vector2.zero;
+            imgRt.offsetMax = Vector2.zero;
+            var image = imgGo.GetComponent<Image>();
+            image.preserveAspect = true;
+            var sprite = LoadTutorialHudSprite();
+            if (sprite != null) image.sprite = sprite;
+
+            var play = CreateButton("PlayButton", panel.transform, "Play", new Vector2(0.5f, 0.06f));
+
+            var screen = panel.GetComponent<TutorialScreen>();
+            SetField(screen, "_playButton", play);
             return panel;
         }
 
@@ -848,9 +889,11 @@ namespace LudumDare.Template.EditorTools
             else
             {
                 ReplaceScreenWithPrefab(parent, "NicknameEntryScreen", NicknameEntryScreenPrefabPath, BuildNicknameEntryUI);
+                ReplaceScreenWithPrefab(parent, "TutorialScreen", TutorialScreenPrefabPath, BuildTutorialUI);
                 ReplaceScreenWithPrefab(parent, "LeaderboardScreen", LeaderboardScreenPrefabPath, BuildLeaderboardUI);
 
                 var nicknameTr = parent.Find("NicknameEntryScreen");
+                var tutorialTr = parent.Find("TutorialScreen");
                 var leaderboardTr = parent.Find("LeaderboardScreen");
                 if (nicknameTr == null || leaderboardTr == null)
                 {
@@ -860,6 +903,7 @@ namespace LudumDare.Template.EditorTools
                 }
 
                 nicknameTr.gameObject.SetActive(false);
+                if (tutorialTr != null) tutorialTr.gameObject.SetActive(false);
                 leaderboardTr.gameObject.SetActive(false);
 
                 var mainMenu = uiRoot.GetComponentInChildren<MainMenuScreen>(true);
@@ -869,7 +913,14 @@ namespace LudumDare.Template.EditorTools
                     var lb = leaderboardTr.GetComponent<LeaderboardScreen>();
                     if (nick != null) SetField(mainMenu, "_nicknameEntryScreen", nick);
                     if (lb != null) SetField(mainMenu, "_leaderboardScreen", lb);
+                    if (nick != null && tutorialTr != null)
+                    {
+                        var tut = tutorialTr.GetComponent<TutorialScreen>();
+                        if (tut != null) SetField(nick, "_tutorialScreen", tut);
+                    }
+
                     PrefabUtility.RecordPrefabInstancePropertyModifications(mainMenu);
+                    if (nick != null) PrefabUtility.RecordPrefabInstancePropertyModifications(nick);
                 }
             }
 

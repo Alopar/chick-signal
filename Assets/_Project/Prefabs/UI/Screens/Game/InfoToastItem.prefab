@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.UI.InfoToastItemView
   _canvasGroup: {fileID: 371900004}
   _label: {fileID: 371900005}
-  _duration: 1.35
+  _duration: 2
   _fadeInDuration: 0.16
   _fadeOutDuration: 0.2
   _riseDistance: 36

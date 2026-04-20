@@ -11,6 +11,8 @@ namespace LudumDare.Template.UI
         [SerializeField] private Button _confirmButton;
         [SerializeField] private Button _backButton;
         [SerializeField] private int _maxNicknameLength = 32;
+        [Tooltip("Shown after a valid nickname is confirmed (sibling under UIRoot if not assigned).")]
+        [SerializeField] private TutorialScreen _tutorialScreen;
 
         private bool _clickListenersAdded;
 
@@ -25,6 +27,11 @@ namespace LudumDare.Template.UI
         protected override void Awake()
         {
             base.Awake();
+            if (_tutorialScreen == null)
+            {
+                _tutorialScreen = LeaderboardUiRuntimeBuilder.FindChildScreen(transform.parent, "TutorialScreen") as TutorialScreen;
+            }
+
             TryAddListeners();
         }
 
@@ -55,6 +62,12 @@ namespace LudumDare.Template.UI
 
             if (PlayerSession.HasInstance) PlayerSession.Instance.SetNickname(raw);
             if (SaveManager.HasInstance) SaveManager.Instance.LastNickname = raw;
+
+            if (_tutorialScreen != null && UIManager.HasInstance)
+            {
+                UIManager.Instance.Push(_tutorialScreen);
+                return;
+            }
 
             if (SceneLoader.HasInstance) SceneLoader.Instance.LoadGame();
         }
