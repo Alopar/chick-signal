@@ -617,6 +617,12 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void HandleTrapAttract() => TryPlacePlayerTrap(PlayerTrapKind.Attract);
 
+        public void RequestDashFromUi() => HandleDash();
+
+        public void RequestTrapSlowFromUi() => HandleTrapSlow();
+
+        public void RequestTrapAttractFromUi() => HandleTrapAttract();
+
         public void ApplyEvolutionBonus(SignalEvolutionBonus bonus)
         {
             if (_phase != SignalRunPhase.EvolutionPick) return;

@@ -20,6 +20,14 @@ namespace LudumDare.Template.UI
         [SerializeField] private Button _healCardButton;
         [SerializeField] private Button _trapCardButton;
         [SerializeField] private Button _purgeCardButton;
+        [SerializeField] private Button _pauseButton;
+        [SerializeField] private PauseScreen _pauseScreen;
+        [SerializeField] private Button _dashAbilityButton;
+        [SerializeField] private Button _trapSlowAbilityButton;
+        [SerializeField] private Button _trapAttractAbilityButton;
+        [SerializeField] private Image _dashCooldownOverlay;
+        [SerializeField] private Image _trapSlowCooldownOverlay;
+        [SerializeField] private Image _trapAttractCooldownOverlay;
         [SerializeField] private float _cardHoverLift = 14f;
         [SerializeField] private float _cardHoverDuration = 0.12f;
 
@@ -48,6 +56,12 @@ namespace LudumDare.Template.UI
 
             AutoWireEvolutionCards();
             BindEvolutionButtons();
+            AutoWirePauseButton();
+            AutoWireAbilityBar();
+            BindButton(_pauseButton, OnPauseButtonClicked);
+            BindButton(_dashAbilityButton, OnDashAbilityClicked);
+            BindButton(_trapSlowAbilityButton, OnTrapSlowAbilityClicked);
+            BindButton(_trapAttractAbilityButton, OnTrapAttractAbilityClicked);
             SetupCardHover();
             SetEvolutionCardsVisible(false);
         }
@@ -80,6 +94,9 @@ namespace LudumDare.Template.UI
         private void HandleSignalHud(SignalHudSnapshot snapshot)
         {
             if (_waveLabel != null) _waveLabel.text = $"Wave: {Mathf.Max(1, snapshot.WaveDisplayIndex)}";
+            ApplyCooldownRadial(_dashCooldownOverlay, snapshot.DashReady01);
+            ApplyCooldownRadial(_trapSlowCooldownOverlay, snapshot.TrapSlowBar01);
+            ApplyCooldownRadial(_trapAttractCooldownOverlay, snapshot.TrapAttractBar01);
         }
 
         private void HandleInfoToast(SignalInfoToastEvent toastEvent)
@@ -139,6 +156,63 @@ namespace LudumDare.Template.UI
             BindButton(_healCardButton, ApplyHealBonus);
             BindButton(_trapCardButton, ApplyTrapBonus);
             BindButton(_purgeCardButton, ApplyPurgeBonus);
+        }
+
+        private void AutoWirePauseButton()
+        {
+            if (_pauseButton == null)
+                _pauseButton = FindButton("PauseButton");
+        }
+
+        private void AutoWireAbilityBar()
+        {
+            if (_dashAbilityButton == null)
+                _dashAbilityButton = FindButton("AbilityBar/DashAbility");
+            if (_trapSlowAbilityButton == null)
+                _trapSlowAbilityButton = FindButton("AbilityBar/TrapSlowAbility");
+            if (_trapAttractAbilityButton == null)
+                _trapAttractAbilityButton = FindButton("AbilityBar/TrapAttractAbility");
+            if (_dashCooldownOverlay == null)
+                _dashCooldownOverlay = FindImage("AbilityBar/DashAbility/CooldownOverlay");
+            if (_trapSlowCooldownOverlay == null)
+                _trapSlowCooldownOverlay = FindImage("AbilityBar/TrapSlowAbility/CooldownOverlay");
+            if (_trapAttractCooldownOverlay == null)
+                _trapAttractCooldownOverlay = FindImage("AbilityBar/TrapAttractAbility/CooldownOverlay");
+        }
+
+        private static void ApplyCooldownRadial(Image overlay, float ready01)
+        {
+            if (overlay == null) return;
+            float cd = 1f - Mathf.Clamp01(ready01);
+            overlay.fillAmount = cd;
+            overlay.enabled = cd > 0.001f;
+        }
+
+        private Image FindImage(string path)
+        {
+            var child = transform.Find(path);
+            if (child == null) return null;
+            return child.TryGetComponent(out Image img) ? img : null;
+        }
+
+        private void OnPauseButtonClicked() => PauseInputWatcher.TogglePauseMenu(_pauseScreen);
+
+        private void OnDashAbilityClicked()
+        {
+            if (_signalController == null) _signalController = FindAnyObjectByType<SignalGameController>();
+            _signalController?.RequestDashFromUi();
+        }
+
+        private void OnTrapSlowAbilityClicked()
+        {
+            if (_signalController == null) _signalController = FindAnyObjectByType<SignalGameController>();
+            _signalController?.RequestTrapSlowFromUi();
+        }
+
+        private void OnTrapAttractAbilityClicked()
+        {
+            if (_signalController == null) _signalController = FindAnyObjectByType<SignalGameController>();
+            _signalController?.RequestTrapAttractFromUi();
         }
 
         private static void BindButton(Button button, UnityEngine.Events.UnityAction action)

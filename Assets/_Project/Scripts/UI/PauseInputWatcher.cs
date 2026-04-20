@@ -5,23 +5,21 @@ using UnityEngine.InputSystem;
 namespace LudumDare.Template.UI
 {
     /// <summary>
-    /// Toggles the <see cref="PauseScreen"/> on ESC / gamepad Start. Lives in the Game scene and
-    /// grabs the screen reference through <see cref="UIManager"/>.
+    /// Toggles the <see cref="PauseScreen"/> on keyboard P / gamepad Start. Lives in the Game scene;
+    /// <see cref="HUDScreen"/> can call <see cref="TogglePauseMenu"/> with the same behaviour.
     /// </summary>
     public class PauseInputWatcher : MonoBehaviour
     {
         [SerializeField] private PauseScreen _pauseScreen;
 
-        private void Update()
+        /// <summary>Opens or closes the pause overlay (same logic as the keyboard shortcut).</summary>
+        public static void TogglePauseMenu(PauseScreen pauseScreen)
         {
-            if (Keyboard.current == null) return;
-            if (!Keyboard.current.escapeKey.wasPressedThisFrame &&
-                (Gamepad.current == null || !Gamepad.current.startButton.wasPressedThisFrame))
-            {
-                return;
-            }
+            PauseScreen screen = pauseScreen != null
+                ? pauseScreen
+                : UnityEngine.Object.FindAnyObjectByType<PauseScreen>();
 
-            if (_pauseScreen == null || !PauseService.HasInstance || !UIManager.HasInstance) return;
+            if (screen == null || !PauseService.HasInstance || !UIManager.HasInstance) return;
 
             if (PauseService.Instance.IsPaused)
             {
@@ -31,8 +29,20 @@ namespace LudumDare.Template.UI
             else
             {
                 PauseService.Instance.Pause();
-                UIManager.Instance.Push(_pauseScreen, hideCurrent: false);
+                UIManager.Instance.Push(screen, hideCurrent: false);
             }
+        }
+
+        private void Update()
+        {
+            if (Keyboard.current == null) return;
+            if (!Keyboard.current.pKey.wasPressedThisFrame &&
+                (Gamepad.current == null || !Gamepad.current.startButton.wasPressedThisFrame))
+            {
+                return;
+            }
+
+            TogglePauseMenu(_pauseScreen);
         }
     }
 }
