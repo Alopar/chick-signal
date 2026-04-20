@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: MainMenuBgmCue
   m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Managers.AudioCueSO
   Clips:
-  - {fileID: 8300000, guid: 765790391b1243848a2fa1eb26289296, type: 3}
-  Volume: 0.75
+  - {fileID: 8300000, guid: 8093c82d16c4fd14bbc99c7779670044, type: 3}
+  Volume: 0.5
   PitchRange: {x: 1, y: 1}
   Loop: 1
   MixerGroup: {fileID: 3314805556022513538, guid: f20bc4b0e3db0b04fb47cdf82e7401ca, type: 2}

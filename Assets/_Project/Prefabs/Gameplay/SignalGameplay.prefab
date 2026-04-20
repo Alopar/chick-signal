@@ -56,6 +56,9 @@ MonoBehaviour:
   _hudChannel: {fileID: 11400000, guid: 2f433af4ad02de2479b8d60899d759c1, type: 2}
   _evolutionModalChannel: {fileID: 11400000, guid: e16036e33e66d17409706b360a6e7de4, type: 2}
   _floatingPopupChannel: {fileID: 11400000, guid: 3d898474a0f84a3596cbf6cf2a85a2f9, type: 2}
+  _infoToastChannel: {fileID: 0}
+  _playerSignalCue: {fileID: 11400000, guid: 4d8a91c3f2b04e6d9c1a5e7b3d9f2104, type: 2}
+  _playerCounterSignalCue: {fileID: 11400000, guid: 5e9b02d4a3c15f7e0d2b6f8c4e0a3215, type: 2}
   _cameraFollowSmoothTime: 0.18
   _cameraFollowMaxSpeed: 80
   _cameraMouseBiasMaxWorld: 0.42

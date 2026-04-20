@@ -25,6 +25,9 @@ namespace LudumDare.Template.Managers
         private AudioSource _musicB;
         private bool _usingA = true;
 
+        private AudioSource _heldSfx;
+        private AudioCueSO _heldCueActive;
+
         private const string ParamMaster = "MasterVolume";
         private const string ParamMusic  = "MusicVolume";
         private const string ParamSfx    = "SFXVolume";
@@ -87,6 +90,39 @@ namespace LudumDare.Template.Managers
             src.outputAudioMixerGroup = cue.MixerGroup != null ? cue.MixerGroup : _sfxGroup;
             src.Play();
             _sfxPool.Enqueue(src);
+        }
+
+        /// <summary>
+        /// Один удерживаемый зацикленный SFX (например сигнал/контрсигнал). При смене cue или <c>null</c> — остановка/перезапуск.
+        /// </summary>
+        public void SetHeldLoopingSfx(AudioCueSO cue)
+        {
+            if (cue == null)
+            {
+                if (_heldSfx != null) _heldSfx.Stop();
+                _heldCueActive = null;
+                return;
+            }
+
+            if (_heldCueActive == cue && _heldSfx != null && _heldSfx.isPlaying)
+                return;
+
+            if (cue.Clips == null || cue.Clips.Length == 0) return;
+            var clip = cue.Clips[0];
+            if (clip == null) return;
+
+            if (_heldSfx == null)
+            {
+                _heldSfx = CreateSource("SFX_Held", _sfxGroup, loop: true);
+            }
+
+            _heldCueActive = cue;
+            _heldSfx.clip = clip;
+            _heldSfx.volume = cue.Volume;
+            _heldSfx.pitch = 0.5f * (cue.PitchRange.x + cue.PitchRange.y);
+            _heldSfx.loop = cue.Loop;
+            _heldSfx.outputAudioMixerGroup = cue.MixerGroup != null ? cue.MixerGroup : _sfxGroup;
+            _heldSfx.Play();
         }
 
         public void PlayMusic(AudioCueSO cue, float fadeSeconds = 1f)

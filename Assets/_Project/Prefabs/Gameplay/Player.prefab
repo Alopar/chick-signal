@@ -124,7 +124,7 @@ MonoBehaviour:
   _rigidbody2D: {fileID: 2973987001409804090}
   _animator: {fileID: 8812345678901234504}
   _spriteRenderer: {fileID: 8812345678901234503}
-  _attackCue: {fileID: 11400000, guid: 6be22f54e459df148bbb6696f11220f4, type: 2}
+  _attackCue: {fileID: 0}
   _moveSpeed: 5
   _movingSpeedThreshold: 0.05
 --- !u!1 &8812345678901234501
@@ -257,3 +257,12 @@ MonoBehaviour:
   _controller: {fileID: 0}
   _spriteRenderer: {fileID: 8812345678901234503}
   _intensityCurvePower: 0.9
+  _dashIntensityScale: 1
+  _echoSpread: 0.12
+  _echoStepScale: 0.28
+  _echoStrength: 0.85
+  _echoTint: {r: 0.55, g: 0.92, b: 1, a: 1}
+  _chromaticAmount: 0.35
+  _chromaticSpread: 0.014
+  _glow: 0.18
+  _spriteTint: {r: 1, g: 1, b: 1, a: 1}

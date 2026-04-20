@@ -49,6 +49,10 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private SignalFloatingPopupEventChannelSO _floatingPopupChannel;
         [SerializeField] private SignalInfoToastEventChannelSO _infoToastChannel;
 
+        [Header("Player SFX")]
+        [SerializeField] private AudioCueSO _playerSignalCue;
+        [SerializeField] private AudioCueSO _playerCounterSignalCue;
+
         [Header("Camera")]
         [Tooltip("Время сглаживания следования камеры за игроком (SmoothDamp).")]
         [SerializeField] private float _cameraFollowSmoothTime = 0.18f;
@@ -321,6 +325,7 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void OnDisable()
         {
+            StopHeldPlayerSfx();
             if (_inputReader != null)
             {
                 _inputReader.OnJump -= HandleDash;
@@ -454,11 +459,37 @@ namespace LudumDare.Template.Gameplay.Signal
         private void Update()
         {
             if (_balance == null || _inputReader == null) return;
-            if (_phase != SignalRunPhase.Playing) return;
+            if (_phase != SignalRunPhase.Playing)
+            {
+                StopHeldPlayerSfx();
+                return;
+            }
 
             bool jammed = _player.SignalJam > 0f;
             _player.IsEmitting = _inputReader.IsAttackHeld && !jammed;
             _player.IsRepelling = _inputReader.IsRepelHeld && !jammed;
+            SyncPlayerHeldSfx();
+        }
+
+        private void SyncPlayerHeldSfx()
+        {
+            if (!AudioManager.HasInstance) return;
+
+            bool paused = PauseService.HasInstance && PauseService.Instance.IsPaused;
+            AudioCueSO held = null;
+            if (!paused)
+            {
+                if (_player.IsRepelling) held = _playerCounterSignalCue;
+                else if (_player.IsEmitting) held = _playerSignalCue;
+            }
+
+            AudioManager.Instance.SetHeldLoopingSfx(held);
+        }
+
+        private static void StopHeldPlayerSfx()
+        {
+            if (AudioManager.HasInstance)
+                AudioManager.Instance.SetHeldLoopingSfx(null);
         }
 
         private void LateUpdate()
