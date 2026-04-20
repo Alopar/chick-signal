@@ -45,6 +45,7 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private Behaviour[] _disableWhileSignalRuns;
         [SerializeField] private SignalHudEventChannelSO _hudChannel;
         [SerializeField] private SignalEvolutionEventChannelSO _evolutionModalChannel;
+        [SerializeField] private SignalFloatingPopupEventChannelSO _floatingPopupChannel;
 
         [Header("Camera")]
         [Tooltip("Время сглаживания следования камеры за игроком (SmoothDamp).")]
@@ -58,6 +59,8 @@ namespace LudumDare.Template.Gameplay.Signal
 
         public SignalHudEventChannelSO HudChannel => _hudChannel;
         public SignalEvolutionEventChannelSO EvolutionChannel => _evolutionModalChannel;
+        public SignalFloatingPopupEventChannelSO FloatingPopupChannel => _floatingPopupChannel;
+        public void SetFloatingPopupChannel(SignalFloatingPopupEventChannelSO channel) => _floatingPopupChannel = channel;
 
         /// <summary>Вызывается UI после подписки на канал, чтобы не терять первый снимок.</summary>
         public void RefreshHud() => PushHud();
@@ -550,8 +553,10 @@ namespace LudumDare.Template.Gameplay.Signal
             switch (bonus)
             {
                 case SignalEvolutionBonus.Heal:
+                    float hpDelta = _nest.MaxHp + 10f - _nest.Hp;
                     _nest.MaxHp += 10f;
                     _nest.Hp = _nest.MaxHp;
+                    RaiseFloatingPopup(SignalFloatingPopupType.HpGain, hpDelta, _nest.X, _nest.Y);
                     break;
                 case SignalEvolutionBonus.Trap:
                     AddBonusTrapZone();
@@ -757,15 +762,21 @@ namespace LudumDare.Template.Gameplay.Signal
                 {
                     if (_nest.Absorbing)
                     {
-                        _nest.Satiety += SatiationPerAbsorbed(SignalNpcKind.Green);
+                        float satietyGain = SatiationPerAbsorbed(SignalNpcKind.Green);
+                        _nest.Satiety += satietyGain;
+                        RaiseFloatingPopup(SignalFloatingPopupType.FoodGain, satietyGain, ally.X, ally.Y);
                         AddScoreForAbsorbed(SignalNpcKind.Green);
                         TryCompleteSatietyLevel();
                     }
                     else
                     {
                         _nest.Charge += 1f;
+                        RaiseFloatingPopup(SignalFloatingPopupType.ChargeGain, 1f, ally.X, ally.Y);
                         if (S.OptionNestHealFromGreen)
+                        {
                             _nest.Hp = Mathf.Min(_nest.MaxHp, _nest.Hp + 1f);
+                            RaiseFloatingPopup(SignalFloatingPopupType.HpGain, 1f, ally.X, ally.Y);
+                        }
                         if (_nest.Charge >= _nest.ChargeMax)
                         {
                             _nest.Charge = _nest.ChargeMax;
@@ -855,7 +866,9 @@ namespace LudumDare.Template.Gameplay.Signal
                 {
                     if (_nest.Absorbing)
                     {
-                        _nest.Satiety += SatiationPerAbsorbed(enemy.Kind);
+                        float satietyGain = SatiationPerAbsorbed(enemy.Kind);
+                        _nest.Satiety += satietyGain;
+                        RaiseFloatingPopup(SignalFloatingPopupType.FoodGain, satietyGain, enemy.X, enemy.Y);
                         AddScoreForAbsorbed(enemy.Kind);
                         TryCompleteSatietyLevel();
                         _enemies.RemoveAt(ei);
@@ -866,6 +879,7 @@ namespace LudumDare.Template.Gameplay.Signal
                     if (!(enemy.Kind == SignalNpcKind.Red && S.CheatNoRedEnemyNestDamage))
                     {
                         _nest.Hp = Mathf.Max(0f, _nest.Hp - dmg);
+                        RaiseFloatingPopup(SignalFloatingPopupType.Damage, dmg, enemy.X, enemy.Y);
                         if (_nest.Hp <= 0f)
                         {
                             EndDefeat();
@@ -1406,6 +1420,13 @@ namespace LudumDare.Template.Gameplay.Signal
                 TrapBarPercent(_trapAttract, _balance.Traps.PlayerTrapMaxCharges, _balance.Traps.PlayerTrapRechargeAttract) / 100f
             );
             _hudChannel.Raise(snap);
+        }
+
+        private void RaiseFloatingPopup(SignalFloatingPopupType type, float amount, float sourceLogicalX, float sourceLogicalY)
+        {
+            if (_floatingPopupChannel == null || amount <= 0f) return;
+            Vector3 worldPosition = LogicalToWorld(sourceLogicalX, sourceLogicalY);
+            _floatingPopupChannel.Raise(new SignalFloatingPopupEvent(type, amount, worldPosition));
         }
 
         private void SyncTransforms()

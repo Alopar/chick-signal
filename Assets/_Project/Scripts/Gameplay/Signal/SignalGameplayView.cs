@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LudumDare.Template.Core;
 using UnityEngine;
 
 namespace LudumDare.Template.Gameplay.Signal
@@ -26,6 +27,14 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private Color _mudTrapTint = new(1f, 1f, 1f, 0.88f);
         [SerializeField] private Color _flyTrapTint = new(1f, 1f, 1f, 0.88f);
         [SerializeField] private Color _pulseColor = new(0.27f, 0.8f, 1f, 0.5f);
+        [Header("Floating Popups")]
+        [SerializeField] private SignalFloatingPopupEventChannelSO _floatingPopupChannel;
+        [SerializeField] private GameObject _floatingPopupPrefab;
+        [SerializeField] private int _floatingPopupPrewarm = 16;
+        [SerializeField] private Color _popupDamageColor = new(1f, 0.35f, 0.35f, 1f);
+        [SerializeField] private Color _popupHpGainColor = new(0.45f, 1f, 0.45f, 1f);
+        [SerializeField] private Color _popupChargeGainColor = new(0.45f, 0.9f, 1f, 1f);
+        [SerializeField] private Color _popupFoodGainColor = new(1f, 0.9f, 0.35f, 1f);
         [Header("Nest Chick Growth")]
         [SerializeField] private float _chickBaseScale = 1f;
         [SerializeField] private float _chickGrowthPerNestRadiusUnit = 0.01f;
@@ -50,6 +59,7 @@ namespace LudumDare.Template.Gameplay.Signal
         private MaterialPropertyBlock _mpbRepel;
         private LineRenderer _realNestRadiusRing;
         private LineRenderer _visualChickRadiusRing;
+        private ObjectPool _floatingPopupPool;
 
         private void Awake()
         {
@@ -78,6 +88,41 @@ namespace LudumDare.Template.Gameplay.Signal
 
             EnsureNestVisual();
             EnsureConeRenderers();
+            EnsureFloatingPopupPool();
+        }
+
+        private void OnEnable()
+        {
+            if (_controller != null)
+            {
+                var controllerChannel = _controller.FloatingPopupChannel;
+                if (controllerChannel == null && _floatingPopupChannel != null)
+                {
+                    _controller.SetFloatingPopupChannel(_floatingPopupChannel);
+                    controllerChannel = _floatingPopupChannel;
+                }
+                else if (_floatingPopupChannel == null && controllerChannel != null)
+                {
+                    _floatingPopupChannel = controllerChannel;
+                }
+                else if (_floatingPopupChannel != null && controllerChannel != null && _floatingPopupChannel != controllerChannel)
+                {
+                    // Keep one shared channel instance so emitter/subscriber always meet.
+                    _controller.SetFloatingPopupChannel(_floatingPopupChannel);
+                    controllerChannel = _floatingPopupChannel;
+                }
+
+                _floatingPopupChannel = controllerChannel;
+            }
+
+            if (_floatingPopupChannel != null)
+                _floatingPopupChannel.OnPopupRequested += HandleFloatingPopup;
+        }
+
+        private void OnDisable()
+        {
+            if (_floatingPopupChannel != null)
+                _floatingPopupChannel.OnPopupRequested -= HandleFloatingPopup;
         }
 
         private void EnsureConeVisualSettings()
@@ -522,6 +567,76 @@ namespace LudumDare.Template.Gameplay.Signal
         }
 
         private static Sprite _cachedSprite;
+
+        private void EnsureFloatingPopupPool()
+        {
+            if (_floatingPopupPool != null) return;
+            if (_fxRoot == null) return;
+            if (_floatingPopupChannel == null && _controller != null)
+                _floatingPopupChannel = _controller.FloatingPopupChannel;
+            if (_floatingPopupPrefab == null)
+            {
+                Debug.LogWarning($"{nameof(SignalGameplayView)}: не назначен префаб popup ({nameof(_floatingPopupPrefab)}).");
+                return;
+            }
+
+            _floatingPopupPool = new ObjectPool(_floatingPopupPrefab, _fxRoot, Mathf.Max(0, _floatingPopupPrewarm));
+        }
+
+        private void HandleFloatingPopup(SignalFloatingPopupEvent popupEvent)
+        {
+            EnsureFloatingPopupPool();
+            if (_floatingPopupPool == null) return;
+
+            var go = _floatingPopupPool.Get(popupEvent.WorldPosition, Quaternion.identity);
+            var view = go.GetComponent<SignalFloatingPopupView>();
+            if (view == null)
+            {
+                _floatingPopupPool.Release(go);
+                return;
+            }
+
+            view.Play(
+                FormatPopupText(popupEvent),
+                ResolvePopupColor(popupEvent.Type),
+                popupEvent.WorldPosition,
+                OnPopupFinished);
+        }
+
+        private void OnPopupFinished(SignalFloatingPopupView view)
+        {
+            if (view == null || _floatingPopupPool == null) return;
+            _floatingPopupPool.Release(view.gameObject);
+        }
+
+        private static string FormatPopupText(SignalFloatingPopupEvent popupEvent)
+        {
+            int amountInt = Mathf.Max(1, Mathf.RoundToInt(popupEvent.Amount));
+            string value = popupEvent.Type == SignalFloatingPopupType.Damage
+                ? $"-{amountInt}"
+                : $"+{amountInt}";
+            string suffix = popupEvent.Type switch
+            {
+                SignalFloatingPopupType.Damage => " HP",
+                SignalFloatingPopupType.HpGain => " HP",
+                SignalFloatingPopupType.ChargeGain => " Charge",
+                SignalFloatingPopupType.FoodGain => " Food",
+                _ => string.Empty,
+            };
+            return value + suffix;
+        }
+
+        private Color ResolvePopupColor(SignalFloatingPopupType type)
+        {
+            return type switch
+            {
+                SignalFloatingPopupType.Damage => _popupDamageColor,
+                SignalFloatingPopupType.HpGain => _popupHpGainColor,
+                SignalFloatingPopupType.ChargeGain => _popupChargeGainColor,
+                SignalFloatingPopupType.FoodGain => _popupFoodGainColor,
+                _ => Color.white,
+            };
+        }
 
         private sealed class NpcVisual
         {
