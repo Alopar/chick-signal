@@ -1304,6 +1304,7 @@ namespace LudumDare.Template.Gameplay.Signal
             while (wdef.HasValue && wdef.Value.Duration > 0f && _waveElapsed >= wdef.Value.Duration)
             {
                 FlushEnemySpawnsUpTo(wdef.Value.Duration);
+                OnWaveCompleted(_waveNumber);
                 if (waveCount > 0 && _waveNumber == waveCount)
                 {
                     EndVictory();
@@ -1317,6 +1318,18 @@ namespace LudumDare.Template.Gameplay.Signal
             }
 
             FlushEnemySpawnsUpTo(_waveElapsed);
+        }
+
+        private void OnWaveCompleted(int completedWaveNumber)
+        {
+            if (_balance == null || !GameManager.HasInstance) return;
+            int every = Mathf.Max(1, _balance.WaveScoreBonus.EveryNthWave);
+            int award = Mathf.Max(0, _balance.WaveScoreBonus.ScoreAward);
+            if (award <= 0) return;
+            if (completedWaveNumber % every != 0) return;
+
+            GameManager.Instance.AddScore(award);
+            Debug.Log($"[Signal][WaveScore] Wave {completedWaveNumber} completed: +{award}, total={GameManager.Instance.Score}");
         }
 
         private void SpawnEnemy(SignalNpcKind kind)

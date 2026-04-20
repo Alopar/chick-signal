@@ -131,6 +131,9 @@ MonoBehaviour:
     ThirdBonus: 5
     FourthThreshold: 16
     FourthBonus: 10
+  WaveScoreBonus:
+    EveryNthWave: 5
+    ScoreAward: 100
   Ally:
     SpeedMin: 60
     SpeedRand: 20

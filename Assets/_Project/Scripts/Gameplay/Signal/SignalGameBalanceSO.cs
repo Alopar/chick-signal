@@ -28,6 +28,7 @@ namespace LudumDare.Template.Gameplay.Signal
         public SpawnBalance Spawn = new();
         public EnemyBalance Enemy = new();
         public ComboBalance Combo = new();
+        public WaveScoreBonusBalance WaveScoreBonus = new();
         public AllyBalance Ally = new();
         public WinBalance Win = new();
 
@@ -171,6 +172,13 @@ namespace LudumDare.Template.Gameplay.Signal
     }
 
     [Serializable]
+    public struct WaveScoreBonusBalance
+    {
+        [Min(1)] public int EveryNthWave;
+        [Min(0)] public int ScoreAward;
+    }
+
+    [Serializable]
     public struct AllyBalance
     {
         public float SpeedMin;
@@ -307,6 +315,12 @@ namespace LudumDare.Template.Gameplay.Signal
                 ThirdBonus = 5,
                 FourthThreshold = 16,
                 FourthBonus = 10,
+            };
+
+            s.WaveScoreBonus = new WaveScoreBonusBalance
+            {
+                EveryNthWave = 5,
+                ScoreAward = 100,
             };
 
             s.Ally = new AllyBalance { SpeedMin = 60f, SpeedRand = 20f, Radius = 9f };
