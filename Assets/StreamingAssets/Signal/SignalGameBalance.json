@@ -122,56 +122,6 @@
         "Duration": 80.0,
         "Red": 7,
         "Green": 80
-      },
-      {
-        "Duration": 5.0,
-        "Red": 1,
-        "Green": 4
-      },
-      {
-        "Duration": 25.0,
-        "Red": 5,
-        "Green": 10
-      },
-      {
-        "Duration": 40.0,
-        "Red": 8,
-        "Green": 15
-      },
-      {
-        "Duration": 60.0,
-        "Red": 12,
-        "Green": 35
-      },
-      {
-        "Duration": 71.0,
-        "Red": 15,
-        "Green": 55
-      },
-      {
-        "Duration": 75.0,
-        "Red": 15,
-        "Green": 24
-      },
-      {
-        "Duration": 85.0,
-        "Red": 15,
-        "Green": 13
-      },
-      {
-        "Duration": 80.0,
-        "Red": 16,
-        "Green": 75
-      },
-      {
-        "Duration": 150.0,
-        "Red": 27,
-        "Green": 42
-      },
-      {
-        "Duration": 120.0,
-        "Red": 20,
-        "Green": 150
       }
     ]
   },

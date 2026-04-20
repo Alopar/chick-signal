@@ -4,7 +4,7 @@ using UnityEngine;
 namespace LudumDare.Template.Gameplay.Signal
 {
     /// <summary>
-    /// Отображает снимок HUD через канал (TMP при наличии, иначе OnGUI).
+    /// Отображает снимок HUD через канал и TMP.
     /// </summary>
     [DefaultExecutionOrder(-40)]
     public sealed class SignalHudPresenter : MonoBehaviour
@@ -59,17 +59,6 @@ namespace LudumDare.Template.Gameplay.Signal
                 _trapSlowLabel.text = $"Q slow {s.TrapSlowBar01 * 100f:0}%";
             if (_trapAttractLabel != null)
                 _trapAttractLabel.text = $"E attract {s.TrapAttractBar01 * 100f:0}%";
-        }
-
-        private void OnGUI()
-        {
-            if (_nestChargeLabel != null) return;
-            var s = _last;
-            const float line = 22f;
-            float y = 8f;
-            GUI.Label(new Rect(8f, y, 500f, line), $"SIGNAL  Charge {s.NestCharge01 * 100f:0}%  HP {s.NestHp01 * 100f:0}%  Satiety {s.NestSatiety01 * 100f:0}%  Lv{s.NestLevel}");
-            y += line;
-            GUI.Label(new Rect(8f, y, 500f, line), $"Wave {s.WaveDisplayIndex}  Enemies {s.EnemyCount}  Dash {s.DashReady01 * 100f:0}%  Q {s.TrapSlowBar01 * 100f:0}%  E {s.TrapAttractBar01 * 100f:0}%");
         }
     }
 }
