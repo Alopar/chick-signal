@@ -46,6 +46,7 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private SignalHudEventChannelSO _hudChannel;
         [SerializeField] private SignalEvolutionEventChannelSO _evolutionModalChannel;
         [SerializeField] private SignalFloatingPopupEventChannelSO _floatingPopupChannel;
+        [SerializeField] private SignalInfoToastEventChannelSO _infoToastChannel;
 
         [Header("Camera")]
         [Tooltip("Время сглаживания следования камеры за игроком (SmoothDamp).")]
@@ -60,7 +61,9 @@ namespace LudumDare.Template.Gameplay.Signal
         public SignalHudEventChannelSO HudChannel => _hudChannel;
         public SignalEvolutionEventChannelSO EvolutionChannel => _evolutionModalChannel;
         public SignalFloatingPopupEventChannelSO FloatingPopupChannel => _floatingPopupChannel;
+        public SignalInfoToastEventChannelSO InfoToastChannel => _infoToastChannel;
         public void SetFloatingPopupChannel(SignalFloatingPopupEventChannelSO channel) => _floatingPopupChannel = channel;
+        public void SetInfoToastChannel(SignalInfoToastEventChannelSO channel) => _infoToastChannel = channel;
 
         /// <summary>Вызывается UI после подписки на канал, чтобы не терять первый снимок.</summary>
         public void RefreshHud() => PushHud();
@@ -185,6 +188,7 @@ namespace LudumDare.Template.Gameplay.Signal
         private int _comboEatenMonsters;
         private int _comboBonus;
         private float _comboTimeLeft;
+        private bool _waveStartToastPending;
 
         private float _gameTime;
         private Vector3 _cameraFollowVelocity;
@@ -201,6 +205,8 @@ namespace LudumDare.Template.Gameplay.Signal
                 _hudChannel = ScriptableObject.CreateInstance<SignalHudEventChannelSO>();
             if (_evolutionModalChannel == null)
                 _evolutionModalChannel = ScriptableObject.CreateInstance<SignalEvolutionEventChannelSO>();
+            if (_infoToastChannel == null)
+                _infoToastChannel = ScriptableObject.CreateInstance<SignalInfoToastEventChannelSO>();
 
             if (_inputReader == null)
                 _inputReader = Resources.Load<InputReader>("InputReader");
@@ -347,6 +353,7 @@ namespace LudumDare.Template.Gameplay.Signal
             _waveSpawnNext.Clear();
             _gameTime = 0f;
             ResetCombo();
+            _waveStartToastPending = true;
 
             RebuildEnemySpawnSchedule();
             var sp = _balance.Spawn;
@@ -375,6 +382,11 @@ namespace LudumDare.Template.Gameplay.Signal
 
             float dt = Mathf.Min(Time.fixedDeltaTime, _balance.LoopMaxDeltaTime);
             Step(dt);
+            if (_waveStartToastPending)
+            {
+                _waveStartToastPending = false;
+                RaiseInfoToast(SignalInfoToastType.WaveStarted, waveNumber: _waveNumber);
+            }
             PushHud();
             SyncTransforms();
         }
@@ -995,24 +1007,28 @@ namespace LudumDare.Template.Gameplay.Signal
             {
                 _comboBonus = combo.FirstBonus;
                 _comboTimeLeft += combo.TimeAddSeconds;
+                RaiseInfoToast(SignalInfoToastType.ComboReached, comboMultiplier: _comboBonus);
                 Debug.Log($"[Signal][Combo] Threshold reached: eaten={_comboEatenMonsters}, bonus={_comboBonus}x, timeLeft={_comboTimeLeft:0.00}s");
             }
             else if (_comboEatenMonsters == combo.SecondThreshold)
             {
                 _comboBonus = combo.SecondBonus;
                 _comboTimeLeft += combo.TimeAddSeconds;
+                RaiseInfoToast(SignalInfoToastType.ComboReached, comboMultiplier: _comboBonus);
                 Debug.Log($"[Signal][Combo] Threshold reached: eaten={_comboEatenMonsters}, bonus={_comboBonus}x, timeLeft={_comboTimeLeft:0.00}s");
             }
             else if (_comboEatenMonsters == combo.ThirdThreshold)
             {
                 _comboBonus = combo.ThirdBonus;
                 _comboTimeLeft += combo.TimeAddSeconds;
+                RaiseInfoToast(SignalInfoToastType.ComboReached, comboMultiplier: _comboBonus);
                 Debug.Log($"[Signal][Combo] Threshold reached: eaten={_comboEatenMonsters}, bonus={_comboBonus}x, timeLeft={_comboTimeLeft:0.00}s");
             }
             else if (_comboEatenMonsters == combo.FourthThreshold)
             {
                 _comboBonus = combo.FourthBonus;
                 _comboTimeLeft += combo.TimeAddSeconds;
+                RaiseInfoToast(SignalInfoToastType.ComboReached, comboMultiplier: _comboBonus);
                 Debug.Log($"[Signal][Combo] Threshold reached: eaten={_comboEatenMonsters}, bonus={_comboBonus}x, timeLeft={_comboTimeLeft:0.00}s");
             }
 
@@ -1330,6 +1346,7 @@ namespace LudumDare.Template.Gameplay.Signal
                 _waveElapsed -= wdef.Value.Duration;
                 _waveNumber++;
                 RebuildEnemySpawnSchedule();
+                _waveStartToastPending = true;
                 wdef = GetSpawnWaveDef();
             }
 
@@ -1345,6 +1362,7 @@ namespace LudumDare.Template.Gameplay.Signal
             if (completedWaveNumber % every != 0) return;
 
             GameManager.Instance.AddScore(award);
+            RaiseInfoToast(SignalInfoToastType.WaveScoreBonus, waveNumber: completedWaveNumber, scoreAmount: award);
             Debug.Log($"[Signal][WaveScore] Wave {completedWaveNumber} completed: +{award}, total={GameManager.Instance.Score}");
         }
 
@@ -1429,6 +1447,12 @@ namespace LudumDare.Template.Gameplay.Signal
             if (_floatingPopupChannel == null || amount <= 0f) return;
             Vector3 worldPosition = LogicalToWorld(sourceLogicalX, sourceLogicalY);
             _floatingPopupChannel.Raise(new SignalFloatingPopupEvent(type, amount, worldPosition));
+        }
+
+        private void RaiseInfoToast(SignalInfoToastType type, int waveNumber = 0, int comboMultiplier = 0, int scoreAmount = 0)
+        {
+            if (_infoToastChannel == null) return;
+            _infoToastChannel.Raise(new SignalInfoToastEvent(type, waveNumber, comboMultiplier, scoreAmount));
         }
 
         private void SyncTransforms()

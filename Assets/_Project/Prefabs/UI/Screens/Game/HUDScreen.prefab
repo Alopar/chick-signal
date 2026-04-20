@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &490001000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 490001001}
+  - component: {fileID: 490001002}
+  - component: {fileID: 490001003}
+  m_Layer: 0
+  m_Name: InfoToastsLayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &490001001
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490001000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3024754707367394466}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 900, y: 420}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!222 &490001002
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490001000}
+  m_CullTransparentMesh: 1
+--- !u!114 &490001003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490001000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a4ab71ddf34f159a8e2ee1c9b6a442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.UI.InfoToastLayerView
+  _toastPrefab: {fileID: 371900006, guid: f5f66d93529a4bbf95e7ba8e94a0c123, type: 3}
+  _spawnRoot: {fileID: 490001001}
+  _spacingY: 58
+  _showInterval: 0.2
+  _maxQueueSize: 12
 --- !u!1 &5142620331592238179
 GameObject:
   m_ObjectHideFlags: 0
@@ -31,6 +93,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2167744906892233970}
+  - {fileID: 490001001}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -67,7 +130,9 @@ MonoBehaviour:
   _showOnStart: 1
   _replacesStack: 1
   _scoreChannel: {fileID: 11400000, guid: a10e235ecb2992f4baf8c5313bfa1de3, type: 2}
+  _infoToastChannel: {fileID: 11400000, guid: e4e57c82611d4fa6b0534d6bc4e9f7aa, type: 2}
   _scoreLabel: {fileID: 8603788435553027901}
+  _infoToastLayer: {fileID: 490001003}
 --- !u!1 &7307315349792925096
 GameObject:
   m_ObjectHideFlags: 0
