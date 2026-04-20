@@ -176,6 +176,8 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void SyncUnits()
         {
+            _controller.GetNest(out _, out _, out _, out bool nestFeeding, out _);
+
             int ac = _controller.GetAllyCount();
             while (_allyVisuals.Count < ac) _allyVisuals.Add(CreateNpcVisual(_unitsRoot, SignalNpcKind.Green, 4, "Ally"));
             while (_allyVisuals.Count > ac)
@@ -188,7 +190,7 @@ namespace LudumDare.Template.Gameplay.Signal
             for (int i = 0; i < ac; i++)
             {
                 _controller.GetAlly(i, out float lx, out float ly, out float rad, out float mt);
-                ApplyNpcVisual(_allyVisuals[i], lx, ly, rad, mt > 0f);
+                ApplyNpcVisual(_allyVisuals[i], lx, ly, nestFeeding);
             }
 
             int ec = _controller.GetEnemyCount();
@@ -204,7 +206,7 @@ namespace LudumDare.Template.Gameplay.Signal
             {
                 _controller.GetEnemy(i, out float lx, out float ly, out float rad, out float mt, out SignalNpcKind kind);
                 EnsureEnemyVisualKind(i, kind, 5);
-                ApplyNpcVisual(_enemyVisuals[i], lx, ly, rad, mt > 0f);
+                ApplyNpcVisual(_enemyVisuals[i], lx, ly, nestFeeding);
             }
         }
 
@@ -246,7 +248,7 @@ namespace LudumDare.Template.Gameplay.Signal
             };
         }
 
-        private void ApplyNpcVisual(NpcVisual visual, float lx, float ly, float rad, bool active)
+        private void ApplyNpcVisual(NpcVisual visual, float lx, float ly, bool feeding)
         {
             Vector3 p = _controller.LogicalToWorldPublic(lx, ly);
             Vector3 targetPos = new Vector3(p.x, p.y, 0f);
@@ -256,13 +258,9 @@ namespace LudumDare.Template.Gameplay.Signal
                 visual.SpriteRenderer.flipX = delta.x > 0f;
 
             visual.Root.position = targetPos;
-            float worldD = 2f * rad / _controller.PixelsPerWorldUnit;
-            float sx = Mathf.Max(1e-6f, visual.SpriteRenderer.sprite != null ? visual.SpriteRenderer.sprite.bounds.size.x : GetDefaultSprite().bounds.size.x);
-            visual.Root.localScale = Vector3.one * Mathf.Max(0.03f, worldD / sx);
             if (visual.Animator != null)
             {
-                // Состояние выбирается жёстко: либо active, либо feeding.
-                visual.Animator.SetBool(FeedingHash, !active);
+                visual.Animator.SetBool(FeedingHash, feeding);
                 // Если юнит стоит на месте, анимация должна быть поставлена на паузу.
                 visual.Animator.speed = moving ? 1f : 0f;
             }
