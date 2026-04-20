@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Managers.AudioCueSO
   Clips:
   - {fileID: 8300000, guid: 4275170acec7f76419daa77bb004627e, type: 3}
-  Volume: 1
+  Volume: 0.8
   PitchRange: {x: 1, y: 1}
   Loop: 1
   MixerGroup: {fileID: 4043243294817334332, guid: f20bc4b0e3db0b04fb47cdf82e7401ca, type: 2}

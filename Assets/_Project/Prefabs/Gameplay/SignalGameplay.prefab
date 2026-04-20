@@ -59,6 +59,7 @@ MonoBehaviour:
   _infoToastChannel: {fileID: 0}
   _playerSignalCue: {fileID: 11400000, guid: 4d8a91c3f2b04e6d9c1a5e7b3d9f2104, type: 2}
   _playerCounterSignalCue: {fileID: 11400000, guid: 5e9b02d4a3c15f7e0d2b6f8c4e0a3215, type: 2}
+  _nestBlueModeCue: {fileID: 11400000, guid: b4c8dce591a243f0b8e7c6d5a3948572, type: 2}
   _cameraFollowSmoothTime: 0.18
   _cameraFollowMaxSpeed: 80
   _cameraMouseBiasMaxWorld: 0.42

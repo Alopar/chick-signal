@@ -28,6 +28,8 @@ namespace LudumDare.Template.Managers
         private AudioSource _heldSfx;
         private AudioCueSO _heldCueActive;
 
+        private AudioSource _nestFeedingSfx;
+
         private const string ParamMaster = "MasterVolume";
         private const string ParamMusic  = "MusicVolume";
         private const string ParamSfx    = "SFXVolume";
@@ -123,6 +125,33 @@ namespace LudumDare.Template.Managers
             _heldSfx.loop = cue.Loop;
             _heldSfx.outputAudioMixerGroup = cue.MixerGroup != null ? cue.MixerGroup : _sfxGroup;
             _heldSfx.Play();
+        }
+
+        /// <summary>
+        /// Зацикленный SFX режима кормления гнезда. Каждый вызов перезапускает клип с начала (новая волна).
+        /// </summary>
+        public void PlayNestFeedingWaveLoop(AudioCueSO cue)
+        {
+            if (cue == null) return;
+            if (cue.Clips == null || cue.Clips.Length == 0) return;
+            var clip = cue.Clips[0];
+            if (clip == null) return;
+
+            if (_nestFeedingSfx == null)
+                _nestFeedingSfx = CreateSource("SFX_NestFeeding", _sfxGroup, loop: true);
+
+            _nestFeedingSfx.clip = clip;
+            _nestFeedingSfx.volume = cue.Volume;
+            _nestFeedingSfx.pitch = 0.5f * (cue.PitchRange.x + cue.PitchRange.y);
+            _nestFeedingSfx.loop = cue.Loop;
+            _nestFeedingSfx.outputAudioMixerGroup = cue.MixerGroup != null ? cue.MixerGroup : _sfxGroup;
+            _nestFeedingSfx.time = 0f;
+            _nestFeedingSfx.Play();
+        }
+
+        public void StopNestFeedingLoop()
+        {
+            if (_nestFeedingSfx != null) _nestFeedingSfx.Stop();
         }
 
         public void PlayMusic(AudioCueSO cue, float fadeSeconds = 1f)

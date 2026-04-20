@@ -53,6 +53,9 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private AudioCueSO _playerSignalCue;
         [SerializeField] private AudioCueSO _playerCounterSignalCue;
 
+        [Header("Nest SFX")]
+        [SerializeField] private AudioCueSO _nestBlueModeCue;
+
         [Header("Camera")]
         [Tooltip("Время сглаживания следования камеры за игроком (SmoothDamp).")]
         [SerializeField] private float _cameraFollowSmoothTime = 0.18f;
@@ -224,6 +227,9 @@ namespace LudumDare.Template.Gameplay.Signal
         private float _gameTime;
         private Vector3 _cameraFollowVelocity;
 
+        private bool _nestWasAbsorbingForSfx;
+        private bool _pauseWasActiveForNestSfx;
+
         private void Awake()
         {
             if (_balance == null)
@@ -325,7 +331,7 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private void OnDisable()
         {
-            StopHeldPlayerSfx();
+            StopSignalSceneLoopingSfx();
             if (_inputReader != null)
             {
                 _inputReader.OnJump -= HandleDash;
@@ -419,6 +425,8 @@ namespace LudumDare.Template.Gameplay.Signal
             _gameTime = 0f;
             ResetCombo();
             _waveStartToastPending = true;
+            _nestWasAbsorbingForSfx = false;
+            _pauseWasActiveForNestSfx = false;
 
             RebuildEnemySpawnSchedule();
             var sp = _balance.Spawn;
@@ -459,11 +467,26 @@ namespace LudumDare.Template.Gameplay.Signal
         private void Update()
         {
             if (_balance == null || _inputReader == null) return;
+
+            bool paused = PauseService.HasInstance && PauseService.Instance.IsPaused;
+
             if (_phase != SignalRunPhase.Playing)
             {
-                StopHeldPlayerSfx();
+                StopSignalSceneLoopingSfx();
+                _pauseWasActiveForNestSfx = paused;
                 return;
             }
+
+            if (paused)
+            {
+                if (AudioManager.HasInstance) AudioManager.Instance.StopNestFeedingLoop();
+            }
+            else if (_pauseWasActiveForNestSfx && _nest.Absorbing && AudioManager.HasInstance && _nestBlueModeCue != null)
+            {
+                AudioManager.Instance.PlayNestFeedingWaveLoop(_nestBlueModeCue);
+            }
+
+            _pauseWasActiveForNestSfx = paused;
 
             bool jammed = _player.SignalJam > 0f;
             _player.IsEmitting = _inputReader.IsAttackHeld && !jammed;
@@ -486,10 +509,11 @@ namespace LudumDare.Template.Gameplay.Signal
             AudioManager.Instance.SetHeldLoopingSfx(held);
         }
 
-        private static void StopHeldPlayerSfx()
+        private static void StopSignalSceneLoopingSfx()
         {
-            if (AudioManager.HasInstance)
-                AudioManager.Instance.SetHeldLoopingSfx(null);
+            if (!AudioManager.HasInstance) return;
+            AudioManager.Instance.SetHeldLoopingSfx(null);
+            AudioManager.Instance.StopNestFeedingLoop();
         }
 
         private void LateUpdate()
@@ -745,6 +769,8 @@ namespace LudumDare.Template.Gameplay.Signal
             {
                 _nest.PulseTimer = 0f;
                 _pulses.Add(new PulseSim { R = _nest.Radius, Speed = S.Nest.PulseExpandSpeed });
+                if (_nest.Absorbing && AudioManager.HasInstance && _nestBlueModeCue != null)
+                    AudioManager.Instance.PlayNestFeedingWaveLoop(_nestBlueModeCue);
             }
 
             float pulseMax = NestPulseMaxR();
@@ -1020,6 +1046,13 @@ namespace LudumDare.Template.Gameplay.Signal
                     _nest.Charge = _nest.AbsorptionChargeStart * u;
                 }
             }
+
+            bool absorbNow = _nest.Absorbing;
+            if (absorbNow && !_nestWasAbsorbingForSfx && AudioManager.HasInstance && _nestBlueModeCue != null)
+                AudioManager.Instance.PlayNestFeedingWaveLoop(_nestBlueModeCue);
+            else if (!absorbNow && _nestWasAbsorbingForSfx && AudioManager.HasInstance)
+                AudioManager.Instance.StopNestFeedingLoop();
+            _nestWasAbsorbingForSfx = absorbNow;
         }
 
         private void EndDefeat()
