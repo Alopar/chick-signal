@@ -101,10 +101,10 @@ MonoBehaviour:
   _controller: {fileID: 2419645840226337993}
   _nestAnchor: {fileID: 8033847721100551234}
   _nestVisualPrefab: {fileID: 6707988994521686595, guid: 26df7052ae9bdd946a4717518545a799, type: 3}
+  _caterpillarVisualPrefab: {fileID: 5100000000000000001, guid: d3e4f506172849ab8c9d0e1f2a3b4c5d, type: 3}
+  _spiderVisualPrefab: {fileID: 5200000000000000001, guid: e4f5061728394abc9d0e1f2a3b4c5d6e, type: 3}
   _signalCone: {fileID: 0}
   _repelCone: {fileID: 0}
-  _allyColor: {r: 0.27, g: 1, b: 0.53, a: 0.9}
-  _enemyColor: {r: 1, g: 0.26, b: 0.4, a: 0.9}
   _mudTrapSprite: {fileID: 5634026908348037240, guid: 9f648e5add568444b9e6ece210673f8f, type: 3}
   _flyTrapSprite: {fileID: 5352286359449648278, guid: 7ef6abc0b616c7c4e9b0f24462477aa2, type: 3}
   _mudTrapTint: {r: 1, g: 1, b: 1, a: 0.88}

@@ -9,15 +9,18 @@ namespace LudumDare.Template.Gameplay.Signal
     [DefaultExecutionOrder(-30)]
     public sealed class SignalGameplayView : MonoBehaviour
     {
+        private static readonly int FeedingHash = Animator.StringToHash("Feeding");
+        private const float NpcMoveThresholdSq = 0.000001f;
+
         [SerializeField] private SignalGameController _controller;
         [SerializeField] private Transform _nestAnchor;
         [SerializeField] private GameObject _nestVisualPrefab;
+        [SerializeField] private GameObject _caterpillarVisualPrefab;
+        [SerializeField] private GameObject _spiderVisualPrefab;
         [SerializeField] private SpriteRenderer _signalCone;
         [SerializeField] private SpriteRenderer _repelCone;
         [Tooltip("Все параметры шейдера конуса — на этом компоненте (или будет добавлен автоматически).")]
         [SerializeField] private SignalConeVisualSettings _coneVisualSettings;
-        [SerializeField] private Color _allyColor = new(0.27f, 1f, 0.53f, 0.9f);
-        [SerializeField] private Color _enemyColor = new(1f, 0.26f, 0.4f, 0.9f);
         [SerializeField] private Sprite _mudTrapSprite;
         [SerializeField] private Sprite _flyTrapSprite;
         [SerializeField] private Color _mudTrapTint = new(1f, 1f, 1f, 0.88f);
@@ -26,8 +29,8 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private Transform _unitsRoot;
         private Transform _fxRoot;
-        private readonly List<SpriteRenderer> _allySprites = new();
-        private readonly List<SpriteRenderer> _enemySprites = new();
+        private readonly List<NpcVisual> _allyVisuals = new();
+        private readonly List<NpcVisual> _enemyVisuals = new();
         private readonly List<LineRenderer> _pulseRings = new();
         private readonly List<SpriteRenderer> _staticTrapRings = new();
         private readonly List<SpriteRenderer> _playerTrapRings = new();
@@ -174,59 +177,98 @@ namespace LudumDare.Template.Gameplay.Signal
         private void SyncUnits()
         {
             int ac = _controller.GetAllyCount();
-            while (_allySprites.Count < ac) _allySprites.Add(CreateDot(_unitsRoot, "Ally", _allyColor, 4));
-            while (_allySprites.Count > ac)
+            while (_allyVisuals.Count < ac) _allyVisuals.Add(CreateNpcVisual(_unitsRoot, SignalNpcKind.Green, 4, "Ally"));
+            while (_allyVisuals.Count > ac)
             {
-                int last = _allySprites.Count - 1;
-                Destroy(_allySprites[last].gameObject);
-                _allySprites.RemoveAt(last);
+                int last = _allyVisuals.Count - 1;
+                Destroy(_allyVisuals[last].Root.gameObject);
+                _allyVisuals.RemoveAt(last);
             }
 
             for (int i = 0; i < ac; i++)
             {
                 _controller.GetAlly(i, out float lx, out float ly, out float rad, out float mt);
-                ApplyDot(_allySprites[i], lx, ly, rad, mt > 0f);
+                ApplyNpcVisual(_allyVisuals[i], lx, ly, rad, mt > 0f);
             }
 
             int ec = _controller.GetEnemyCount();
-            while (_enemySprites.Count < ec) _enemySprites.Add(CreateDot(_unitsRoot, "Enemy", _enemyColor, 5));
-            while (_enemySprites.Count > ec)
+            while (_enemyVisuals.Count < ec) _enemyVisuals.Add(CreateNpcVisual(_unitsRoot, SignalNpcKind.Red, 5, "Enemy"));
+            while (_enemyVisuals.Count > ec)
             {
-                int last = _enemySprites.Count - 1;
-                Destroy(_enemySprites[last].gameObject);
-                _enemySprites.RemoveAt(last);
+                int last = _enemyVisuals.Count - 1;
+                Destroy(_enemyVisuals[last].Root.gameObject);
+                _enemyVisuals.RemoveAt(last);
             }
 
             for (int i = 0; i < ec; i++)
             {
                 _controller.GetEnemy(i, out float lx, out float ly, out float rad, out float mt, out SignalNpcKind kind);
-                var col = kind == SignalNpcKind.Red ? _enemyColor : _allyColor;
-                _enemySprites[i].color = col;
-                ApplyDot(_enemySprites[i], lx, ly, rad, mt > 0f);
+                EnsureEnemyVisualKind(i, kind, 5);
+                ApplyNpcVisual(_enemyVisuals[i], lx, ly, rad, mt > 0f);
             }
         }
 
-        private SpriteRenderer CreateDot(Transform parent, string name, Color c, int order)
+        private void EnsureEnemyVisualKind(int index, SignalNpcKind kind, int sortingOrder)
         {
-            var go = new GameObject(name);
-            go.transform.SetParent(parent, false);
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sprite = GetDefaultSprite();
-            sr.color = c;
-            sr.sortingOrder = order;
-            return sr;
+            var current = _enemyVisuals[index];
+            if (current.Kind == kind) return;
+            Destroy(current.Root.gameObject);
+            _enemyVisuals[index] = CreateNpcVisual(_unitsRoot, kind, sortingOrder, "Enemy");
         }
 
-        private void ApplyDot(SpriteRenderer sr, float lx, float ly, float rad, bool awake)
+        private NpcVisual CreateNpcVisual(Transform parent, SignalNpcKind kind, int sortingOrder, string fallbackName)
+        {
+            GameObject prefab = kind == SignalNpcKind.Red ? _spiderVisualPrefab : _caterpillarVisualPrefab;
+            GameObject instance;
+            if (prefab != null)
+            {
+                instance = Instantiate(prefab, parent, false);
+                instance.name = prefab.name;
+            }
+            else
+            {
+                instance = new GameObject(fallbackName);
+                instance.transform.SetParent(parent, false);
+                var fallbackRenderer = instance.AddComponent<SpriteRenderer>();
+                fallbackRenderer.sprite = GetDefaultSprite();
+            }
+
+            var renderer = instance.GetComponentInChildren<SpriteRenderer>();
+            if (renderer == null) renderer = instance.AddComponent<SpriteRenderer>();
+            renderer.sortingOrder = sortingOrder;
+
+            return new NpcVisual
+            {
+                Kind = kind,
+                Root = instance.transform,
+                SpriteRenderer = renderer,
+                Animator = instance.GetComponentInChildren<Animator>(),
+            };
+        }
+
+        private void ApplyNpcVisual(NpcVisual visual, float lx, float ly, float rad, bool active)
         {
             Vector3 p = _controller.LogicalToWorldPublic(lx, ly);
-            sr.transform.position = new Vector3(p.x, p.y, 0f);
+            Vector3 targetPos = new Vector3(p.x, p.y, 0f);
+            Vector3 delta = visual.Initialized ? targetPos - visual.LastWorldPosition : Vector3.zero;
+            bool moving = delta.sqrMagnitude > NpcMoveThresholdSq;
+            if (moving && Mathf.Abs(delta.x) > 1e-6f)
+                visual.SpriteRenderer.flipX = delta.x > 0f;
+
+            visual.Root.position = targetPos;
             float worldD = 2f * rad / _controller.PixelsPerWorldUnit;
-            float sx = Mathf.Max(1e-6f, sr.sprite != null ? sr.sprite.bounds.size.x : GetDefaultSprite().bounds.size.x);
-            sr.transform.localScale = Vector3.one * Mathf.Max(0.03f, worldD / sx);
-            var col = sr.color;
-            col.a = awake ? 0.95f : 0.45f;
-            sr.color = col;
+            float sx = Mathf.Max(1e-6f, visual.SpriteRenderer.sprite != null ? visual.SpriteRenderer.sprite.bounds.size.x : GetDefaultSprite().bounds.size.x);
+            visual.Root.localScale = Vector3.one * Mathf.Max(0.03f, worldD / sx);
+            if (visual.Animator != null)
+            {
+                // Состояние выбирается жёстко: либо active, либо feeding.
+                visual.Animator.SetBool(FeedingHash, !active);
+                // Если юнит стоит на месте, анимация должна быть поставлена на паузу.
+                visual.Animator.speed = moving ? 1f : 0f;
+            }
+
+            visual.LastWorldPosition = targetPos;
+            visual.Initialized = true;
         }
 
         private void SyncPulses()
@@ -416,6 +458,16 @@ namespace LudumDare.Template.Gameplay.Signal
         }
 
         private static Sprite _cachedSprite;
+
+        private sealed class NpcVisual
+        {
+            public SignalNpcKind Kind;
+            public Transform Root;
+            public SpriteRenderer SpriteRenderer;
+            public Animator Animator;
+            public Vector3 LastWorldPosition;
+            public bool Initialized;
+        }
 
         private static Sprite GetDefaultSprite()
         {
