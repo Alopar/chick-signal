@@ -774,8 +774,10 @@ namespace LudumDare.Template.Gameplay.Signal
                         RaiseFloatingPopup(SignalFloatingPopupType.ChargeGain, 1f, ally.X, ally.Y);
                         if (S.OptionNestHealFromGreen)
                         {
+                            float hpBefore = _nest.Hp;
                             _nest.Hp = Mathf.Min(_nest.MaxHp, _nest.Hp + 1f);
-                            RaiseFloatingPopup(SignalFloatingPopupType.HpGain, 1f, ally.X, ally.Y);
+                            float hpGain = _nest.Hp - hpBefore;
+                            RaiseFloatingPopup(SignalFloatingPopupType.HpGain, hpGain, ally.X, ally.Y);
                         }
                         if (_nest.Charge >= _nest.ChargeMax)
                         {

@@ -89,10 +89,15 @@ MonoBehaviour:
   _floatingPopupChannel: {fileID: 11400000, guid: 3d898474a0f84a3596cbf6cf2a85a2f9, type: 2}
   _floatingPopupPrefab: {fileID: 4650328487882354001, guid: 80a07ad0f9f9d3f4b8e158ddfdfdd9a9, type: 3}
   _floatingPopupPrewarm: 16
-  _popupDamageColor: {r: 1, g: 0.35, b: 0.35, a: 1}
-  _popupHpGainColor: {r: 0.45, g: 1, b: 0.45, a: 1}
-  _popupChargeGainColor: {r: 0.45, g: 0.9, b: 1, a: 1}
-  _popupFoodGainColor: {r: 1, g: 0.9, b: 0.35, a: 1}
+  _sameSourcePopupDelay: 0.08
+  _popupDamageColor: {r: 1, g: 0, b: 0, a: 1}
+  _popupHpGainColor: {r: 0, g: 1, b: 0.000000059604645, a: 1}
+  _popupChargeGainColor: {r: 0, g: 0.86476696, b: 1, a: 1}
+  _popupFoodGainColor: {r: 1, g: 0.8591663, b: 0.035848916, a: 1}
+  _popupDamageLabel: HP
+  _popupHpGainLabel: HP
+  _popupChargeLabel: CP
+  _popupFoodLabel: XP
   _chickBaseScale: 1
   _chickGrowthPerNestRadiusUnit: 0.01
   _chickGrowthPercent: 100

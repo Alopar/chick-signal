@@ -31,10 +31,15 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private SignalFloatingPopupEventChannelSO _floatingPopupChannel;
         [SerializeField] private GameObject _floatingPopupPrefab;
         [SerializeField] private int _floatingPopupPrewarm = 16;
+        [SerializeField] private float _sameSourcePopupDelay = 0.08f;
         [SerializeField] private Color _popupDamageColor = new(1f, 0.35f, 0.35f, 1f);
         [SerializeField] private Color _popupHpGainColor = new(0.45f, 1f, 0.45f, 1f);
         [SerializeField] private Color _popupChargeGainColor = new(0.45f, 0.9f, 1f, 1f);
         [SerializeField] private Color _popupFoodGainColor = new(1f, 0.9f, 0.35f, 1f);
+        [SerializeField] private string _popupDamageLabel = "HP";
+        [SerializeField] private string _popupHpGainLabel = "HP";
+        [SerializeField] private string _popupChargeLabel = "Charge";
+        [SerializeField] private string _popupFoodLabel = "Food";
         [Header("Nest Chick Growth")]
         [SerializeField] private float _chickBaseScale = 1f;
         [SerializeField] private float _chickGrowthPerNestRadiusUnit = 0.01f;
@@ -60,6 +65,8 @@ namespace LudumDare.Template.Gameplay.Signal
         private LineRenderer _realNestRadiusRing;
         private LineRenderer _visualChickRadiusRing;
         private ObjectPool _floatingPopupPool;
+        private readonly List<QueuedPopup> _queuedPopups = new();
+        private readonly Dictionary<Vector2Int, float> _nextPopupTimeBySource = new();
 
         private void Awake()
         {
@@ -219,6 +226,20 @@ namespace LudumDare.Template.Gameplay.Signal
             SyncStaticTraps();
             SyncPlayerTraps();
             SyncCones();
+        }
+
+        private void Update()
+        {
+            if (_queuedPopups.Count == 0) return;
+
+            float now = Time.time;
+            for (int i = _queuedPopups.Count - 1; i >= 0; i--)
+            {
+                var pending = _queuedPopups[i];
+                if (pending.SpawnTime > now) continue;
+                SpawnPopupNow(pending.PopupEvent);
+                _queuedPopups.RemoveAt(i);
+            }
         }
 
         private void SyncNest()
@@ -588,6 +609,31 @@ namespace LudumDare.Template.Gameplay.Signal
             EnsureFloatingPopupPool();
             if (_floatingPopupPool == null) return;
 
+            float now = Time.time;
+            Vector2Int sourceKey = BuildPopupSourceKey(popupEvent.WorldPosition);
+            _nextPopupTimeBySource.TryGetValue(sourceKey, out float nextAllowedTime);
+            float spawnTime = Mathf.Max(now, nextAllowedTime);
+            float delayStep = Mathf.Max(0f, _sameSourcePopupDelay);
+            _nextPopupTimeBySource[sourceKey] = spawnTime + delayStep;
+
+            if (spawnTime <= now + 0.0001f)
+            {
+                SpawnPopupNow(popupEvent);
+            }
+            else
+            {
+                _queuedPopups.Add(new QueuedPopup
+                {
+                    PopupEvent = popupEvent,
+                    SpawnTime = spawnTime,
+                });
+            }
+        }
+
+        private void SpawnPopupNow(SignalFloatingPopupEvent popupEvent)
+        {
+            if (_floatingPopupPool == null) return;
+
             var go = _floatingPopupPool.Get(popupEvent.WorldPosition, Quaternion.identity);
             var view = go.GetComponent<SignalFloatingPopupView>();
             if (view == null)
@@ -609,7 +655,7 @@ namespace LudumDare.Template.Gameplay.Signal
             _floatingPopupPool.Release(view.gameObject);
         }
 
-        private static string FormatPopupText(SignalFloatingPopupEvent popupEvent)
+        private string FormatPopupText(SignalFloatingPopupEvent popupEvent)
         {
             int amountInt = Mathf.Max(1, Mathf.RoundToInt(popupEvent.Amount));
             string value = popupEvent.Type == SignalFloatingPopupType.Damage
@@ -617,13 +663,27 @@ namespace LudumDare.Template.Gameplay.Signal
                 : $"+{amountInt}";
             string suffix = popupEvent.Type switch
             {
-                SignalFloatingPopupType.Damage => " HP",
-                SignalFloatingPopupType.HpGain => " HP",
-                SignalFloatingPopupType.ChargeGain => " Charge",
-                SignalFloatingPopupType.FoodGain => " Food",
+                SignalFloatingPopupType.Damage => BuildPopupSuffix(_popupDamageLabel),
+                SignalFloatingPopupType.HpGain => BuildPopupSuffix(_popupHpGainLabel),
+                SignalFloatingPopupType.ChargeGain => BuildPopupSuffix(_popupChargeLabel),
+                SignalFloatingPopupType.FoodGain => BuildPopupSuffix(_popupFoodLabel),
                 _ => string.Empty,
             };
             return value + suffix;
+        }
+
+        private static string BuildPopupSuffix(string label)
+        {
+            if (string.IsNullOrWhiteSpace(label)) return string.Empty;
+            return " " + label.Trim();
+        }
+
+        private static Vector2Int BuildPopupSourceKey(Vector3 worldPosition)
+        {
+            const float precision = 100f;
+            return new Vector2Int(
+                Mathf.RoundToInt(worldPosition.x * precision),
+                Mathf.RoundToInt(worldPosition.y * precision));
         }
 
         private Color ResolvePopupColor(SignalFloatingPopupType type)
@@ -646,6 +706,12 @@ namespace LudumDare.Template.Gameplay.Signal
             public Animator Animator;
             public Vector3 LastWorldPosition;
             public bool Initialized;
+        }
+
+        private struct QueuedPopup
+        {
+            public SignalFloatingPopupEvent PopupEvent;
+            public float SpawnTime;
         }
 
         private static Sprite GetDefaultSprite()
