@@ -25,6 +25,7 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private float _ringStartAngleDeg = 90f;
 
         [Header("Scaling")]
+        [Tooltip("Множитель масштаба корня UI (полоски, кольцо) относительно значения, которое приходит из SignalGameplayView (там же настраивается, насколько UI следует за птенцом).")]
         [SerializeField, Min(0.01f)] private float _scaleByChickMultiplier = 1f;
 
         [Header("Sorting")]

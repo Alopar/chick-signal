@@ -98,8 +98,9 @@ MonoBehaviour:
   _popupChargeLabel: CP
   _popupFoodLabel: XP
   _chickBaseScale: 1
-  _chickGrowthPerNestRadiusUnit: 0.01
   _chickGrowthPercent: 100
+  _nestStatusScaleFollowChick: 0.5
+  _nestStatusUiScaleMultiplier: 1
   _showNestDebugRings: 0
   _realNestRadiusColor: {r: 1, g: 0.25, b: 0.25, a: 0.95}
   _visualChickRadiusColor: {r: 0.2, g: 0.95, b: 1, a: 0.95}

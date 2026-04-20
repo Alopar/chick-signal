@@ -42,12 +42,15 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private string _popupFoodLabel = "Food";
         [Header("Nest Chick Growth")]
         [SerializeField] private float _chickBaseScale = 1f;
-        [SerializeField] private float _chickGrowthPerNestRadiusUnit = 0.01f;
-        [Tooltip("100% = текущий темп роста. Больше — птенец растет визуально быстрее.")]
+        [Tooltip("100% — масштаб птенца меняется пропорционально логическому радиусу гнезда (как кольцо радиуса в игре). Меньше/больше — искусственно замедлить/ускорить рост относительно гнезда.")]
         [SerializeField] private float _chickGrowthPercent = 100f;
         [Header("Nest Status World UI")]
         [SerializeField] private SignalNestStatusVisualSettings _nestStatusVisualSettings;
         [SerializeField] private bool _autoAttachNestStatusWorldView = true;
+        [Tooltip("Насколько корень UI состояния (LineRenderer полоски и кольцо) следует за масштабом птенца. 1 — как птенец; 0.5 — прирост размера вдвое медленнее относительно стартовой базы; 0 — размер UI не растёт вместе с гнездом.")]
+        [SerializeField, Range(0f, 1f)] private float _nestStatusScaleFollowChick = 0.5f;
+        [Tooltip("Дополнительный множитель размера UI состояния после учёта следования за птенцом (1 = без изменений).")]
+        [SerializeField, Min(0.01f)] private float _nestStatusUiScaleMultiplier = 1f;
         [Header("Nest Debug Rings")]
         [SerializeField] private bool _showNestDebugRings;
         [SerializeField] private Color _realNestRadiusColor = new(1f, 0.25f, 0.25f, 0.95f);
@@ -265,9 +268,9 @@ namespace LudumDare.Template.Gameplay.Signal
             float initialNestRadius = _controller.Balance != null
                 ? Mathf.Max(1f, _controller.Balance.Nest.Radius)
                 : Mathf.Max(1f, nestRadius);
-            float growth = Mathf.Max(0f, nestRadius - initialNestRadius);
+            float safeInitial = Mathf.Max(1e-6f, initialNestRadius);
             float growthMultiplier = Mathf.Max(0f, _chickGrowthPercent) / 100f;
-            float chickScale = _chickBaseScale + growth * _chickGrowthPerNestRadiusUnit * growthMultiplier;
+            float chickScale = _chickBaseScale * (nestRadius / safeInitial) * growthMultiplier;
             _nestVisual.SetChickScale(chickScale);
             SyncNestStatusWorldView(chickScale);
             SyncNestDebugRings(_nestAnchor.position, nestRadius, initialNestRadius, chickScale);
@@ -285,13 +288,19 @@ namespace LudumDare.Template.Gameplay.Signal
                 out bool absorbing,
                 out float absorptionLeft01);
 
+            float growthMultiplier = Mathf.Max(0f, _chickGrowthPercent) / 100f;
+            float refChickScale = Mathf.Max(1e-6f, _chickBaseScale * growthMultiplier);
+            float follow = Mathf.Clamp01(_nestStatusScaleFollowChick);
+            float statusRootScale = Mathf.Lerp(refChickScale, chickScale, follow);
+            statusRootScale *= Mathf.Max(0.01f, _nestStatusUiScaleMultiplier);
+
             _nestStatusWorldView.ApplyStatus(
                 satiety01,
                 hp01,
                 charge01,
                 absorbing,
                 absorptionLeft01,
-                chickScale);
+                statusRootScale);
         }
 
         private void SyncNestDebugRings(Vector3 centerWorld, float realNestRadiusLogical, float initialNestRadiusLogical, float chickScale)
