@@ -3,13 +3,12 @@
   "ReferenceCanvasHeight": 600.0,
   "LogicalPixelsPerWorldUnit": 100.0,
   "LoopMaxDeltaTime": 0.05,
-  //Игрок
   "Player": {
     "StartDx": 200.0,
-    "Speed": 160.0, //Было 140
+    "Speed": 160.0,
     "Hp": 100.0,
     "MaxHp": 100.0,
-    "SignalPower": 600.0, //Было 400
+    "SignalPower": 600.0,
     "SignalRadius": 160.0,
     "Radius": 14.0,
     "SignalJamOnHit": 3.5,
@@ -19,7 +18,7 @@
     "RepelSpeedMult": 1.15
   },
   "Signal": {
-    "ConeAngleRadians": 0.7853982, //Ширина конуса сигнала
+    "ConeAngleRadians": 0.7853982,
     "StrengthScale": 10000.0,
     "NpcWakeDuration": 0.7
   },
@@ -32,8 +31,7 @@
     "Hp": 200.0,
     "MaxHp": 200.0,
     "InitialLevel": 1,
-    "InitialChargeMax": 5.0, //Сколько надо зеленых для активации Синего режима
-    
+    "InitialChargeMax": 5.0,
     "HealRadius": 5.0,
     "HealBase": 10.0,
     "HealProximityBonus": 8.0,
@@ -42,7 +40,7 @@
     "PulseInterval": 1.5,
     "PulseExpandSpeed": 300.0,
     "PulseMaxRadius": 900.0,
-    "MaxLevel": 999, // Максимальный уровень
+    "MaxLevel": 999,
     "ChargeBase": 5.0,
     "ChargePerLevel": 10.0,
     "LevelSignalPowerBonus": 60.0,
@@ -63,9 +61,7 @@
     "RingOuter": 330.0,
     "MinGapBetween": 12.0,
     "SectorEdgeMargin": 0.12,
-    "SlowMult": 0.35, //Чем меньше значение тем медленее
-
-    // Ловушки героя (Q / E)
+    "SlowMult": 0.35,
     "PlayerPlacedRadius": 55.0,
     "PlayerPlacedDuration": 6.0,
     "PlayerTrapMaxCharges": 1,
@@ -76,123 +72,102 @@
   "Spawn": {
     "EdgeMargin": 20.0,
     "StartingAllies": 0,
-    //Волны
     "Waves": [
-      //Уровень 1
       {
         "Duration": 10.0,
         "Red": 2,
         "Green": 4
       },
-      //Уровень 2
       {
         "Duration": 25.0,
         "Red": 5,
         "Green": 5
       },
-      //Уровень 3
       {
         "Duration": 25.0,
         "Red": 3,
         "Green": 7
       },
-      //Уровень 4
-        {
-            "Duration": 30.0,
-            "Red": 5,
-            "Green": 12
-        },
-      //Уровень 5
-        {
-            "Duration": 35.0,
-            "Red": 4,
-            "Green": 9
-        },
-      //Уровень 6
-        {
-            "Duration": 45.0,
-            "Red": 5,
-            "Green": 12
-        },
-      //Уровень 7
-        {
-            "Duration": 50.0,
-            "Red": 7,
-            "Green": 13
-        },
-      //Уровень 8
-        {
-            "Duration": 60.0,
-            "Red": 6,
-            "Green": 15
-        },
-      //Уровень 9
-        {
-            "Duration": 75.0,
-            "Red": 11,
-            "Green": 12
-        },
-      //Уровень 10
-        {
-            "Duration": 80.0,
-            "Red": 7,
-            "Green": 80
-        },
-      //Уровень 11
-        {
-            "Duration": 5.0,
-            "Red": 1,
-            "Green": 4
-        },
-      //Уровень 12
-        {
-            "Duration": 25.0,
-            "Red": 5,
-            "Green": 10
-        },
-      //Уровень 13
-        {
-            "Duration": 40.0,
-            "Red": 8,
-            "Green": 15
-        },
-      //Уровень 14
+      {
+        "Duration": 30.0,
+        "Red": 5,
+        "Green": 12
+      },
+      {
+        "Duration": 35.0,
+        "Red": 4,
+        "Green": 9
+      },
+      {
+        "Duration": 45.0,
+        "Red": 5,
+        "Green": 12
+      },
+      {
+        "Duration": 50.0,
+        "Red": 7,
+        "Green": 13
+      },
+      {
+        "Duration": 60.0,
+        "Red": 6,
+        "Green": 15
+      },
+      {
+        "Duration": 75.0,
+        "Red": 11,
+        "Green": 12
+      },
+      {
+        "Duration": 80.0,
+        "Red": 7,
+        "Green": 80
+      },
+      {
+        "Duration": 5.0,
+        "Red": 1,
+        "Green": 4
+      },
+      {
+        "Duration": 25.0,
+        "Red": 5,
+        "Green": 10
+      },
+      {
+        "Duration": 40.0,
+        "Red": 8,
+        "Green": 15
+      },
       {
         "Duration": 60.0,
         "Red": 12,
         "Green": 35
       },
-      //Уровень 15
       {
         "Duration": 71.0,
         "Red": 15,
         "Green": 55
       },
-      //Уровень 16
       {
         "Duration": 75.0,
         "Red": 15,
         "Green": 24
       },
-      //Уровень 17
       {
         "Duration": 85.0,
         "Red": 15,
         "Green": 13
       },
-      //Уровень 18
       {
         "Duration": 80.0,
         "Red": 16,
         "Green": 75
       },
-      //Уровень 19
       {
         "Duration": 150.0,
         "Red": 27,
         "Green": 42
       },
-      //Уровень 20
       {
         "Duration": 120.0,
         "Red": 20,

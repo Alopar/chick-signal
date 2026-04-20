@@ -61,7 +61,7 @@ MonoBehaviour:
     AoeUnlockLevel: 99
     AbsorptionDuration: 10
     SatiationMax: 10
-    RadiusPerLevel: 8
+    RadiusPerLevel: 5
   Traps:
     Count: 1
     RadiusMin: 65
