@@ -1,4 +1,3 @@
-using LudumDare.Template.Events;
 using LudumDare.Template.Managers;
 using TMPro;
 using UnityEngine;
@@ -7,12 +6,18 @@ using UnityEngine.UI;
 namespace LudumDare.Template.UI
 {
     /// <summary>
-    /// Overlay shown on <see cref="GameState.GameOver"/> or <see cref="GameState.Victory"/>. Configure
-    /// both labels in-prefab; the screen toggles which one is active based on the incoming state.
+    /// Итоговый оверлей: отдельные префабы для победы и поражения (разное оформление), одна логика кнопок и счёта.
+    /// Показ инициирует <see cref="GameManager"/> через <see cref="PresentForState"/>.
     /// </summary>
-    public class EndGameScreen : UIScreen
+    public sealed class EndGameScreen : UIScreen
     {
-        [SerializeField] private GameStateEventChannelSO _stateChannel;
+        public enum ResultKind
+        {
+            Victory = 0,
+            Defeat = 1
+        }
+
+        [SerializeField] private ResultKind _resultKind = ResultKind.Defeat;
         [SerializeField] private TMP_Text _titleLabel;
         [SerializeField] private TMP_Text _scoreLabel;
 
@@ -22,10 +27,6 @@ namespace LudumDare.Template.UI
         [SerializeField] private Button _mainMenuButton;
         [Tooltip("Leaderboard screen (leave empty to build at runtime).")]
         [SerializeField] private UIScreen _leaderboardScreen;
-
-        [Header("Copy")]
-        [SerializeField] private string _victoryTitle = "VICTORY";
-        [SerializeField] private string _gameOverTitle = "GAME OVER";
 
         protected override void Awake()
         {
@@ -37,34 +38,45 @@ namespace LudumDare.Template.UI
 
             EnsureRuntimeLeaderboardButton();
 
-            if (_stateChannel != null) _stateChannel.OnEventRaised += HandleState;
             if (_restartButton != null) _restartButton.onClick.AddListener(OnRestart);
             if (_leaderboardButton != null) _leaderboardButton.onClick.AddListener(OnLeaderboard);
             if (_mainMenuButton != null) _mainMenuButton.onClick.AddListener(OnMainMenu);
         }
 
-        protected override void OnDestroy()
-        {
-            if (_stateChannel != null) _stateChannel.OnEventRaised -= HandleState;
-            base.OnDestroy();
-        }
-
-        private void HandleState(GameState state)
+        /// <summary>
+        /// Показывает оверлей, соответствующий <paramref name="state"/> (победа или поражение).
+        /// </summary>
+        public static void PresentForState(GameState state)
         {
             if (state != GameState.GameOver && state != GameState.Victory) return;
 
-            if (_titleLabel != null)
+            var want = state == GameState.Victory ? ResultKind.Victory : ResultKind.Defeat;
+            var screens = FindObjectsByType<EndGameScreen>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < screens.Length; i++)
             {
-                _titleLabel.text = state == GameState.Victory ? _victoryTitle : _gameOverTitle;
+                if (screens[i] == null || screens[i]._resultKind != want) continue;
+                screens[i].Present();
+                return;
             }
+        }
 
-            if (_scoreLabel != null && GameManager.HasInstance)
-            {
-                int best = SaveManager.HasInstance ? SaveManager.Instance.BestScore : GameManager.Instance.Score;
-                _scoreLabel.text = $"Score: {GameManager.Instance.Score}\nBest: {best}";
-            }
+        /// <summary>
+        /// Обновляет счёт и выводит этот экземпер в стек UI.
+        /// </summary>
+        public void Present()
+        {
+            RefreshScoreLabel();
 
-            if (UIManager.HasInstance) UIManager.Instance.Push(this, hideCurrent: false);
+            if (UIManager.HasInstance)
+                UIManager.Instance.Push(this, hideCurrent: false);
+        }
+
+        private void RefreshScoreLabel()
+        {
+            if (_scoreLabel == null || !GameManager.HasInstance) return;
+
+            int best = SaveManager.HasInstance ? SaveManager.Instance.BestScore : GameManager.Instance.Score;
+            _scoreLabel.text = $"Score: {GameManager.Instance.Score}\nBest: {best}";
         }
 
         private void OnRestart()

@@ -462,7 +462,7 @@ namespace LudumDare.Template.EditorTools
             SetField(screen, "_leaderboardButton", leaderboardBtn);
             SetField(screen, "_mainMenuButton", mainMenu);
             SetField(screen, "_leaderboardScreen", leaderboardScreen);
-            SetField(screen, "_stateChannel", LoadByName<GameStateEventChannelSO>("OnGameStateChanged"));
+            SetField(screen, "_resultKind", (int)EndGameScreen.ResultKind.Defeat);
             return panel;
         }
 
@@ -834,12 +834,12 @@ namespace LudumDare.Template.EditorTools
                 }
 
                 leaderboardTr.gameObject.SetActive(false);
-                var endGame = uiRoot.GetComponentInChildren<EndGameScreen>(true);
-                if (endGame != null)
+                var lb = leaderboardTr.GetComponent<LeaderboardScreen>();
+                if (lb != null)
                 {
-                    var lb = leaderboardTr.GetComponent<LeaderboardScreen>();
-                    if (lb != null)
+                    foreach (var endGame in uiRoot.GetComponentsInChildren<EndGameScreen>(true))
                     {
+                        if (endGame == null) continue;
                         SetField(endGame, "_leaderboardScreen", lb);
                         PrefabUtility.RecordPrefabInstancePropertyModifications(endGame);
                     }
@@ -929,6 +929,19 @@ namespace LudumDare.Template.EditorTools
                 return;
             }
             prop.boolValue = value;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void SetField(UnityEngine.Object target, string fieldName, int value)
+        {
+            var so = new SerializedObject(target);
+            var prop = so.FindProperty(fieldName);
+            if (prop == null)
+            {
+                Debug.LogWarning($"[TemplateSceneSetup] Field {fieldName} not found on {target.GetType().Name}.");
+                return;
+            }
+            prop.intValue = value;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
     }

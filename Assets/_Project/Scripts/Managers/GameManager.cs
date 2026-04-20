@@ -1,5 +1,6 @@
 using LudumDare.Template.Core;
 using LudumDare.Template.Events;
+using LudumDare.Template.UI;
 using UnityEngine;
 
 namespace LudumDare.Template.Managers
@@ -54,6 +55,7 @@ namespace LudumDare.Template.Managers
             if (SaveManager.HasInstance) SaveManager.Instance.TrySetBestScore(Score);
             TrySubmitScoreToLeaderboard();
             SetState(GameState.GameOver);
+            EndGameScreen.PresentForState(GameState.GameOver);
         }
 
         public void Victory()
@@ -66,6 +68,7 @@ namespace LudumDare.Template.Managers
             if (SaveManager.HasInstance) SaveManager.Instance.TrySetBestScore(Score);
             TrySubmitScoreToLeaderboard();
             SetState(GameState.Victory);
+            EndGameScreen.PresentForState(GameState.Victory);
         }
 
         private void TrySubmitScoreToLeaderboard()
