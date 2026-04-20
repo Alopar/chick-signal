@@ -26,6 +26,16 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private Color _mudTrapTint = new(1f, 1f, 1f, 0.88f);
         [SerializeField] private Color _flyTrapTint = new(1f, 1f, 1f, 0.88f);
         [SerializeField] private Color _pulseColor = new(0.27f, 0.8f, 1f, 0.5f);
+        [Header("Nest Chick Growth")]
+        [SerializeField] private float _chickBaseScale = 1f;
+        [SerializeField] private float _chickGrowthPerNestRadiusUnit = 0.01f;
+        [Tooltip("100% = текущий темп роста. Больше — птенец растет визуально быстрее.")]
+        [SerializeField] private float _chickGrowthPercent = 100f;
+        [Header("Nest Debug Rings")]
+        [SerializeField] private bool _showNestDebugRings;
+        [SerializeField] private Color _realNestRadiusColor = new(1f, 0.25f, 0.25f, 0.95f);
+        [SerializeField] private Color _visualChickRadiusColor = new(0.2f, 0.95f, 1f, 0.95f);
+        [SerializeField] private float _debugRingWidth = 0.03f;
 
         private Transform _unitsRoot;
         private Transform _fxRoot;
@@ -38,6 +48,8 @@ namespace LudumDare.Template.Gameplay.Signal
         private Material _coneMaterial;
         private MaterialPropertyBlock _mpbSignal;
         private MaterialPropertyBlock _mpbRepel;
+        private LineRenderer _realNestRadiusRing;
+        private LineRenderer _visualChickRadiusRing;
 
         private void Awake()
         {
@@ -168,10 +180,64 @@ namespace LudumDare.Template.Gameplay.Signal
         {
             if (_nestVisual == null) return;
 
-            _controller.GetNest(out float lx, out float ly, out _, out bool absorbing, out _);
+            _controller.GetNest(out float lx, out float ly, out float nestRadius, out bool absorbing, out _);
             Vector3 p = _controller.LogicalToWorldPublic(lx, ly);
             _nestAnchor.position = new Vector3(p.x, p.y, 0f);
             _nestVisual.SetAbsorbing(absorbing);
+
+            float initialNestRadius = _controller.Balance != null
+                ? Mathf.Max(1f, _controller.Balance.Nest.Radius)
+                : Mathf.Max(1f, nestRadius);
+            float growth = Mathf.Max(0f, nestRadius - initialNestRadius);
+            float growthMultiplier = Mathf.Max(0f, _chickGrowthPercent) / 100f;
+            float chickScale = _chickBaseScale + growth * _chickGrowthPerNestRadiusUnit * growthMultiplier;
+            _nestVisual.SetChickScale(chickScale);
+            SyncNestDebugRings(_nestAnchor.position, nestRadius, initialNestRadius, chickScale);
+        }
+
+        private void SyncNestDebugRings(Vector3 centerWorld, float realNestRadiusLogical, float initialNestRadiusLogical, float chickScale)
+        {
+            if (!_showNestDebugRings)
+            {
+                SetDebugRingEnabled(_realNestRadiusRing, false);
+                SetDebugRingEnabled(_visualChickRadiusRing, false);
+                return;
+            }
+
+            _realNestRadiusRing ??= CreateDebugRing("NestRealRadiusRing", _realNestRadiusColor);
+            _visualChickRadiusRing ??= CreateDebugRing("NestVisualRadiusRing", _visualChickRadiusColor);
+
+            float realRadiusWorld = realNestRadiusLogical / Mathf.Max(1e-6f, _controller.PixelsPerWorldUnit);
+            float visualScaleRatio = chickScale / Mathf.Max(1e-6f, _chickBaseScale);
+            float visualNestRadiusLogical = initialNestRadiusLogical * visualScaleRatio;
+            float visualRadiusWorld = visualNestRadiusLogical / Mathf.Max(1e-6f, _controller.PixelsPerWorldUnit);
+
+            BuildCircleLine(_realNestRadiusRing, centerWorld, realRadiusWorld, 64);
+            BuildCircleLine(_visualChickRadiusRing, centerWorld, visualRadiusWorld, 64);
+            SetDebugRingEnabled(_realNestRadiusRing, true);
+            SetDebugRingEnabled(_visualChickRadiusRing, true);
+        }
+
+        private LineRenderer CreateDebugRing(string name, Color color)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(_fxRoot != null ? _fxRoot : transform, false);
+            var lr = go.AddComponent<LineRenderer>();
+            lr.loop = true;
+            lr.positionCount = 0;
+            lr.widthMultiplier = Mathf.Max(0.001f, _debugRingWidth);
+            lr.material = new Material(Shader.Find("Sprites/Default"));
+            lr.startColor = color;
+            lr.endColor = color;
+            lr.sortingOrder = 10;
+            lr.useWorldSpace = true;
+            return lr;
+        }
+
+        private static void SetDebugRingEnabled(LineRenderer ring, bool enabled)
+        {
+            if (ring != null)
+                ring.enabled = enabled;
         }
 
         private void SyncUnits()
