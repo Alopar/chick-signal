@@ -1,0 +1,2406 @@
+fileFormatVersion: 2
+guid: 9be58192b1c77704b9a266e5aaa459ee
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3997749586802186832
+    second: birdBornAnimation_0
+  - first:
+      213: -6864206170259417600
+    second: birdBornAnimation_1
+  - first:
+      213: -6988052104130970733
+    second: birdBornAnimation_2
+  - first:
+      213: -4533773925362695432
+    second: birdBornAnimation_3
+  - first:
+      213: -6823603479397453109
+    second: birdBornAnimation_4
+  - first:
+      213: 7072004600761141715
+    second: birdBornAnimation_5
+  - first:
+      213: -3508622887722246417
+    second: birdBornAnimation_6
+  - first:
+      213: -5096638743264203857
+    second: birdBornAnimation_7
+  - first:
+      213: -4773041246392963825
+    second: birdBornAnimation_8
+  - first:
+      213: 668433273097332390
+    second: birdBornAnimation_9
+  - first:
+      213: -2438984887750508526
+    second: birdBornAnimation_10
+  - first:
+      213: 1792443551817456168
+    second: birdBornAnimation_11
+  - first:
+      213: -3955319454165121021
+    second: birdBornAnimation_12
+  - first:
+      213: 6160939078223329303
+    second: birdBornAnimation_13
+  - first:
+      213: -1237027857493502345
+    second: birdBornAnimation_14
+  - first:
+      213: 7476138770987480484
+    second: birdBornAnimation_15
+  - first:
+      213: 4327430394470808209
+    second: birdBornAnimation_16
+  - first:
+      213: 5224132528278978811
+    second: birdBornAnimation_17
+  - first:
+      213: -8466195412777474365
+    second: birdBornAnimation_18
+  - first:
+      213: -7613945837523646616
+    second: birdBornAnimation_19
+  - first:
+      213: -6672214461523238832
+    second: birdBornAnimation_20
+  - first:
+      213: 2097274528209517154
+    second: birdBornAnimation_21
+  - first:
+      213: -5475312367872407716
+    second: birdBornAnimation_22
+  - first:
+      213: -5441326967493607137
+    second: birdBornAnimation_23
+  - first:
+      213: 4352759211383807819
+    second: birdBornAnimation_24
+  - first:
+      213: -6788156689661818886
+    second: birdBornAnimation_25
+  - first:
+      213: 3834705218816444261
+    second: birdBornAnimation_26
+  - first:
+      213: 1934778786042935225
+    second: birdBornAnimation_27
+  - first:
+      213: 518170168967604826
+    second: birdBornAnimation_28
+  - first:
+      213: 3062970766703852483
+    second: birdBornAnimation_29
+  - first:
+      213: -6684344286710359719
+    second: birdBornAnimation_30
+  - first:
+      213: -5750787602033325008
+    second: birdBornAnimation_31
+  - first:
+      213: 3980638595713985807
+    second: birdBornAnimation_32
+  - first:
+      213: 6037940775404376626
+    second: birdBornAnimation_33
+  - first:
+      213: 7314461966388516650
+    second: birdBornAnimation_34
+  - first:
+      213: -9003039478890769532
+    second: birdBornAnimation_35
+  - first:
+      213: -8237067899349815637
+    second: birdBornAnimation_36
+  - first:
+      213: -4030601746366565832
+    second: birdBornAnimation_37
+  - first:
+      213: -8617144663236716969
+    second: birdBornAnimation_38
+  - first:
+      213: 2588610189876238559
+    second: birdBornAnimation_39
+  - first:
+      213: -8270279600792772805
+    second: birdBornAnimation_40
+  - first:
+      213: 8554467354659989357
+    second: birdBornAnimation_41
+  - first:
+      213: 582316894566009933
+    second: birdBornAnimation_42
+  - first:
+      213: -231333246030624968
+    second: birdBornAnimation_43
+  - first:
+      213: 4887617363784833940
+    second: birdBornAnimation_44
+  - first:
+      213: 4367696035480299369
+    second: birdBornAnimation_45
+  - first:
+      213: 5543145169066898981
+    second: birdBornAnimation_46
+  - first:
+      213: 401031340243715705
+    second: birdBornAnimation_47
+  - first:
+      213: 2905613487955280948
+    second: birdBornAnimation_48
+  - first:
+      213: -5879207921580581236
+    second: birdBornAnimation_49
+  - first:
+      213: -2706357550002299615
+    second: birdBornAnimation_50
+  - first:
+      213: 2579919723227398727
+    second: birdBornAnimation_51
+  - first:
+      213: -7088732464148321320
+    second: birdBornAnimation_52
+  - first:
+      213: -8406437777016243558
+    second: birdBornAnimation_53
+  - first:
+      213: 6225724751152308812
+    second: birdBornAnimation_54
+  - first:
+      213: -4623858622565233660
+    second: birdBornAnimation_55
+  - first:
+      213: 6995260223345108957
+    second: birdBornAnimation_56
+  - first:
+      213: 4612479212178909454
+    second: birdBornAnimation_57
+  - first:
+      213: 2999849780251101425
+    second: birdBornAnimation_58
+  - first:
+      213: 4869297765945767862
+    second: birdBornAnimation_59
+  - first:
+      213: 4725974368981031354
+    second: birdBornAnimation_60
+  - first:
+      213: -9001962531451149206
+    second: birdBornAnimation_61
+  - first:
+      213: -5736693125300795524
+    second: birdBornAnimation_62
+  - first:
+      213: -5498062848507850543
+    second: birdBornAnimation_63
+  - first:
+      213: 4804904113868145923
+    second: birdBornAnimation_64
+  - first:
+      213: -6988982414712424642
+    second: birdBornAnimation_65
+  - first:
+      213: 6249157261759427914
+    second: birdBornAnimation_66
+  - first:
+      213: 7324613354749227410
+    second: birdBornAnimation_67
+  - first:
+      213: 668825033433601262
+    second: birdBornAnimation_68
+  - first:
+      213: -4824842724370788434
+    second: birdBornAnimation_69
+  - first:
+      213: 6821876832635209411
+    second: birdBornAnimation_70
+  - first:
+      213: -6197709705749862179
+    second: birdBornAnimation_71
+  - first:
+      213: -4641638061317213217
+    second: birdBornAnimation_72
+  - first:
+      213: 96114411268683484
+    second: birdBornAnimation_73
+  - first:
+      213: -2142414848900493091
+    second: birdBornAnimation_74
+  - first:
+      213: -4166323361217736387
+    second: birdBornAnimation_75
+  - first:
+      213: 3908433966159464740
+    second: birdBornAnimation_76
+  - first:
+      213: -3695924150687551679
+    second: birdBornAnimation_77
+  - first:
+      213: -6259527215587011746
+    second: birdBornAnimation_78
+  - first:
+      213: -9087032396461202008
+    second: birdBornAnimation_79
+  - first:
+      213: 8764051007615435813
+    second: birdBornAnimation_80
+  - first:
+      213: -6375509739497572165
+    second: birdBornAnimation_81
+  - first:
+      213: -4880401866483975671
+    second: birdBornAnimation_82
+  - first:
+      213: -1175940114546207880
+    second: birdBornAnimation_83
+  - first:
+      213: -6398385089915196385
+    second: birdBornAnimation_84
+  - first:
+      213: -650326569684684684
+    second: birdBornAnimation_85
+  - first:
+      213: -4716408302645266909
+    second: birdBornAnimation_86
+  - first:
+      213: -8875431767619618572
+    second: birdBornAnimation_87
+  - first:
+      213: 4714143511145422088
+    second: birdBornAnimation_88
+  - first:
+      213: 5798743691404735210
+    second: birdBornAnimation_89
+  - first:
+      213: 2345374060051063053
+    second: birdBornAnimation_90
+  - first:
+      213: 6218287789180308113
+    second: birdBornAnimation_91
+  - first:
+      213: -7965525714386906054
+    second: birdBornAnimation_92
+  - first:
+      213: -8594113464972870831
+    second: birdBornAnimation_93
+  - first:
+      213: 8056627604767052575
+    second: birdBornAnimation_94
+  - first:
+      213: -8103766757403316508
+    second: birdBornAnimation_95
+  - first:
+      213: -5029165358697392669
+    second: birdBornAnimation_96
+  - first:
+      213: 3570163968737257607
+    second: birdBornAnimation_97
+  - first:
+      213: -7633980523033338789
+    second: birdBornAnimation_98
+  - first:
+      213: -2950927671364013021
+    second: birdBornAnimation_99
+  - first:
+      213: 4295950757690401199
+    second: birdBornAnimation_100
+  - first:
+      213: 3386380378886691741
+    second: birdBornAnimation_101
+  - first:
+      213: -8147848821056630456
+    second: birdBornAnimation_102
+  - first:
+      213: -5204074259540775263
+    second: birdBornAnimation_103
+  - first:
+      213: -2189988896541625007
+    second: birdBornAnimation_104
+  - first:
+      213: 6147911107805079185
+    second: birdBornAnimation_105
+  - first:
+      213: -8004461915410864095
+    second: birdBornAnimation_106
+  - first:
+      213: -1588812804337736773
+    second: birdBornAnimation_107
+  - first:
+      213: 536303582696355284
+    second: birdBornAnimation_108
+  - first:
+      213: -4284123658429805931
+    second: birdBornAnimation_109
+  - first:
+      213: 8130227337194310006
+    second: birdBornAnimation_110
+  - first:
+      213: 4998544973061954078
+    second: birdBornAnimation_111
+  - first:
+      213: 5514702663044783538
+    second: birdBornAnimation_112
+  - first:
+      213: 1047116752250978409
+    second: birdBornAnimation_113
+  - first:
+      213: -7886933174810201904
+    second: birdBornAnimation_114
+  - first:
+      213: 7544663500081809260
+    second: birdBornAnimation_115
+  - first:
+      213: 5769835793953704815
+    second: birdBornAnimation_116
+  - first:
+      213: 1315970548508362490
+    second: birdBornAnimation_117
+  - first:
+      213: 6742316036872832535
+    second: birdBornAnimation_118
+  - first:
+      213: -7320792474191623705
+    second: birdBornAnimation_119
+  - first:
+      213: -9127820707151741408
+    second: birdBornAnimation_120
+  - first:
+      213: 2783899920709659408
+    second: birdBornAnimation_121
+  - first:
+      213: -7999597272896116448
+    second: birdBornAnimation_122
+  - first:
+      213: -8038586278708771671
+    second: birdBornAnimation_123
+  - first:
+      213: -5831862120551224227
+    second: birdBornAnimation_124
+  - first:
+      213: 3779708343644401490
+    second: birdBornAnimation_125
+  - first:
+      213: 4490990861467987597
+    second: birdBornAnimation_126
+  - first:
+      213: 8861409068979881524
+    second: birdBornAnimation_127
+  - first:
+      213: 7396906901973659390
+    second: birdBornAnimation_128
+  - first:
+      213: 5252194282591786843
+    second: birdBornAnimation_129
+  - first:
+      213: 1870800610089436448
+    second: birdBornAnimation_130
+  - first:
+      213: 7179729768012498221
+    second: birdBornAnimation_131
+  - first:
+      213: 3589189743644090510
+    second: birdBornAnimation_132
+  - first:
+      213: 372145528426327420
+    second: birdBornAnimation_133
+  - first:
+      213: -6342127961998096109
+    second: birdBornAnimation_134
+  - first:
+      213: 3678326086990184596
+    second: birdBornAnimation_135
+  - first:
+      213: 3802698227655979606
+    second: birdBornAnimation_136
+  - first:
+      213: -8247176073854380880
+    second: birdBornAnimation_137
+  - first:
+      213: 482134575929002510
+    second: birdBornAnimation_138
+  - first:
+      213: -4292794534761464180
+    second: birdBornAnimation_139
+  - first:
+      213: -6434541239188305570
+    second: birdBornAnimation_140
+  - first:
+      213: -8571208247451984857
+    second: birdBornAnimation_141
+  - first:
+      213: 80301060421901395
+    second: birdBornAnimation_142
+  - first:
+      213: -6614798647919329189
+    second: birdBornAnimation_143
+  - first:
+      213: -8393993884551182760
+    second: birdBornAnimation_144
+  - first:
+      213: 1272229269807880267
+    second: birdBornAnimation_145
+  - first:
+      213: 6157769346465986402
+    second: birdBornAnimation_146
+  - first:
+      213: 6611424978832803177
+    second: birdBornAnimation_147
+  - first:
+      213: -6050711193831972752
+    second: birdBornAnimation_148
+  - first:
+      213: 901608786981652182
+    second: birdBornAnimation_149
+  - first:
+      213: -884260055436254273
+    second: birdBornAnimation_150
+  - first:
+      213: -110397671085556101
+    second: birdBornAnimation_151
+  - first:
+      213: 1037923244181432157
+    second: birdBornAnimation_152
+  - first:
+      213: 8498825941673755958
+    second: birdBornAnimation_153
+  - first:
+      213: 8880775665663951660
+    second: birdBornAnimation_154
+  - first:
+      213: -8226202827682024288
+    second: birdBornAnimation_155
+  - first:
+      213: -6403943236027562264
+    second: birdBornAnimation_156
+  - first:
+      213: 8226381293859082182
+    second: birdBornAnimation_157
+  - first:
+      213: 6499108498616523625
+    second: birdBornAnimation_158
+  - first:
+      213: -2834236142317691293
+    second: birdBornAnimation_159
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: birdBornAnimation_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1530
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b5e0b98ee32588c0800000000000000
+      internalID: -3997749586802186832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_1
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 1530
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00694a43bd07db0a0800000000000000
+      internalID: -6864206170259417600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_2
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 1530
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39b3a55b2a3750f90800000000000000
+      internalID: -6988052104130970733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_3
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 1530
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f204d6c2acc411c0800000000000000
+      internalID: -4533773925362695432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_4
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 1530
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc2356ad9c0bd41a0800000000000000
+      internalID: -6823603479397453109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_5
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 1530
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d9cb4e17bec42260800000000000000
+      internalID: 7072004600761141715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_6
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 1530
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fee9286b21ede4fc0800000000000000
+      internalID: -3508622887722246417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_7
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 1530
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fab6e3fe01a1549b0800000000000000
+      internalID: -5096638743264203857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1360
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0da57a6640c2cdb0800000000000000
+      internalID: -4773041246392963825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_9
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 1360
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a6a4073580c64900800000000000000
+      internalID: 668433273097332390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_10
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 1360
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 210c519ba2cf62ed0800000000000000
+      internalID: -2438984887750508526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_11
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 1360
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82ad402e9e900e810800000000000000
+      internalID: 1792443551817456168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_12
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 1360
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 308cb41a9e1eb19c0800000000000000
+      internalID: -3955319454165121021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_13
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 1360
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 718f258137d008550800000000000000
+      internalID: 6160939078223329303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_14
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 1360
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77656d8b7b135dee0800000000000000
+      internalID: -1237027857493502345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_15
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 1360
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a5fb381a9490c760800000000000000
+      internalID: 7476138770987480484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1190
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19a39ac140f1e0c30800000000000000
+      internalID: 4327430394470808209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_17
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 1190
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf0c1a71bd8df7840800000000000000
+      internalID: 5224132528278978811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_18
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 1190
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c66b5eb028028a80800000000000000
+      internalID: -8466195412777474365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_19
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 1190
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 867c657e994d55690800000000000000
+      internalID: -7613945837523646616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_20
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 1190
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 050eea35c488763a0800000000000000
+      internalID: -6672214461523238832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_21
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 1190
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26a376252140b1d10800000000000000
+      internalID: 2097274528209517154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_22
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 1190
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5789ae2968c304b0800000000000000
+      internalID: -5475312367872407716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_23
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 1190
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f114ac3d3f58c74b0800000000000000
+      internalID: -5441326967493607137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1020
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4f575bd07b186c30800000000000000
+      internalID: 4352759211383807819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_25
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 1020
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af70409b47f9bc1a0800000000000000
+      internalID: -6788156689661818886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_26
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 1020
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56704e1541c973530800000000000000
+      internalID: 3834705218816444261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_27
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 1020
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b7fc051e07b9da10800000000000000
+      internalID: 1934778786042935225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_28
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 1020
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5aa486f509e03700800000000000000
+      internalID: 518170168967604826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_29
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 1020
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cbf9ca1fabd18a20800000000000000
+      internalID: 3062970766703852483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_30
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 1020
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 959973259407c33a0800000000000000
+      internalID: -6684344286710359719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_31
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 1020
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03c451a15291130b0800000000000000
+      internalID: -5750787602033325008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 850
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0dedb466b11e3730800000000000000
+      internalID: 3980638595713985807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_33
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 850
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23213d415231bc350800000000000000
+      internalID: 6037940775404376626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_34
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 850
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2751bd9760328560800000000000000
+      internalID: 7314461966388516650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_35
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 850
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 483d5e94b47ce0380800000000000000
+      internalID: -9003039478890769532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_36
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 850
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bae2b7c236e00bd80800000000000000
+      internalID: -8237067899349815637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_37
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 850
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83270c4111d6018c0800000000000000
+      internalID: -4030601746366565832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_38
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 850
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7565f999590c96880800000000000000
+      internalID: -8617144663236716969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_39
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 850
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd8978da0479ce320800000000000000
+      internalID: 2588610189876238559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 680
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3f569955801a3d80800000000000000
+      internalID: -8270279600792772805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_41
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 680
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d672f2d4cb297b670800000000000000
+      internalID: 8554467354659989357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_42
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 680
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4cc05f512ec41800800000000000000
+      internalID: 582316894566009933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_43
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 680
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8374b9d63a32accf0800000000000000
+      internalID: -231333246030624968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_44
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 680
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49b1d6eb81e44d340800000000000000
+      internalID: 4887617363784833940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_45
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 680
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9676fa9376c2d9c30800000000000000
+      internalID: 4367696035480299369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_46
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 680
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 526b7a499253dec40800000000000000
+      internalID: 5543145169066898981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_47
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 680
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 976860311efb09500800000000000000
+      internalID: 401031340243715705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 510
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 434882c9210d25820800000000000000
+      internalID: 2905613487955280948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_49
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 510
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8ed6817b8bd86ea0800000000000000
+      internalID: -5879207921580581236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_50
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 510
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12d9aeca526117ad0800000000000000
+      internalID: -2706357550002299615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_51
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 510
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7424efbb157bdc320800000000000000
+      internalID: 2579919723227398727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_52
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 510
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dbe8aea163cf9d90800000000000000
+      internalID: -7088732464148321320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_53
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 510
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9ab58a8165565b80800000000000000
+      internalID: -8406437777016243558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_54
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 510
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c426ac50da7366650800000000000000
+      internalID: 6225724751152308812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_55
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 510
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40c4f5eb411c4dfb0800000000000000
+      internalID: -4623858622565233660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 340
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd7a7e35c18241160800000000000000
+      internalID: 6995260223345108957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_57
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 340
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e092ccfc761d20040800000000000000
+      internalID: 4612479212178909454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_58
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 340
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f886633b7b91a920800000000000000
+      internalID: 2999849780251101425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_59
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 340
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b7fcccf488339340800000000000000
+      internalID: 4869297765945767862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_60
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 340
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab917b836a8069140800000000000000
+      internalID: 4725974368981031354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_61
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 340
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a646a77a5ca921380800000000000000
+      internalID: -9001962531451149206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_62
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 340
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7745013ffb2360b0800000000000000
+      internalID: -5736693125300795524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_63
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 340
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d0dae128f4f2b3b0800000000000000
+      internalID: -5498062848507850543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_64
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 170
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3058ce685d27ea240800000000000000
+      internalID: 4804904113868145923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_65
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 170
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e373d95e585220f90800000000000000
+      internalID: -6988982414712424642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_66
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 170
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4539bc8b6779b650800000000000000
+      internalID: 6249157261759427914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_67
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 170
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 291f8e6e90146a560800000000000000
+      internalID: 7324613354749227410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_68
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 170
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee4d2b603d4284900800000000000000
+      internalID: 668825033433601262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_69
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 170
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eaf40c4fa17ba0db0800000000000000
+      internalID: -4824842724370788434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_70
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 170
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c640bed5dc2cae50800000000000000
+      internalID: 6821876832635209411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_71
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 170
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd8e9c70cdf4df9a0800000000000000
+      internalID: -6197709705749862179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_72
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd3314396c6959fb0800000000000000
+      internalID: -4641638061317213217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_73
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 0
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd6377d3c87755100800000000000000
+      internalID: 96114411268683484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_74
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 0
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd093c1cb0d9442e0800000000000000
+      internalID: -2142414848900493091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_75
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 0
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3194332afe3e26c0800000000000000
+      internalID: -4166323361217736387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_76
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 0
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42981050cfb8d3630800000000000000
+      internalID: 3908433966159464740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: birdBornAnimation_77
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 0
+        width: 210
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14f2b79119075bcc0800000000000000
+      internalID: -3695924150687551679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 4f9c2c6ead9c96a47aed705c3e4bdac9
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":210.0,"y":170.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      birdBornAnimation_0: -3997749586802186832
+      birdBornAnimation_1: -6864206170259417600
+      birdBornAnimation_10: -2438984887750508526
+      birdBornAnimation_11: 1792443551817456168
+      birdBornAnimation_12: -3955319454165121021
+      birdBornAnimation_13: 6160939078223329303
+      birdBornAnimation_14: -1237027857493502345
+      birdBornAnimation_15: 7476138770987480484
+      birdBornAnimation_16: 4327430394470808209
+      birdBornAnimation_17: 5224132528278978811
+      birdBornAnimation_18: -8466195412777474365
+      birdBornAnimation_19: -7613945837523646616
+      birdBornAnimation_2: -6988052104130970733
+      birdBornAnimation_20: -6672214461523238832
+      birdBornAnimation_21: 2097274528209517154
+      birdBornAnimation_22: -5475312367872407716
+      birdBornAnimation_23: -5441326967493607137
+      birdBornAnimation_24: 4352759211383807819
+      birdBornAnimation_25: -6788156689661818886
+      birdBornAnimation_26: 3834705218816444261
+      birdBornAnimation_27: 1934778786042935225
+      birdBornAnimation_28: 518170168967604826
+      birdBornAnimation_29: 3062970766703852483
+      birdBornAnimation_3: -4533773925362695432
+      birdBornAnimation_30: -6684344286710359719
+      birdBornAnimation_31: -5750787602033325008
+      birdBornAnimation_32: 3980638595713985807
+      birdBornAnimation_33: 6037940775404376626
+      birdBornAnimation_34: 7314461966388516650
+      birdBornAnimation_35: -9003039478890769532
+      birdBornAnimation_36: -8237067899349815637
+      birdBornAnimation_37: -4030601746366565832
+      birdBornAnimation_38: -8617144663236716969
+      birdBornAnimation_39: 2588610189876238559
+      birdBornAnimation_4: -6823603479397453109
+      birdBornAnimation_40: -8270279600792772805
+      birdBornAnimation_41: 8554467354659989357
+      birdBornAnimation_42: 582316894566009933
+      birdBornAnimation_43: -231333246030624968
+      birdBornAnimation_44: 4887617363784833940
+      birdBornAnimation_45: 4367696035480299369
+      birdBornAnimation_46: 5543145169066898981
+      birdBornAnimation_47: 401031340243715705
+      birdBornAnimation_48: 2905613487955280948
+      birdBornAnimation_49: -5879207921580581236
+      birdBornAnimation_5: 7072004600761141715
+      birdBornAnimation_50: -2706357550002299615
+      birdBornAnimation_51: 2579919723227398727
+      birdBornAnimation_52: -7088732464148321320
+      birdBornAnimation_53: -8406437777016243558
+      birdBornAnimation_54: 6225724751152308812
+      birdBornAnimation_55: -4623858622565233660
+      birdBornAnimation_56: 6995260223345108957
+      birdBornAnimation_57: 4612479212178909454
+      birdBornAnimation_58: 2999849780251101425
+      birdBornAnimation_59: 4869297765945767862
+      birdBornAnimation_6: -3508622887722246417
+      birdBornAnimation_60: 4725974368981031354
+      birdBornAnimation_61: -9001962531451149206
+      birdBornAnimation_62: -5736693125300795524
+      birdBornAnimation_63: -5498062848507850543
+      birdBornAnimation_64: 4804904113868145923
+      birdBornAnimation_65: -6988982414712424642
+      birdBornAnimation_66: 6249157261759427914
+      birdBornAnimation_67: 7324613354749227410
+      birdBornAnimation_68: 668825033433601262
+      birdBornAnimation_69: -4824842724370788434
+      birdBornAnimation_7: -5096638743264203857
+      birdBornAnimation_70: 6821876832635209411
+      birdBornAnimation_71: -6197709705749862179
+      birdBornAnimation_72: -4641638061317213217
+      birdBornAnimation_73: 96114411268683484
+      birdBornAnimation_74: -2142414848900493091
+      birdBornAnimation_75: -4166323361217736387
+      birdBornAnimation_76: 3908433966159464740
+      birdBornAnimation_77: -3695924150687551679
+      birdBornAnimation_8: -4773041246392963825
+      birdBornAnimation_9: 668433273097332390
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
