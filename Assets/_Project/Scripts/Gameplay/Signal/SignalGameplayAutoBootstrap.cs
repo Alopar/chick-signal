@@ -19,7 +19,6 @@ namespace LudumDare.Template.Gameplay.Signal
             go.AddComponent<SignalGameController>();
             go.AddComponent<SignalGameplayView>();
             go.AddComponent<SignalHudPresenter>();
-            go.AddComponent<SignalEvolutionPanel>();
         }
     }
 }

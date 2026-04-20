@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2419645840226337993}
   - component: {fileID: 8925782516553369989}
   - component: {fileID: 8278025653607510496}
-  - component: {fileID: 1330651428468219334}
   - component: {fileID: 4095319495551465094}
   m_Layer: 0
   m_Name: SignalGameplay
@@ -126,19 +125,6 @@ MonoBehaviour:
   _dashLabel: {fileID: 0}
   _trapSlowLabel: {fileID: 0}
   _trapAttractLabel: {fileID: 0}
---- !u!114 &1330651428468219334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2076698350880432070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d72233f768e2248439dd64f281e908f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalEvolutionPanel
-  _controller: {fileID: 2419645840226337993}
 --- !u!114 &4095319495551465094
 MonoBehaviour:
   m_ObjectHideFlags: 0

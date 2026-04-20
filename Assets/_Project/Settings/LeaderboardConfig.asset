@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d4e8f2a1b3c4d5e6f708192a3b4c5da, type: 3}
   m_Name: LeaderboardConfig
   m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Managers.LeaderboardConfig
-  _webAppUrl: https://script.google.com/macros/s/AKfycbzypEA1-hD1x96bLtb_fPBxWonpI7vB88OuVHLQOpwfRlSxj_xRhAptYnYiuYffc7PDxg/exec
+  _webAppUrl: https://script.google.com/macros/s/AKfycbypDdtjfRJzMriBTWc0FnCnupyIK0Yn_Qre9Y-FudoOCcWYXbluVg_0UzAMCoRJmxp9lQ/exec
