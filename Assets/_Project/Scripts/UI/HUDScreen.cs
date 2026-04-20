@@ -10,9 +10,11 @@ namespace LudumDare.Template.UI
     public class HUDScreen : UIScreen
     {
         [SerializeField] private IntEventChannelSO _scoreChannel;
+        [SerializeField] private SignalHudEventChannelSO _signalHudChannel;
         [SerializeField] private SignalInfoToastEventChannelSO _infoToastChannel;
         [SerializeField] private SignalEvolutionEventChannelSO _evolutionChannel;
         [SerializeField] private TMP_Text _scoreLabel;
+        [SerializeField] private TMP_Text _waveLabel;
         [SerializeField] private InfoToastLayerView _infoToastLayer;
         [SerializeField] private GameObject _evolutionCardsPanel;
         [SerializeField] private Button _healCardButton;
@@ -34,10 +36,13 @@ namespace LudumDare.Template.UI
             {
                 if (_infoToastChannel != null)
                     _signalController.SetInfoToastChannel(_infoToastChannel);
+                if (_signalHudChannel == null)
+                    _signalHudChannel = _signalController.HudChannel;
                 if (_evolutionChannel == null)
                     _evolutionChannel = _signalController.EvolutionChannel;
             }
 
+            if (_signalHudChannel != null) _signalHudChannel.OnHudUpdated += HandleSignalHud;
             if (_evolutionChannel != null)
                 _evolutionChannel.OnVisibilityChanged += HandleEvolutionVisibility;
 
@@ -50,6 +55,7 @@ namespace LudumDare.Template.UI
         protected override void OnDestroy()
         {
             if (_scoreChannel != null) _scoreChannel.OnEventRaised -= HandleScore;
+            if (_signalHudChannel != null) _signalHudChannel.OnHudUpdated -= HandleSignalHud;
             if (_infoToastChannel != null) _infoToastChannel.OnToastRequested -= HandleInfoToast;
             if (_evolutionChannel != null) _evolutionChannel.OnVisibilityChanged -= HandleEvolutionVisibility;
             base.OnDestroy();
@@ -62,12 +68,18 @@ namespace LudumDare.Template.UI
                 _scoreLabel.text = $"Score: {GameManager.Instance.Score}";
             }
 
+            _signalController?.RefreshHud();
             SetEvolutionCardsVisible(_isEvolutionPanelVisible);
         }
 
         private void HandleScore(int value)
         {
             if (_scoreLabel != null) _scoreLabel.text = $"Score: {value}";
+        }
+
+        private void HandleSignalHud(SignalHudSnapshot snapshot)
+        {
+            if (_waveLabel != null) _waveLabel.text = $"Wave: {Mathf.Max(1, snapshot.WaveDisplayIndex)}";
         }
 
         private void HandleInfoToast(SignalInfoToastEvent toastEvent)
