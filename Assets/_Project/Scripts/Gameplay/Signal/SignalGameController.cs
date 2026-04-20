@@ -43,6 +43,11 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private InputReader _inputReader;
         [SerializeField] private Camera _camera;
         [SerializeField] private Transform _playerTransform;
+        [Header("Позиции на уровне")]
+        [Tooltip("Если задано, логическое положение гнезда берётся из мировой позиции (для стыковки с кат-сценой). Иначе — центр холста по балансу.")]
+        [SerializeField] private Transform _nestWorldStart;
+        [Tooltip("Если задано, старт игрока в логике берётся из мира. Если задано только гнездо — смещение игрока как в балансе относительно гнезда.")]
+        [SerializeField] private Transform _playerWorldStart;
         [SerializeField] private Behaviour[] _disableWhileSignalRuns;
         [SerializeField] private SignalHudEventChannelSO _hudChannel;
         [SerializeField] private SignalEvolutionEventChannelSO _evolutionModalChannel;
@@ -257,7 +262,14 @@ namespace LudumDare.Template.Gameplay.Signal
             if (_playerTransform == null)
             {
                 var go = GameObject.FindGameObjectWithTag("Player");
-                if (go != null) _playerTransform = go.transform;
+                if (go != null)
+                    _playerTransform = go.transform;
+                else
+                {
+                    var pcs = UnityEngine.Object.FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                    if (pcs != null && pcs.Length > 0)
+                        _playerTransform = pcs[0].transform;
+                }
             }
 
             if (_disableWhileSignalRuns == null || _disableWhileSignalRuns.Length == 0)
@@ -374,10 +386,24 @@ namespace LudumDare.Template.Gameplay.Signal
             var p = _balance.Player;
             var n = _balance.Nest;
             float dxFromNest = p.StartDx - n.StartDx;
+
+            Vector2 nestLogical = new Vector2(_w * 0.5f, _h * 0.5f);
+            Vector2 playerLogical = new Vector2(_w * 0.5f + dxFromNest, _h * 0.5f);
+
+            if (_nestWorldStart != null)
+                nestLogical = WorldToLogical(_nestWorldStart.position.x, _nestWorldStart.position.y);
+            if (_playerWorldStart != null)
+                playerLogical = WorldToLogical(_playerWorldStart.position.x, _playerWorldStart.position.y);
+
+            if (_nestWorldStart != null && _playerWorldStart == null)
+                playerLogical = new Vector2(nestLogical.x + dxFromNest, nestLogical.y);
+            else if (_nestWorldStart == null && _playerWorldStart != null)
+                nestLogical = new Vector2(playerLogical.x - dxFromNest, playerLogical.y);
+
             _player = new PlayerSim
             {
-                X = _w * 0.5f + dxFromNest,
-                Y = _h * 0.5f,
+                X = playerLogical.x,
+                Y = playerLogical.y,
                 Speed = p.Speed,
                 Hp = p.Hp,
                 MaxHp = p.MaxHp,
@@ -394,8 +420,8 @@ namespace LudumDare.Template.Gameplay.Signal
 
             _nest = new NestSim
             {
-                X = _w * 0.5f,
-                Y = _h * 0.5f,
+                X = nestLogical.x,
+                Y = nestLogical.y,
                 Level = n.InitialLevel,
                 Hp = n.Hp,
                 MaxHp = n.MaxHp,
@@ -1598,6 +1624,13 @@ namespace LudumDare.Template.Gameplay.Signal
             float wx = (lx - _w * 0.5f) / _pixelsPerUnit;
             float wy = -(ly - _h * 0.5f) / _pixelsPerUnit;
             return new Vector3(wx, wy, 0f);
+        }
+
+        private Vector2 WorldToLogical(float wx, float wy)
+        {
+            float lx = wx * _pixelsPerUnit + _w * 0.5f;
+            float ly = -wy * _pixelsPerUnit + _h * 0.5f;
+            return new Vector2(lx, ly);
         }
     }
 

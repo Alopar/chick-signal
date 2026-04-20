@@ -13,9 +13,19 @@ namespace LudumDare.Template.Gameplay.Signal
         private static void Boot()
         {
             if (SceneManager.GetActiveScene().name != SceneLoader.GameScene) return;
-            if (Object.FindAnyObjectByType<SignalGameController>() != null) return;
+            var existing = Object.FindObjectsByType<SignalGameController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            if (existing != null && existing.Length > 0)
+                return;
+
+            // AfterSceneLoad иногда выполняется раньше Awake: флаг из интро ещё не выставлен — ищем компонент в сцене.
+            bool defer = SignalGameplayBootstrapDefer.DeferGameplayStartRequested
+                || SignalIntroCutsceneController.SceneContainsIntroController();
+            SignalGameplayBootstrapDefer.ClearDeferRequest();
 
             var go = new GameObject("SignalGameplay");
+            if (defer)
+                go.SetActive(false);
+
             go.AddComponent<SignalGameController>();
             go.AddComponent<SignalGameplayView>();
             go.AddComponent<SignalHudPresenter>();

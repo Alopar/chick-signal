@@ -1,6 +1,7 @@
 using LudumDare.Template.Input;
 using LudumDare.Template.Managers;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace LudumDare.Template.Gameplay.Player
 {
@@ -91,8 +92,16 @@ namespace LudumDare.Template.Gameplay.Player
             if (_mainCamera == null) _mainCamera = Camera.main;
             if (_mainCamera == null) return;
 
-            Vector3 mp = UnityEngine.Input.mousePosition;
-            mp.z = -_mainCamera.transform.position.z;
+            // Input System (в Player Settings включён только новый ввод — UnityEngine.Input недоступен).
+            Vector2 screenPos;
+            if (Pointer.current != null)
+                screenPos = Pointer.current.position.ReadValue();
+            else if (Mouse.current != null)
+                screenPos = Mouse.current.position.ReadValue();
+            else
+                return;
+
+            Vector3 mp = new Vector3(screenPos.x, screenPos.y, -_mainCamera.transform.position.z);
             float cursorWorldX = _mainCamera.ScreenToWorldPoint(mp).x;
             _spriteRenderer.flipX = cursorWorldX > transform.position.x;
         }

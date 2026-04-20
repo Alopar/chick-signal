@@ -14,6 +14,7 @@ namespace LudumDare.Template.Gameplay.Signal
         private const float NpcMoveThresholdSq = 0.000001f;
 
         [SerializeField] private SignalGameController _controller;
+        [Tooltip("Якорь гнезда в мире: поставьте пустой объект на уровне и назначьте сюда (тот же трансформ можно указать в контроллере как старт гнезда). Если не задан — создаётся дочерний Nest у корня SIGNAL.")]
         [SerializeField] private Transform _nestAnchor;
         [SerializeField] private GameObject _nestVisualPrefab;
         [SerializeField] private GameObject _caterpillarVisualPrefab;
