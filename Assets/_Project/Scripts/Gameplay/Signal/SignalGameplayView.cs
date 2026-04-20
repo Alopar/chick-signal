@@ -45,6 +45,9 @@ namespace LudumDare.Template.Gameplay.Signal
         [SerializeField] private float _chickGrowthPerNestRadiusUnit = 0.01f;
         [Tooltip("100% = текущий темп роста. Больше — птенец растет визуально быстрее.")]
         [SerializeField] private float _chickGrowthPercent = 100f;
+        [Header("Nest Status World UI")]
+        [SerializeField] private SignalNestStatusVisualSettings _nestStatusVisualSettings;
+        [SerializeField] private bool _autoAttachNestStatusWorldView = true;
         [Header("Nest Debug Rings")]
         [SerializeField] private bool _showNestDebugRings;
         [SerializeField] private Color _realNestRadiusColor = new(1f, 0.25f, 0.25f, 0.95f);
@@ -64,6 +67,7 @@ namespace LudumDare.Template.Gameplay.Signal
         private MaterialPropertyBlock _mpbRepel;
         private LineRenderer _realNestRadiusRing;
         private LineRenderer _visualChickRadiusRing;
+        private SignalNestStatusWorldView _nestStatusWorldView;
         private ObjectPool _floatingPopupPool;
         private readonly List<QueuedPopup> _queuedPopups = new();
         private readonly Dictionary<Vector2Int, float> _nextPopupTimeBySource = new();
@@ -157,6 +161,13 @@ namespace LudumDare.Template.Gameplay.Signal
             if (_nestVisual == null) _nestVisual = instance.AddComponent<SignalNestVisual>();
             if (_nestVisual.SpriteRenderer == null)
                 Debug.LogWarning($"{nameof(SignalGameplayView)}: у префаба гнезда нет {nameof(SpriteRenderer)}.");
+
+            _nestStatusWorldView = instance.GetComponentInChildren<SignalNestStatusWorldView>();
+            if (_nestStatusWorldView == null && _autoAttachNestStatusWorldView)
+                _nestStatusWorldView = instance.AddComponent<SignalNestStatusWorldView>();
+            if (_nestStatusWorldView != null)
+                _nestStatusWorldView.SetSettings(_nestStatusVisualSettings);
+
             _nestAnchor.localScale = Vector3.one;
         }
 
@@ -258,7 +269,29 @@ namespace LudumDare.Template.Gameplay.Signal
             float growthMultiplier = Mathf.Max(0f, _chickGrowthPercent) / 100f;
             float chickScale = _chickBaseScale + growth * _chickGrowthPerNestRadiusUnit * growthMultiplier;
             _nestVisual.SetChickScale(chickScale);
+            SyncNestStatusWorldView(chickScale);
             SyncNestDebugRings(_nestAnchor.position, nestRadius, initialNestRadius, chickScale);
+        }
+
+        private void SyncNestStatusWorldView(float chickScale)
+        {
+            if (_nestStatusWorldView == null) return;
+
+            _nestStatusWorldView.SetSettings(_nestStatusVisualSettings);
+            _controller.GetNestStatus01(
+                out float hp01,
+                out float satiety01,
+                out float charge01,
+                out bool absorbing,
+                out float absorptionLeft01);
+
+            _nestStatusWorldView.ApplyStatus(
+                satiety01,
+                hp01,
+                charge01,
+                absorbing,
+                absorptionLeft01,
+                chickScale);
         }
 
         private void SyncNestDebugRings(Vector3 centerWorld, float realNestRadiusLogical, float initialNestRadiusLogical, float chickScale)

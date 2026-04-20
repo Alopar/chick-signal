@@ -107,6 +107,32 @@ namespace LudumDare.Template.Gameplay.Signal
             level = _nest.Level;
         }
 
+        public void GetNestStatus01(
+            out float hp01,
+            out float satiety01,
+            out float charge01,
+            out bool absorbing,
+            out float absorptionLeft01)
+        {
+            if (_balance == null)
+            {
+                hp01 = 0f;
+                satiety01 = 0f;
+                charge01 = 0f;
+                absorbing = false;
+                absorptionLeft01 = 0f;
+                return;
+            }
+
+            hp01 = Mathf.Clamp01(_nest.Hp / Mathf.Max(1e-6f, _nest.MaxHp));
+            satiety01 = Mathf.Clamp01(_nest.Satiety / Mathf.Max(1e-6f, _balance.Nest.SatiationMax));
+            charge01 = Mathf.Clamp01(_nest.Charge / Mathf.Max(1e-6f, _nest.ChargeMax));
+            absorbing = _nest.Absorbing;
+            absorptionLeft01 = absorbing
+                ? Mathf.Clamp01(_nest.AbsorptionTimeLeft / Mathf.Max(1e-6f, _balance.Nest.AbsorptionDuration))
+                : 0f;
+        }
+
         public int GetPulseCount() => _pulses.Count;
         public float GetPulseRadius(int i) => _pulses[i].R;
 

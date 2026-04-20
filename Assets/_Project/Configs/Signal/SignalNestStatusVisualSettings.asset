@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 294cfd6f5b3e23241b9f082693cebde1, type: 3}
+  m_Name: SignalNestStatusVisualSettings
+  m_EditorClassIdentifier: Assembly-CSharp::LudumDare.Template.Gameplay.Signal.SignalNestStatusVisualSettings
+  _foodFillColor: {r: 1, g: 0.737563, b: 0, a: 1}
+  _healthFillColor: {r: 1, g: 0.0018941243, b: 0, a: 1}
+  _chargeFillColor: {r: 0, g: 1, b: 0.9981643, a: 1}
+  _feedingCountdownColor: {r: 0, g: 1, b: 1, a: 1}
+  _barBackgroundColor: {r: 0, g: 0, b: 0, a: 0.5}
+  _barWidth: 0.95
+  _barHeight: 0.12
+  _topBarOffsetY: 1.5
+  _bottomBarOffsetY: -1.5
+  _ringRadius: 1.15
+  _ringThickness: 0.1
+  _ringSegments: 96
+  _ringStartAngleDeg: 90
+  _scaleByChickMultiplier: 1
+  _barSortingOrder: 12
+  _ringSortingOrder: 13
