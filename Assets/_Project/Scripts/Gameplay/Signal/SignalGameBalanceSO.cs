@@ -150,6 +150,8 @@ namespace LudumDare.Template.Gameplay.Signal
         public float NestDamageGreen;
         public float SatiationRed;
         public float SatiationGreen;
+        [Min(0)] public int ScoreRed;
+        [Min(0)] public int ScoreGreen;
         public float Radius;
     }
 
@@ -274,6 +276,8 @@ namespace LudumDare.Template.Gameplay.Signal
                 NestDamageGreen = 0f,
                 SatiationRed = 4f,
                 SatiationGreen = 2f,
+                ScoreRed = 1,
+                ScoreGreen = 1,
                 Radius = 9f,
             };
 

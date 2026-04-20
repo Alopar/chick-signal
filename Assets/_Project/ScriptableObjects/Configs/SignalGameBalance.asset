@@ -118,13 +118,15 @@ MonoBehaviour:
     NestDamageGreen: 0
     SatiationRed: 4
     SatiationGreen: 2
+    ScoreRed: 1
+    ScoreGreen: 1
     Radius: 9
   Ally:
     SpeedMin: 60
     SpeedRand: 20
     Radius: 9
   CheatNoRedEnemyNestDamage: 0
-  OptionNestHealFromGreen: 0
+  OptionNestHealFromGreen: 1
   DocumentSignalJamNotImplemented: 1
   DocumentEnemyContactSlowNotImplemented: 1
   DocumentPlayerDamageNotImplemented: 1

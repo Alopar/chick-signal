@@ -753,6 +753,7 @@ namespace LudumDare.Template.Gameplay.Signal
                     if (_nest.Absorbing)
                     {
                         _nest.Satiety += SatiationPerAbsorbed(SignalNpcKind.Green);
+                        AddScoreForAbsorbed(SignalNpcKind.Green);
                         TryCompleteSatietyLevel();
                     }
                     else
@@ -850,6 +851,7 @@ namespace LudumDare.Template.Gameplay.Signal
                     if (_nest.Absorbing)
                     {
                         _nest.Satiety += SatiationPerAbsorbed(enemy.Kind);
+                        AddScoreForAbsorbed(enemy.Kind);
                         TryCompleteSatietyLevel();
                         _enemies.RemoveAt(ei);
                         continue;
@@ -938,6 +940,13 @@ namespace LudumDare.Template.Gameplay.Signal
 
         private float SatiationPerAbsorbed(SignalNpcKind kind) =>
             kind == SignalNpcKind.Red ? _balance.Enemy.SatiationRed : _balance.Enemy.SatiationGreen;
+
+        private void AddScoreForAbsorbed(SignalNpcKind kind)
+        {
+            if (!GameManager.HasInstance || _balance == null) return;
+            int amount = kind == SignalNpcKind.Red ? _balance.Enemy.ScoreRed : _balance.Enemy.ScoreGreen;
+            if (amount > 0) GameManager.Instance.AddScore(amount);
+        }
 
         private float SignalStrength(float sx, float sy, float power, float tx, float ty)
         {
