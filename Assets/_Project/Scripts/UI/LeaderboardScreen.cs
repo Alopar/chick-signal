@@ -16,6 +16,7 @@ namespace LudumDare.Template.UI
 
         private readonly List<GameObject> _spawnedRows = new();
         private bool _backListenerAdded;
+        private const int MaxNameLength = 18;
 
         public void SetRuntimeRefs(Button back, TMP_Text status, RectTransform rowsRoot, TextMeshProUGUI rowPrefab)
         {
@@ -79,11 +80,20 @@ namespace LudumDare.Template.UI
             for (var i = 0; i < sorted.Count; i++)
             {
                 var e = sorted[i];
-                var line =
-                    $"{i + 1}. {e.PlayerName} — {e.Score}" +
-                    (string.IsNullOrEmpty(e.RecordedAt) ? string.Empty : $"  ({e.RecordedAt})");
+                var line = BuildRowText(i + 1, e.PlayerName, e.Score);
                 AddRow(line);
             }
+        }
+
+        private static string BuildRowText(int rank, string playerName, int score)
+        {
+            var safeName = string.IsNullOrWhiteSpace(playerName) ? "Unknown" : playerName.Trim();
+            if (safeName.Length > MaxNameLength)
+            {
+                safeName = safeName.Substring(0, MaxNameLength - 1) + ".";
+            }
+
+            return $"{rank}. {safeName} : {score}";
         }
 
         private void AddRow(string text)
@@ -93,10 +103,6 @@ namespace LudumDare.Template.UI
             var row = Instantiate(_rowPrefab, _rowsRoot);
             row.gameObject.SetActive(true);
             row.text = text;
-            row.fontSize = 28;
-            row.alignment = TextAlignmentOptions.Left;
-            var rt = row.rectTransform;
-            rt.sizeDelta = new Vector2(rt.sizeDelta.x, 36f);
             _spawnedRows.Add(row.gameObject);
         }
 
