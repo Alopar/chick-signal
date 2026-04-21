@@ -1286,7 +1286,7 @@ MonoBehaviour:
   _scoreChannel: {fileID: 11400000, guid: a10e235ecb2992f4baf8c5313bfa1de3, type: 2}
   _signalHudChannel: {fileID: 11400000, guid: 2f433af4ad02de2479b8d60899d759c1, type: 2}
   _infoToastChannel: {fileID: 11400000, guid: e4e57c82611d4fa6b0534d6bc4e9f7aa, type: 2}
-  _evolutionChannel: {fileID: 0}
+  _evolutionChannel: {fileID: 11400000, guid: e16036e33e66d17409706b360a6e7de4, type: 2}
   _scoreLabel: {fileID: 8603788435553027901}
   _waveLabel: {fileID: 5623796090142517841}
   _infoToastLayer: {fileID: 490001003}
